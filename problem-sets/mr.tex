@@ -1,0 +1,191 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+\begin{document}
+    \extraheadheight{.5in}
+    \firstpageheader{\large\sf CS2105}%
+    {\large\sf National University of Singapore\\ School of Computing \\
+    \LARGE\sf Midterm Review}%
+    {\large\sf Semester 2 10/11}
+    \firstpageheadrule
+    \pagestyle{headandfoot}
+
+\begin{questions}
+\question
+Consider the following Java code fragment.
+\begin{verbatim}
+new Socket("www.example.com", 80)
+\end{verbatim}
+Which of the following statements about the above code fragment are FALSE?
+\renewcommand{\labelenumi}{(\roman{enumi})}
+\begin{enumerate}
+\item The code causes a DNS query for domain name www.example.com to be issued.
+\item The code causes a SYN packet to be sent to host www.example.com.
+\item The code causes a HTTP request to be sent to host www.example.com.
+\item The code causes host www.example.com to open port 80 and listen for      
+incoming connections.
+\end{enumerate}
+
+\begin{choices}
+\choice (i) and (ii) only
+\choice (ii) and (iii) only
+\choice (iii) and (iv) only
+\choice (i),(ii) and (iv) only
+\choice (i),(iii) and (iv) only      
+\end{choices}
+
+\question
+Consider the sender's view of the sequence numbers in \textbf{Go-Back-N}         protocol.
+Suppose the first sequence number in the sender's window is $k$, and the last
+sequence number in the sender's window is $k+3$.  Let a packet with sequence
+number $i$ be $p_i$.  Which of the following MUST be TRUE?
+\begin{choices}
+\choice $p_k$ is sent and acknowledge.
+\choice $p_{k+3}$ is not sent but is usable.
+\choice If $p_{k+2}$ is sent, then $p_{k+1}$ must have been sent.
+\choice If $p_{k+2}$ is not sent, then $p_{k+1}$ must not have been sent.
+\choice The receiver is currently expecting $p_k$.
+\end{choices}
+
+\question
+Consider a sender and a receiver, communicating using \textbf{Selective-Repeat}
+protocol.  The sender just sent a packet with sequence number 10.  The window
+size is unknown.  Which of the following CANNOT possibly be the sequence number
+of the next packet transmitted by the sender?
+\begin{choices}
+\choice 0
+\choice 9
+\choice 10
+\choice 11
+\choice 12
+\end{choices}
+
+\question
+Consider the checksum algorithm used to compute the checksum field in UDP   header and TCP header.  Although UDP and TCP uses 16-bits words in computing the checksum, in this  question you are asked to consider 8-bits summands.
+
+Suppose a receiver received the following four 8-bit bytes over a           communication channel that might introduce errors.
+\begin{verbatim}
+1101 1011
+1101 0001
+1001 1011
+1011 0110
+\end{verbatim}
+One of the given byte is the checksum (but I am not telling you which one), and the other three bytes is the data used to compute the checksum.  Which of the         following MUST BE TRUE?
+								          \begin{choices} 
+\choice There are no errors in the received bytes.
+\choice There is a one bit error in the received bytes.
+\choice There are two bits error in the received bytes.
+\choice The last byte \texttt{1011 0110} must be the checksum.
+\choice The first byte \texttt{1101 1011} must be the checksum.
+\end{choices}
+
+\question
+Consider the following abbreviated output from the command
+\begin{verbatim}
+    dig a3.nstld.com +trace
+\end{verbatim}
+    issued from within NUS. 
+\begin{verbatim}
+; <<>> DiG 9.2.2 <<>> a3.nstld.com +trace
+;; global options:  printcmd
+.                       162410  IN      NS      M.ROOT-SERVERS.NET.
+.                       162410  IN      NS      A.ROOT-SERVERS.NET.
+.                       162410  IN      NS      B.ROOT-SERVERS.NET.
+.                       162410  IN      NS      C.ROOT-SERVERS.NET.
+;; Received 436 bytes from 137.132.90.2#53(137.132.90.2) in 27 ms
+
+com.                    172800  IN      NS      C.GTLD-SERVERS.NET.
+com.                    172800  IN      NS      D.GTLD-SERVERS.NET.
+com.                    172800  IN      NS      E.GTLD-SERVERS.NET.
+com.                    172800  IN      NS      F.GTLD-SERVERS.NET.
+;; Received 490 bytes from 202.12.27.33#53(M.ROOT-SERVERS.NET) in 296 ms
+
+a3.nstld.com.           172800  IN      A       192.5.6.32
+nstld.com.              172800  IN      NS      a2.nstld.com.
+nstld.com.              172800  IN      NS      c2.nstld.com.
+nstld.com.              172800  IN      NS      d2.nstld.com.
+;; Received 277 bytes from 192.26.92.30#53(C.GTLD-SERVERS.NET) in 246 ms
+\end{verbatim}
+	
+Give the IP address of
+\begin{parts}
+\part a root DNS server\\
+\part a top-level domain DNS server \\
+\part local DNS server\\
+\part host a3.nstld.com\\
+\end{parts}
+
+\question
+Suppose we want to design a stop-and-wait, reliable protocol for communication 
+between a sender S and a receiver R, over a channel with the following 
+characteristics.
+\begin{itemize}
+	\item Packets can be lost from S to R.
+	\item The channel from R to S is reliable.
+	\item Neither channel will corrupt a packet (it a packet is received, it
+	      must be correct)
+	\item Neither channel will reorder packets.
+	\item The maximum RTT between S and R is known and is guaranteed to be $D$.
+	\end{itemize}
+
+\begin{parts}
+\part For each of the following techniques you learnt in class for building
+reliable protocol, comment on whether or not, it is needed in the design
+of the protocol.  Justify your answer.
+(i) Acknowledgement
+(ii) Negative Acknowledgement
+(iii) Timeout
+(iv) Sequence Number
+
+\part Using \textit{only} the necessary techniques above, design
+a stop-and-wait protocol for reliable communication between S and R 
+through the channel with the specified characteristics.  Show your 
+design by drawing the FSM for the sender side and receiver side of 
+the protocol.  You can use either the C-like notation in the textbook
+or the pseudocode notation shown in lecture to describe the events and
+actions in your FSM. 
+	
+Note that for full credit, your protocol should not only be correct, 
+but should also be as simple as possible.
+\end{parts}
+
+\question
+The following figure shows two hosts X and Y communicating over 
+a channel using TCP.  X and Y are sending data to each other
+(recall that TCP supports duplex communications).  Each segments
+contain 100 bytes of data.  None of the segments shown in the 
+figure are retransmitted packets, and the second segment send by 
+X is lost.
+
+The sequence numbers ($S$) and acknowledgement numbers ($A$) for 
+some segments (indicated by thicker line) are missing.  Complete 
+the figure below by filling in the missing sequence numbers and 
+acknowledgement numbers.
+
+\centerline{
+        \includegraphics[scale=0.7]{tcp.eps}
+}
+
+
+\question
+Two hosts A and B are connected by a link with bandwidth-delay 
+product of $P$ bits and transmission rate of $R$ bps.  A sends 
+a packet of size $L$ bits to B.
+
+\begin{parts}
+\part 
+Let $T$ be the time between the first bit of the packet leaving A and the 
+last bit of the packet arriving at B.  Express $T$ in terms of $P$, $R$ and $L$.
+
+\part
+Suppose A and B are using alternating-bit protocol.  Assuming no packets are 
+lost, express the link utilization in terms of $P$, $R$, and $L$.
+
+\end{parts}
+\end{questions}
+\end{document}

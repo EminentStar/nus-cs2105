@@ -1,0 +1,44 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+\begin{document}
+    \extraheadheight{.5in}
+    \firstpageheader{\large\sf CS2105}%
+    {\large\sf National University of Singapore\\ School of Computing \\
+    \LARGE\sf Problem Set 7}%
+    {\large\sf Semester 2 10/11}
+    \firstpageheadrule
+    \pagestyle{headandfoot}
+
+    \begin{questions}
+
+\question Suppose Alice wants to send a message $m$ to Bob, and wants to ensure confidentiality, sender authentication, and message integrity.  Alice performs the following steps:
+\begin{enumerate}
+	\item generates a random session key $K_s$ 
+	\item encrypts the session key $K_s$ with Bob's public key, $K_B^+$, obtaining $K_B^+(K_s)$
+	\item hashes the message $m$ with a cryptographic hash function $H$, obtaining $H(m)$  
+	\item encrypts the hash with Alice's private key $K_A^-$, obtaining $K_A^-(H(m))$
+	\item encrypts the message $m$, concatenated ($\oplus$) with $K_A^-(H(m))$, using the session key $K_s$, obtaining $K_s(m \oplus K_A^-(H(m)))$
+	\item finally, sends $K_s(m + K_A^-(H(m))) \oplus K_B^+(K_s)$ to Bob
+\end{enumerate}
+
+Show what Bob has to do to verify that $m$ is indeed from Alice and has not been modified.
+
+Explain how these steps ensure confidentiality (prevents eavesdropping), sender authentication (prevents impersonation of Alice), and message integrity (prevents tempering with $m$).
+
+\question A certificate issued by a certification authority (CA) is digitally signed.  To verify the digital signature of the CA, however, the public key of the CA is needed.  How can we know that the given public key of a CA is trustable?
+
+\question Ah Kow goes to the website www.ura.gov.sg to pay his parking fines to URA over unsecure HTTP.  When he clicks the "pay" button on the website, he is redirected to a website www.paymenow.com, which runs HTTPS and asks for his credit card number.  The certificate for www.paymenow.com is properly signed by Verisign.  Should Ah Kow give his credit card number?  Why or why not?
+
+\question We discussed about running VPN over IPSec in class.  Our School of Computing's VPN, however, runs over SSL instead of IPSec.  
+
+What are the pros and cons of running VPN over IPSec versus running VPN over SSL?  
+
+\end{questions}
+
+\end{document}

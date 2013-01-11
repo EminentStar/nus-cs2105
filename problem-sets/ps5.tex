@@ -1,0 +1,80 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+\begin{document}
+    \extraheadheight{.5in}
+    \firstpageheader{\large\sf CS2105}%
+    {\large\sf National University of Singapore\\ School of Computing \\
+    \LARGE\sf Problem Set 5}%
+    {\large\sf Semester 2 10/11}
+    \firstpageheadrule
+    \pagestyle{headandfoot}
+
+    \begin{questions}
+	\question \textbf{(KR, Chapter 4, Problem 13)}
+	Consider a subnet with prefix 101.101.101.64/26.  Give the range
+	of IP addresses (of form xxx.xxx.xxx.xxx) that can be
+	assigned to this network. 
+	
+	Suppose an ISP owns the block of
+	addresses of the form 101.101.128/17.  Suppose it wants to
+	create four subnets from this bock, with each block having the
+	same number of IP addresses.  What are the prefixes (of form
+	a.b.c.d/x) for the four subnets?
+
+	\question \textbf{(KR, Chapter 4, Problem 16)}
+	Consider the topology shown in Figure 4.17.  Denote the three subnets
+	with hosts (starting clockwise at 12:00) as Networks A, B, and C.  Denote
+	the subnets without hosts as Networks D, E, and F.
+	\begin{figure}[h!]
+		\begin{center}
+	\includegraphics[scale=0.18]{f417.pdf}
+		\end{center}
+	\end{figure}
+	\begin{parts}
+	\part Assign network addresses to each of these six
+	subnets, with the following constraints: All
+	addresses must be allocated from 214.97.254/23;
+	Subnet A should have enough addresses to support 250
+	interfaces; Subnet B should have enough addresses to
+	support 120 interfaces; and Subnet C should have
+	enough addresses to support 120 interfaces.  Of
+	course, subnets D, E, and F should each be able to
+	support two interfaces.  For each subnet, the
+	assignment should take the form a.b.c.d/x or
+	a.b.c.d/x - e.f.g.h/y.  
+	\part Using your answer to
+	part (a), provide the forwarding tables (using
+	longest prefix matching) for each of the three
+	routers.
+	\end{parts}
+
+	\question \textbf{(KR, Chapter 4, Problem 18)}
+	In this problem we will explore the impact of NATs on P2P applications\footnote{Knowledge of
+	Section 2.6 not required to solve this problem}.  Suppose a peer with
+	user name Arnold discovers through querying that a peer with user name Bernard has a file it
+	wants to download.  Also suppose that Bernard is behind a NAT whereas Arnold isn't.  Let
+	138.76.29.7 be the WAN-side address of the NAT and let 10.0.0.1 be the internal IP address
+	for Bernard.  Assume that the NAT is not specifically configured for the P2P application.
+    \begin{parts}
+	\part Discuss why Arnold's peer cannot initiate a TCP connection to Bernard's peer, even if
+	Arnold knows the WAN's side address of the NAT, 138.76.29.7.
+	\part Now suppose that Bernard has established an ongoing TCP connection to another peer,
+	Cindy, which is not behind a NAT.  Also suppose that Arnold learned from Cindy that Bernard
+	has the desired file and that Arnold can establish (or already has established) a TCP
+	connection with Cindy.  Describe how Arnold can use these two TCP connections (one from
+	Bernard to Cindy, and the other from Arnold to Cindy) to instruct Bernard to initiate a
+	direct TCP connection (that is, not passing through Cindy) back to Arnold.  This technique
+	is sometimes called \textit{connection reversal}.  Note that even though Bernard is behind
+	a NAT, Arnold can use this direct TCP connection to request the file, and Bernard can use
+	the connection to deliver the file.
+    \end{parts}
+
+
+    \end{questions}
+\end{document}

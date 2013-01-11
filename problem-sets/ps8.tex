@@ -1,0 +1,48 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+\begin{document}
+    \extraheadheight{.5in}
+    \firstpageheader{\large\sf CS2105}%
+    {\large\sf National University of Singapore\\ School of Computing \\
+    \LARGE\sf Problem Set 8}%
+    {\large\sf Semester 2 10/11}
+    \firstpageheadrule
+    \pagestyle{headandfoot}
+
+    \begin{questions}
+	\question 
+	Compute the CRC for the bits 1010101010 using the generator $G = 110$.
+	
+	(Answer: 10)
+
+	\question \textbf{(KR, Chapter 5, Problem 11)}
+	Suppose nodes A and B are on the same 10 Mbps Ethernet segment, and the propagation delay between 
+	two nodes is 225 bit times.  Suppose node A begins transmitting a frame and, before it finishes, node B
+	begins transmitting a frame.
+
+	\begin{parts}
+	\part What is the minimum possible time taken by A to finish transmission?
+	\part When is the latest time, by which B can begin its transmission?
+	\part Can A finish transmitting before it detects that B has transmitted? 
+	\end{parts}
+
+	\question \textbf{(KR, Chapter 5, Problem 12)}
+	Suppose nodes A and B are on the same 10 Mbps Ethernet segment, and the propagation delay between 
+	two nodes is 225 bit times.  Suppose A and B send frames at the same time, the frames collide,
+	and then A and B choose different values of $K$ in the CSMA/CD algorithm.  Assuming no other nodes are
+	active, can the retransmission from A and B collide?
+
+	Work out the following example.  Suppose A and B begin transmission at $t = 0$ bit times.  They both
+	detect collisions at $t = 225$ bit times.  They finish transmitting a jam signal at 
+	$t = 225 + 48$ bit times. Suppose $K_A = 0$ and $K_B = 1$.  At what time does B schedule its
+	retransmission?  At what time does A begin transmission?  (Note that a node must wait for an idle channel
+	after returning to Step 2 -- see protocol.)  At what time does A's signal reach B? Does B refrain from
+	transmitting at its scheduled time?
+    \end{questions}
+\end{document}

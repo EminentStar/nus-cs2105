@@ -1,0 +1,53 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+\begin{document}
+    \extraheadheight{.5in}
+    \firstpageheader{\large\sf CS2105}%
+    {\large\sf National University of Singapore\\ School of Computing \\
+    \LARGE\sf Problem Set 4}%
+    {\large\sf Semester 2 10/11}
+    \firstpageheadrule
+    \pagestyle{headandfoot}
+
+    \begin{questions}
+\question 
+\textbf{(KR, Chapter 3, Problem 2)} 
+UDP and TCP use 1s complement for their checksums.  Suppse you have the following three 8-bit bytes, 01010011, 01010100, 01110100.  What is the 1s complement of the sum of these 8-bit bytes?  \footnote{Note that although UDP and TCP use 16-bit words in computing the checkusm, for this problem you are being asked to consider 8-bit sums}.  
+
+(Answer: 11100011)
+
+\question 
+\textbf{(KR, Chapter 3, Problem 23)} 
+Host A and B are communicating over a TCP connection, and Host B has already received from A all bytes up through byte 248.  Suppose Host A then sends two segments to Host B back-to-back.  The first and second segments contain 40 and 60 bytes of data, respectively.  In the first segment, the sequence number is 249, the source port number is 503, and the destination port number is 80.  Host B sends an acknowledgement whenever it receives a segment from Host A.
+
+\begin{parts}
+\part In the second segment sent from Host A to B, what are the sequence number, source port number, and destination port number?
+\part If the second segment arrives before the first segment, in the acknowledgement of the first arriving segment, what is the acknowledgement number?
+\part If the first segment arrives before the second segment, in the acknowledgement of the first arriving segment, what is the acknowledgement number, the source port, and the destination port number?
+\part Suppose the two segments sent by A arrive in order at B.  The first acknowledgement is lost and the second acknowledgement arrives after the first timeout interval.  Draw a timing diagram, showing these segments and all other segments and acknowledgements sent.  (Assume there is no additional packet loss.)  
+
+For each segment in your figure, provide the sequence number and the number of bytes of data; for each acknowledgement that you add, provide the acknowledgement number.
+\end{parts}
+
+\question 
+\textbf{(KR, Chapter 3, Problem 24)} 
+Consider transferring an enormous file of $L$ bytes from Host A to Host B.
+
+\begin{parts}
+\part What is the maximum value of $L$ such that TCP sequence numbers are not exhausted? (Recall that the TCP sequence number field has 4 bytes).
+
+\part For the $L$ you obtain in (a), find how long it takes to transmit the file.  Assume that a total of 66 bytes of transport/network/link-layer header are added to each segment before the resulting packet is sent out over a 10Mbps link.  Ignore flow control and congestion control so A can pump out the segments back to back and continuously.
+\end{parts}
+
+
+\question Older version of Microsoft Windows fixed the maximum TCP receiver window 
+to a constant (e.g., Windows 95 uses 8192 bytes).  Is this a good idea?  Why or why not?
+
+\end{questions}
+\end{document}

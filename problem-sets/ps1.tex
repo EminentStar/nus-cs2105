@@ -1,0 +1,118 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+\begin{document}
+    \extraheadheight{.5in}
+    \firstpageheader{\large\sf CS2105}%
+    {\large\sf National University of Singapore\\ School of Computing \\
+    \LARGE\sf Problem Set 1}%
+    {\large\sf Semester 2 10/11}
+    \firstpageheadrule
+    \pagestyle{headandfoot}
+
+    \begin{questions}
+	\question \textbf{(KR, Chapter 1, Problem 5)} Consider two hosts, A and B,
+	connected by a single link of rate $R$ bps.  Suppose that the two hosts
+	are separated by $m$ meters, and suppose the propagation speed along the
+	link is $s$ meters/sec.  Host A is to send a packet of size $L$ bits to
+	Host B.
+    \begin{parts}
+	\part Express the propagation delay, $d_{prop}$, in terms of $m$ and $s$.
+	\part Determine the transmission time of the packet, $d_{trans}$, in
+	terms of $L$ and $R$.
+	\part Ignoring processing and queueing delays, obtain an expression for
+	the end-to-end delay.
+	\part Suppose Host A begins to transmit the packet at time $t$ = 0.  At
+	time $t = d_{trans}$, where is the last bit of the packet?
+	\part Suppose $d_{prop}$ is greater than $d_{trans}$.  At time $t =
+	d_{trans}$, where is the first bit of the packet?
+	\part Suppose $d_{prop}$ is less than $d_{trans}$.  At time $t =
+	d_{trans}$, where is the first bit of the packet?
+	\part Suppose $s = 2.5 \times 10^8$, $L$ = 100 bits, and $R = 28$ kbps.
+	Find the distance $m$ so that $d_{prop}$ equals $d_{trans}$.
+    \end{parts}
+
+	\question \textbf{(KR, Chapter 1, Problem 6)} 
+	Suppose users share a 1
+	Mbps link.  Also suppose each user requires 100 kbps when transmitting,
+	but each user transmits only 10 percent of the time.  (See Section 1.3,
+	KR).  
+	\begin{parts}
+	\part When circuit switching is used, how many users can be supported?
+	\part For the remainder of this problem, suppose packet switching is
+	used.  Find the probability that a given user is transmitting.
+	\part Suppose there are 40 users.  Find the probability that at any given
+	time, exactly $n$ users are transmitting simultaneously.  (Hint: Use the
+	binomial distribution).
+	\part Find the probability that there are 11 or more users transmitting
+	simultaneously.
+	\end{parts}
+
+	\question \textbf{(KR, Chapter 1, Problem 23)} 
+	Suppose two hosts, A and B, are separated by 100,000 kilometers
+	and are connected by a direct link of $R = 1$ Mbps.  Suppose the
+	propagation speed over the link is $2.5 \times 10^8$ meters/sec.
+	\begin{parts}
+	\part Calculate the bandwidth-delay product, $R \times t_{prop}$.
+	\part Consider sending a file of 400,000 bits from Host A to Host B.
+	Suppose the file is sent continuously as one big message.  What is the
+	maximum number of bits that will be in the link at any given time?
+	\part Provide an interpretation of the bandwidth-delay product.
+	\part What is the width (in meters) of a bit in the link?  Is it longer
+	than a soccer field?  (A standard soccer field is between 90 to 120 m long)
+    \part Derive a general expression for the width of a bit in terms of the
+	propagation speed $s$, the transmission rate $R$, and the length of the
+	link $m$.
+	\end{parts}
+
+    \pagebreak
+
+	\question \textbf{(KR, Chapter 1, Problem 24)} 
+	In modern packet-switched networks, the source host segments
+	long, application-layer messages (for example, an image or a music file)
+	into smaller packets and sends the packets into the network.  The
+	receiver then reassembles the packets back  into the original message.
+	We refer to this process as \textit{message segmentation.}  (See 
+	Figure 1.28 in KR, page 103).  
+
+	Consider a message that is $7.5\times 10^6$ bits long that is to be sent
+	from a source to destination, through two packet switches.  Suppose each 
+	link in the figure is 1.5 Mbps.  Ignore propagation, queuing and
+	processing delays.
+
+	\begin{parts}
+	\part Consider sending the message from source to destination
+	\textit{without} message segmentation.  How long does it take to move the
+	message from the source host to the first packet switch?  Keeping in mind
+	that each switch uses store-and-forward packet switching, what is the
+	total time to move the message from source host to destination host?
+
+	\part Now suppose that the message is segmented into 5,000 packets, with
+	each packet being 1,500 bits long.  How long does it take to move the
+	first packet from source host to the first switch?  When the first packet
+	is being sent from the first switch to the second switch, the second
+	packet is being sent from the source host to the second switch.  At what
+	time will the second packet be fully received at the first switch?
+
+	\part How long does it take to move the file from source host to
+	destination host when message segmentation is used?  Compare this result
+	with your answer in part (a) and comment.
+
+	\part Discuss the drawbacks of message segmentation.
+	\end{parts}
+
+	\question \textbf{(KR, Chapter 1, Problem 25)} 
+	Consider sending a large file of $F$ bits from Host A to Host B.  There
+	are two links (and one switch) between A and B, and the links are
+	uncongested (that is, no queuing delays).  Host A segments the file into
+	segments of $S$ bits each and adds 40 bits of headers to each segment,
+	forming packets of $L = 40 + S$ bits.  Each link has a transmission rate
+	of $R$ bps. Find the value of $S$ that minimizes the delay of moving the
+	file from Host A to Host B.  Disregard propagation delay.
+    \end{questions}
+\end{document}

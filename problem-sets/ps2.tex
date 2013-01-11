@@ -1,0 +1,49 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+\begin{document}
+\extraheadheight{.5in}
+\firstpageheader{\large\sf CS2105}%
+{\large\sf National University of Singapore\\ School of Computing \\
+\LARGE\sf Problem Set 2}%
+{\large\sf Semester 2 10/11}
+\firstpageheadrule
+\pagestyle{headandfoot}
+
+\begin{questions}
+
+\question \textbf{(KR, Chapter 2, Problem 8)}
+Suppose with your Web browser you click on a link to obtain a
+Web page.  The IP address for the associated URL is not cached
+in your local host, so a DNS look-up is necessary to obtain the
+IP address.  Suppose that $n$ DNS servers are visited before your
+host receives the IP address from DNS; the successive visits
+incur an RTT of RTT$_1$, ..., RTT$_n$.  Further suppose that
+the Web page associated with the link contains exactly one
+object, consisting of a small amount of HTML text.  Let RTT$_0$
+denote the RTT between the local host and the server containing
+the object.  Assuming zero transmission time of the object, how
+much time elapses from when the client clicks on the link until
+the client receives the object?
+
+\question \textbf{(KR, Chapter 2, Problem 9)}
+Referring to the previous question, suppose the HTML file
+references three very small objects on the same server.
+Neglecting transmission time, how much time elapses with (a)
+Non-persistent HTTP with no parallel TCP connections? (b)
+Non-persistent HTTP with parallel connections? (c) Persistent
+HTTP with pipelining?
+
+\question 
+Suppose a malicious party can intercept your HTTP GET requests (but not necessary your HTTP responses).  Explain how this could lead to undesirable circumstances.
+
+\question
+Suppose a malicious party can insert fake DNS records into DNS servers.  Suggest three different ways how this can be abused.
+
+\end{questions}
+\end{document}
