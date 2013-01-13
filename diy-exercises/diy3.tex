@@ -1,0 +1,78 @@
+\documentclass[a4paper,11pt]{exam}
+\usepackage{hyperref}
+\ifx\pdftexversion\undefined
+\usepackage{epsfig}
+\else
+\usepackage[pdftex]{graphics}
+\fi
+\usepackage{epsfig}
+
+\usepackage{fancyvrb}
+
+%\rhead{\textsf{CS2106 Lab 1}}
+%\lhead{\textsf{Matriculation Number: \underline{\hspace{1.2in}}}}
+%\headrule
+
+\begin{document}
+\extraheadheight{.5in}
+\firstpageheader{\large\sf CS2105}%
+{\large\sf National University of Singapore\\ School of Computing \\
+\LARGE\sf DIY Exercise 3}%
+{\large\sf Semester 2 10/11}
+\firstpageheadrule
+\pagestyle{headandfoot}
+
+You may run the following on Linux, Mac OS X, or Microsoft Windows.  The behaviour may be slightly different (but should not impact your learning).
+
+You need a network connection for this exercise.  
+
+\begin{center}
+	\textbf\textsf{HAVE FUN, AND BE CURIOUS}
+\end{center}
+
+We will continue to learn about network protocols with wireshark. 
+
+\begin{questions}
+
+\question Launch Wireshark.  In the field ``Filter:'', enter 
+\begin{verbatim}
+udp.port == 67 or udp.port == 68
+\end{verbatim}
+and click ``Apply.''
+
+Start capturing packets by typing Ctrl-E.  Now, disable and reenable your network interface (how to do this depends on your OS and whether you are using WiFi or wired connection).  This action should trigger some exchanges of DHCP packets.  
+
+Now, look at the content of the DHCP ACK packets, and pay attention to the option fields:
+\begin{itemize}
+	\item DHCP Server Identifier
+	\item IP Address Lease Time
+	\item Subnet Mask
+	\item Router
+	\item Domain Name Server
+\end{itemize}
+
+What is the meaning of each of these options?
+
+Now repeat this using different network connections (e.g., at home, at school, public WiFi such as Wireless@SG, Internet tethering with 3G, etc.).  Do you see a different set of values?  Which network gives the longest lease time? the shortest lease time?
+
+\question
+
+Find out all the interfaces on your computer.  On Windows, run \texttt{ipconfig /all} in a command window.  If you are using a Mac or Linux, run \texttt{ifconfig}.
+
+What is the IP addresses associated with each of the interface, if any?  Are they public IPs or private IPs?  What is your current active interface?
+
+\question
+
+Print out the routing table on your computer.  If you are on Windows, type \texttt{ROUTE PRINT} in a command window.  If you are using Mac or Linux, run \texttt{netstat -rn}.
+
+You should see three columns that correspond to the destination IP, the gateway, and the interface, respectively.  
+
+What is the meaning of the column labeled ``gateway''?
+
+\end{questions}
+
+\vfill
+\begin{center}
+    \textsf{\Huge THE END}
+\end{center}
+\end{document}

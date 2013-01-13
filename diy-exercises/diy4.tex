@@ -1,0 +1,72 @@
+\documentclass[a4paper,11pt]{exam}
+\usepackage{hyperref}
+\ifx\pdftexversion\undefined
+\usepackage{epsfig}
+\else
+\usepackage[pdftex]{graphics}
+\fi
+\usepackage{epsfig}
+
+\usepackage{fancyvrb}
+
+%\rhead{\textsf{CS2106 Lab 1}}
+%\lhead{\textsf{Matriculation Number: \underline{\hspace{1.2in}}}}
+%\headrule
+
+\begin{document}
+\extraheadheight{.5in}
+\firstpageheader{\large\sf CS2105}%
+{\large\sf National University of Singapore\\ School of Computing \\
+\LARGE\sf DIY Exercise 4}%
+{\large\sf Semester 2 10/11}
+\firstpageheadrule
+\pagestyle{headandfoot}
+
+\begin{center}
+	\textbf\textsf{HAVE FUN, AND BE CURIOUS}
+\end{center}
+
+\begin{questions}
+
+\question This question assumes that you have gone through Problem 2 of Problem Set 7 and understand what a root certificate is.  Go look for the root certificates installed on your computer.  
+\begin{itemize}
+\item On Mac OS X, launch the application "Keychain Access"
+\item On Microsoft Windows, launch "Certificate Manager" by clicking on the Start button, typing "certmgr.msc" into the Search box, and pressing Enter.
+\item On Linux, AFAIK, there is no nice GUI tool to view the certificates.  The command line tool "openssl" allows you to view installed certificates, usually under /etc/pki/tls/.
+\end{itemize}
+
+Are these root certificates unsigned or self-signed?  Who issued the root certificates?
+
+\question
+In this question, you will learn to setup a pair of private key and public key for communication between your sunfire account and your cs2105-z account.  With these setup, you no longer have to key in your password everytime you ssh into cs2105-z from sunfire!
+
+\begin{itemize}
+	\item On sunfire, type the command:
+\begin{Verbatim}
+ssh-keygen -t rsa
+\end{Verbatim}
+This command generates a pair of keys, a public key and private key.  When asked, you can save the keys at the suggested location (under \$HOME/.ssh) with the default names (id\_rsa for private key and id\_rsa.pub for public key).  You can enter an empty string for passphrase if you like\footnote{A passphrase is like a password.  It provides additional protection to the private key}.
+\item Since id\_rsa is your private key, make sure you set the permission correctly (chmod 600 ~/.ssh/id\_rsa if you are not sure) so that noone else can read your private key.
+\item Now, make a copy of your public key and put it under \$HOME/.ssh directory on your cs2105-z account under the name \texttt{authorized\_keys}.  Run the following command on sunfire:
+\begin{Verbatim}
+scp ~/.ssh/id_rsa.pub cs2105-z.comp.nus.edu.sg:~/.ssh/authorized_keys
+\end{Verbatim}
+This command assumes that the file \texttt{authorized\_keys} does not already exist.  If it does, I assume that you already know what you are doing and know how to add a new public key to the file.
+\item After this step, try ssh into cs2105-z from sunfire.  You should now be able to login directly without password!
+\end{itemize}
+
+\begin{parts}
+\part
+What is the purpose of copying the public key to cs2105-z?  Why not the private key?
+\part
+What does using these pair of public/private key ensure?  Confidentiality? Authentication?  Or message integrity?
+\part
+If you ssh from cs2105-z back to sunfire, do you still need to enter a password?  Why?
+\end{parts}
+\end{questions}
+
+\vfill
+\begin{center}
+    \textsf{\Huge THE END}
+\end{center}
+\end{document}

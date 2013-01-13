@@ -1,0 +1,101 @@
+\documentclass[a4paper,11pt]{exam}
+\usepackage{hyperref}
+\ifx\pdftexversion\undefined
+\usepackage{epsfig}
+\else
+\usepackage[pdftex]{graphics}
+\fi
+\usepackage{epsfig}
+
+\usepackage{fancyvrb}
+
+%\rhead{\textsf{CS2106 Lab 1}}
+%\lhead{\textsf{Matriculation Number: \underline{\hspace{1.2in}}}}
+%\headrule
+
+\begin{document}
+\extraheadheight{.5in}
+\firstpageheader{\large\sf CS2105}%
+{\large\sf National University of Singapore\\ School of Computing \\
+\LARGE\sf DIY Exercise 2}%
+{\large\sf Semester 2 10/11}
+\firstpageheadrule
+\pagestyle{headandfoot}
+
+You may run the following on Linux, Mac OS X, or Microsoft Windows.  The behaviour may be slightly different (but should not impact your learning).
+
+You need a network connection for this exercise.  Bad network connection (e.g., wifi with weak signal) works better for this exercise.
+
+\begin{center}
+	\textbf\textsf{HAVE FUN, AND BE CURIOUS}
+\end{center}
+
+
+\texttt{Wireshark} is a GUI tool for capturing and analyzing network packets.  It is freely available on http://www.wireshark.org/.  A video of short wireshark tutorial has been posted -- you should check it out if you are not familiar with wireshark.
+
+Download and install wireshark on your computer.  You will need it for this exercise and future exercises.
+
+It is best if you stop running as many networked programs as possible, and close any many browser windows/tab as possible.
+
+\begin{questions}
+
+\question Launch Wireshark.  In the field ``Filter:'', enter 
+\begin{verbatim}
+tcp.port == 80
+\end{verbatim}
+and click ``Apply.''
+
+Under ``Edit'' $\rightarrow$ ``Preferences..'' $\rightarrow$ ``Protocols'' $\rightarrow$ ``TCP'', make sure that the option ``Relative sequence numbers and window scaling'' is turned off, and ``Analyze TCP sequence numbers'' is turned on.  
+
+Start capturing packets by typing Ctrl-E.
+
+If you are running any application that uses HTTP, you should see some packets being listed, ignore them.
+
+\question 
+On a terminal, run 
+
+\begin{verbatim}
+telnet www.nus.edu.sg 80
+\end{verbatim}
+
+Wait until the connection closes.  Type Ctrl-E in Wireshark to stop capturing.
+
+Wireshark have captured the TCP packets exchanged between your computer and www.nus.edu.sg.  A sequence of exchanges between two host/ports is called a \textit{conversation}.  You can right click on a packet that belongs to that conversation and choose ``Conversation Filter'' $\rightarrow$  ``TCP'', to show only that conversation.  You may want to colorize the conversation so that the text is easier to read. 
+
+You should now see seven packets, three for connection establishment, four for connection termination.  Examine various header fields in the TCP headers of these seven packets, relate them to what you have learnt about the functions of these fields, and how TCP establishes/terminates connection.
+
+\question 
+
+At your display filter, you should now see a filter with four conditions, two for IP addresses and two for TCP port numbers.  This display filter is set for you when you chose to filter a conversation.
+
+Now edit the field "Filter:" to remove the conditions involving TCP ports.
+
+Start capturing again with Control-E (if you are asked to save a previous capture, just answer the question and continue).
+
+On a terminal, run
+\begin{verbatim}
+	curl www.nus.edu.sg
+\end{verbatim}
+
+You should now see a longer conversation that includes some HTTP request/response exchanges between your computer and www.nus.edu.sg.
+
+Wait until the connection closes.  Type Ctrl-E in Wireshark to stop capturing.
+
+\begin{parts}
+\part
+Look through the TCP sequence numbers and ACK numbers exchanged carefully.  Observe how the sequence numbers and ACK numbers changes.
+\part
+Look for packets that are marked as ``TCP Out-Of-Order,'' ``TCP Previous segment lost,''  ``TCP Dup ACK,''  ``TCP Retransmission,'' or ``TCP Fast Retransmission'' (You may not necessary find such packets in your trace, especially if you are on a good connection).  Observe the sequence numbers and ACK numbers of such packets and the packets before/after.  
+\part
+Roughly count the number of ACK packets and data packets.  What is the ratio of the number of ACK packets to data packets?  
+
+Why isn't the ratio equal to one?
+\end{parts}
+
+\end{questions}
+
+\vfill
+\begin{center}
+    \textsf{\Huge THE END}
+\end{center}
+\end{document}
