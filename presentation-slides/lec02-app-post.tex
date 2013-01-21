@@ -1,0 +1,34 @@
+\documentclass[20pt,xcolor={dvipsnames,svgnames,tables},notes=show]{beamer}
+
+% Use Myriad Pro as the standard font
+\usepackage{fontspec}
+\setsansfont{Myriad Pro}
+
+% Load colors
+%\usepackage{color}
+%\usepackage[usenames]{xcolor}
+
+\definecolor{AppBlue}{HTML}{031E89}
+\definecolor{TransportBlue}{HTML}{0D65A9}
+\definecolor{NetworkGreen}{HTML}{0D7544}
+\definecolor{LinkBrown}{HTML}{7F7C16}
+\definecolor{PhysicalRed}{HTML}{7D0F08}
+
+\usepackage{tikz}
+\usetikzlibrary[positioning,arrows,shapes,trees]
+
+% Set default font size
+\setbeamerfont{block title}{size=\Huge}
+\setbeamertemplate{footline}[text line]{%
+	\color{lightgray}\parbox{\linewidth}{\tiny{\vspace*{-8pt}CS2105\hfill Lecture 2\hfill\insertpagenumber}}}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{note page}{%
+	\insertslideintonotes{0.25}\\
+	\insertnote%
+}
+
+\begin{document}
+
+\input{lec02-app.tex}
+
+\end{document}
