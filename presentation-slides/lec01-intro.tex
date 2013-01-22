@@ -1,33 +1,3 @@
-\documentclass[20pt,handout,notes=show]{beamer}
-\usepackage{fontspec}
-\setsansfont{Myriad Pro}
-
-\usepackage{tikz}
-
-\setbeamerfont{block title}{size=\Huge}
-\setbeamertemplate{footline}[text line]{%
-	\color{lightgray}\parbox{\linewidth}{\tiny{\vspace*{-8pt}CS2105\hfill Lecture 1\hfill\insertpagenumber}}}
-\setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{note page}{%
-	\insertslideintonotes{0.25}\\
-	\insertnote%
-}
-
-\begin{document}
-
-\title{CS2105 Lecture 1: Introduction}
-\date{14 January 2013} 
-
-%{
-%\setbeamercolor{background canvas}{bg=black}
-%\setbeamertemplate{footline}{}
-%\begin{frame}
-%\begin{center}
-%\includegraphics[scale=0.3]{figures/silent-mode.png}
-%\end{center}
-%\end{frame}
-%}
-
 \begin{frame}
 \begin{center}
 \textbf{
@@ -91,6 +61,16 @@ Loke Yan Hao\\
 \begin{frame}
 \begin{center}
 \large
+2 programming assignments\\
+1 written assignment\\
+10 problem sets\\
+4 practical exercises\\
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\large
 Important Dates\\
 Midterm: \textbf{11 March 2013}\\
 Final Exam: \textbf{30 April 2013}
@@ -125,14 +105,14 @@ Slides $\not=$ Notes
 \begin{frame}
 \begin{center}
 \large
-You are expected to take notes during lecture
+You are expected to \textbf{take notes} during lecture
 \end{center}
 \end{frame}
 
 \begin{frame}
 \begin{center}
 \large
-You are expected to read the assigned readings
+You are expected to \textbf{read} the assigned readings
 \end{center}
 \end{frame}
 
@@ -196,12 +176,14 @@ Check for updates frequently and\\subscribe via email or RSS
 \end{center}
 \end{frame}
 
-\begin{frame}
-\begin{center}
-\large
-Screencast will be posted
-\end{center}
-\end{frame}
+\begin{frame} \begin{center} \large
+Screencast will be posted 
+\end{center} \end{frame}
+
+\begin{frame} \begin{center} \large
+You need an SoC UNIX account.  Get one here:\\
+\url{https://mysoc.nus.edu.sg/~newacct/}
+\end{center} \end{frame}
 
 \begin{frame}
 \begin{center}
@@ -478,13 +460,13 @@ End-to-end packet delay consists of:
 Many issues to consider, to support different applications running on large number of hosts through different access technology and physical media.
 \end{center}\end{frame}
 
-%\begin{frame}[plain]
-%\begin{tikzpicture}[remember picture,overlay]
-%	\node[at=(current page.center)] {
-%		\includegraphics[width=\paperwidth]{figures/confused-jackie.jpg}
-%	}; 
-%\end{tikzpicture}
-%\end{frame}
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+	\node[at=(current page.center)] {
+		\includegraphics[width=\paperwidth]{figures/confused-jackie.jpg}
+	}; 
+\end{tikzpicture}
+\end{frame}
 
 \begin{frame}\begin{center}\large
 \textbf{Layering}:\\Common CS trick to deal with large and complex systems
@@ -496,12 +478,25 @@ Each layer provides a service;\\ Simple interfaces btwn layers;\\ Hide details f
 	The five layers of the Internet is described in Section 1.5.}
 \end{center}\end{frame}
 
-\begin{frame}[plain]
-\begin{tikzpicture}[remember picture,overlay]
-	\node[at=(current page.center)] {
-		\includegraphics[width=\paperwidth]{figures/layers.pdf}
-	}; 
-\end{tikzpicture}
+%\begin{frame}[plain]
+%\begin{tikzpicture}[remember picture,overlay]
+%	\node[at=(current page.center)] {
+%		\includegraphics[width=\paperwidth]{figures/layers.pdf}
+%	}; 
+%\end{tikzpicture}
+%\end{frame}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+	\end{tikzpicture}
+\end{center}
 \end{frame}
 
 \begin{frame}\begin{center}\large
@@ -534,5 +529,3 @@ Applications (or processes) treat the Internet as a \textbf{black box}, sending 
 \begin{frame}\begin{center}\large
 \textbf{Physical layer}\\\large ``bits over physical media'' 
 \end{center}\end{frame}
-
-\end{document}
