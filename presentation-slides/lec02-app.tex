@@ -1,0 +1,410 @@
+
+\begin{frame}
+\begin{center}
+\large
+CS2105 Lecture 2\\
+\huge
+\textbf{Application Layer\\[10pt]}
+\normalsize
+	21 January, 2013
+\note{
+\tiny
+After this class, you are expected to:
+\begin{itemize} 
+\item be able to choose the right architecture and transport-layer services for your own network application (and justify why). 
+\item understand the basic HTTP interactions between the client and the server, including HTTP request (GET and HEAD) and HTTP response.
+\item understand the concepts of persistent connection, parallel HTTP connections and stateless protocol.
+\item understand the services provided by DNS and how a query is resolved.
+\end{itemize} 
+}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}\begin{center}\large
+	Networked applications runs on \textbf{hosts} and consists of \textbf{communicating processes}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	The \textbf{server process} waits to be contacted
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	The \textbf{client process} initiates the communication
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	Application architecture: \\
+		\textbf{client-server}\\
+		\textbf{peer-to-peer}\\
+		\textbf{hybrid}\\
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	Need to identify the source and destination process
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	Address of a process:\\
+		(\textbf{host, port number})
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	Host addresses\\ are \textbf{32-bit} integers\\
+	known as \textbf{IP addresses},\\
+	represented by four numbers
+	\note{we are going to talk a lot more about IP addresses in Lecture 6.}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	Ports are \textbf{16-bit} integers\\
+	(1-1023 are reserved for OS)
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	\textbf{IANA} coordinates the assignment of port number.
+	\note{\tiny You can find the list of port numbers at \url{http://www.ietf.org/assignments/port-numbers}.  Look for familiar port numbers, such as HTTP, SSH, Battle.Net.  For list of ports, including unofficial ones not registered with IANA, check out \url{http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers}.}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{Socket} is the software interface between processes and the Internet.
+\end{center}\end{frame}
+
+\begin{frame}\normalsize
+	\textbf{initialize} a socket		\\
+	\textbf{listen} for a connection	\\
+	\textbf{accept} a connection	\\
+	\textbf{request} a connection	\\
+	\textbf{send} a message	\\
+	\textbf{receive} a message	\\
+	\textbf{close} the socket
+	\note{The actual APIs for Java will be shown to you through video-based Lecture 5}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=4 cm, minimum width=10 cm, text=white]
+\tikzstyle{packet}=[draw,single arrow,fill=white, minimum width=1.5cm, 
+		minimum height=2cm]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A1)[
+		fill=AppBlue,
+		minimum width=4.95cm]{};
+	\node[layer](A2)[
+		fill=AppBlue,
+		minimum width=4.95cm, 
+		right=0.1cm of A1]{};
+	\node[layer](T)[
+		below = 0cm of A2.south west,
+		yshift = -0.1cm, 
+		xshift = -0.05cm, 
+		fill=TransportBlue]{Transport};
+	\node[layer](N)[
+		below = 0cm of T,
+		fill=NetworkGreen]{Network};
+	\node[packet,
+		below=of A2.south,
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270]{};
+	\node[packet,
+		below=of A2.south,
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\node[packet,
+		below=of A1.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270]{};
+	\node[packet,
+		below=of A1.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}\begin{center}\large
+	{\normalsize Transport service requirements:}\\
+	loss-tolerance\\
+	or\\
+	critical?
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	{\normalsize Transport service requirements:}\\
+	throughput-sensitive\\
+	or\\
+	elastic?
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	{\normalsize Transport service requirements:}\\
+	time-critical
+	or\\
+	not?
+	\note{\tiny The other transport service requirement mentioned in the textbook is \textit{security}, but we will move all discussion about security to Lecture 8 (Week 10).}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	{\normalsize Transport protocols:}\\
+	\textbf{TCP}\\
+	and\\
+	\textbf{UDP}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	TCP is\\
+	\textbf{connection-oriented},\\
+	\textbf{congestion-controlled},\\
+	and \textbf{reliable}.
+\end{center}\end{frame}
+
+\begin{frame}[t]\begin{center}\large
+	TCP takes one RTT to establish connection.\\[1cm]
+	\begin{tikzpicture}[scale=2]
+		\draw[solid] (0,0) -- (0,2);
+		\draw[solid] (2,0) -- (2,2);
+	\end{tikzpicture}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	TCP provides\\
+	\textbf{no gurantees on}\\
+	\textbf{throughput and delay}\\
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	UDP is\\
+	\textbf{connection-less},\\
+	\textbf{not congestion-controlled},\\
+	and \textbf{not reliable}.
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+{\normalsize when writing network application, ask:}\\
+	\textbf{what architecture?}\\
+	\textbf{what type of services?}\\
+	\textbf{how messages are exchanged?}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\Huge
+	\textbf{HTTP}\\
+	\large{Hyper-Text Transfer Protocol}
+\note{
+	We are not able to cover everything about HTTP here.  You may want to read up on your own about cookie (Section 2.2.4) and Web caching (Sections 2.2.5 and 2.2.6) to learn more about these two important topics. 
+}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	Web page\\
+	HTML file\\
+	Web object\\
+	URL
+\end{center}\end{frame}
+
+\begin{frame}[t]\begin{center}\large
+	\begin{tikzpicture}[scale=2]
+		\draw[solid] (0,0) -- (0,3);
+		\draw[solid] (2,0) -- (2,3);
+	\end{tikzpicture}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	persistent\\ vs.\\ non-persistent
+\end{center}\end{frame}
+\begin{frame}[t]\begin{center}\large
+	\begin{tikzpicture}[scale=2]
+		\draw[solid] (0,0) -- (0,3);
+		\draw[solid] (2,0) -- (2,3);
+	\end{tikzpicture}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	stateless\\ vs.\\ stateful
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	pipeline\\ vs.\\ sequential
+\end{center}\end{frame}
+
+\begin{frame}[t]\begin{center}\large
+	\begin{tikzpicture}[scale=2]
+		\draw[solid] (0,0) -- (0,3);
+		\draw[solid] (2,0) -- (2,3);
+	\end{tikzpicture}
+\end{center}\end{frame}
+
+\begin{frame}\footnotesize
+\texttt{%
+\textcolor{blue!50!black}{GET} /$\textasciitilde$cs2105/ \textcolor{green!50!black}{HTTP/1.1}\\
+\textcolor{red!50!black}{Host:} www.comp.nus.edu.sg\\
+\textcolor{red!50!black}{User-Agent:} Mozilla/5.0\\
+\textcolor{red!50!black}{Connection:} close\\
+}
+\end{frame}
+
+\begin{frame}\footnotesize
+\texttt{%
+\textcolor{green!50!black}{HTTP/1.1} \textcolor{blue!50!black}{200 OK}\\
+\textcolor{red!50!black}{Date:} Wed, 19 Jan 2011 06:58:35 GMT\\
+\textcolor{red!50!black}{Server:} Apache/2.2.6 (Unix)\\
+\textcolor{red!50!black}{Connection:} close\\
+\textcolor{red!50!black}{Content-Type:} text/html\\
+}
+\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{Demo}\\ with telnet and curl
+\note{
+Sample commands:\\
+- \texttt{telnet <hostname> 80}\\
+- \texttt{curl -I <URL>}
+
+You can get \texttt{curl} from \url{http://curl.haxx.se/download.html}
+}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\Huge
+\textbf{DNS}\\
+\large{Domain Name Service}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+Two ways to identify a host:\\[10pt]
+\textbf{domain name}\\
+(e.g., www.nus.edu.sg)\\[10pt]
+\textbf{IP address}\\
+(e.g., 137.132.39.133)
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+	DNS \textbf{translates between the two}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{Demo}\\ with nslookup and dig
+\note{
+\texttt{dig} is installed on many UNIX-based systems.  For windows-based OS, \texttt{dig} is available at \url{http://members.shaw.ca/nicholas.fong/dig/}.
+
+Useful dig options include \texttt{+trace} and \texttt{+short}.
+}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+DNS resource record\\
+\textbf(name, value, type, TTL)
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+DNS record types\\
+\textbf{A, MX, CNAME, NS}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+DNS uses a \textbf{hierarchical distributed databases}
+\end{center}\end{frame}
+
+\begin{frame}[t]\begin{center}\scriptsize
+	\tikzstyle{dns}=[
+			align=center, 
+			text centered,
+			rectangle,
+			fill=AppBlue,
+			text=white,
+			minimum width=1.5cm,
+			minimum height=1cm,
+		]
+	\begin{tikzpicture}[
+		level/.style={sibling distance=3.3cm},
+		edge from parent fork down]
+		\node[dns]{root}
+			child{node[dns]{com}
+				child{node[dns]{google}}
+				child{node[dns]{bing}}
+			}
+			child{node[dns]{org}
+				child{node[dns]{pbs}}
+			}
+			child{node[dns]{gov}
+				child{node[dns]{data}}
+				child{node[dns]{usgs}}
+			}
+		;
+	\end{tikzpicture}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{Root servers}
+\note{The list of all DNS root servers can be found on \url{http://www.root-servers.org/}.}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{TLD servers}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{Authoritative servers}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{Local DNS servers}
+\end{center}\end{frame}
+
+\begin{frame}[t]\begin{center}\normalsize
+	\tikzstyle{server}=[
+			align=center, 
+			text centered,
+			circle,
+			fill=AppBlue,
+			text=white,
+			minimum width=2.5cm
+		]
+	\begin{tikzpicture}
+		\node[server](R){Root};
+		\node[server](T)[right=of R]{TLD};
+		\node[server](A)[right=of T]{Auth};
+		\node[server](L)[below=of A]{Local};
+		\node[server](H)[left=of L]{Host};
+	\end{tikzpicture}
+\end{center}\end{frame}
+
+\begin{frame}[t]\begin{center}\normalsize
+	\tikzstyle{server}=[
+			align=center, 
+			text centered,
+			circle,
+			fill=AppBlue,
+			text=white,
+			minimum width=2.5cm
+		]
+	\begin{tikzpicture}
+		\node[server](R){Root};
+		\node[server](T)[right=of R]{TLD};
+		\node[server](A)[right=of T]{Auth};
+		\node[server](L)[below=of A]{Local};
+		\node[server](H)[left=of L]{Host};
+	\end{tikzpicture}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{DNS Caching}
+\end{center}\end{frame}
+
+\begin{frame}\begin{center}\large
+\textbf{DNS Registrar}
+\end{center}\end{frame}
