@@ -18,7 +18,7 @@
 \firstpageheader{\large\sf CS2105}%
 {\large\sf National University of Singapore\\ School of Computing \\
 \LARGE\sf DIY Exercise 1}%
-{\large\sf Semester 2 10/11}
+{\large\sf Semester 2 12/13}
 \firstpageheadrule
 \pagestyle{headandfoot}
 
@@ -63,20 +63,39 @@ Use \texttt{dig} to answer the following questions.  You may have to download an
 
 	\part Use the dig server at URL \url{http://www.kloth.net/services/dig.php} (using your Web browser) and find the IP addresses of \texttt{mail.google.com}. Do you get the same results as part (b)?  Why do you think that the same hostnme provides a different answer when \texttt{dig} is run from different places?
 
-	\part Find the TTL value for the A-type DNS record of the following hosts at their authoritative DNS server: (a) \texttt{sentosa.comp.nus.edu.sg}, (b) \texttt{delco0.ddns.comp.nus.edu.sg}.  What do you think there are differences in the TTL of these records?  (Hint: ddns stands for Dynamic DNS.)
+	\part Find the TTL value for the A-type DNS record of the following hosts at their authoritative DNS server: (a) \texttt{sentosa.comp.nus.edu.sg}, (b) \texttt{liubei.ddns.comp.nus.edu.sg}.  What do you think there are differences in the range of TTL values of these records?  (Hint: ddns stands for Dynamic DNS.)
 
-\part Observe the TTL values for DNS record of \texttt{www.metacafe.com}.  Why do you think the TTL values are so small? (Hint: the DNS servers are provided by Akamai. Google to find out how Akamai works)
+\part Observe the TTL values for DNS record of \texttt{www.apple.com}.  Why do you think the TTL values are so small? (Hint: the DNS servers are provided by Akamai. Google to find out how Akamai works)
 
-\part Wikileaks was ``shut down'' in December 2010 when its DNS service provider removed its mapping from its server.  As a result, users can only access the Wikileaks website through its IP address and not through hostname.  The site has since been up with the domain name \texttt{wikileaks.ch}.  Find out who is providing the DNS server (i.e., authoritative DNS servers) for the domain \texttt{wikileaks.ch} now.
+%\part Wikileaks was ``shut down'' in December 2010 when its DNS service provider removed its mapping from its server.  As a result, users can only access the Wikileaks website through its IP address and not through hostname.  The site has since been up with the domain name \texttt{wikileaks.ch}.  Find out who is providing the DNS server (i.e., authoritative DNS servers) for the domain \texttt{wikileaks.ch} now.
 
-\part The site Torrent-Finder was ``shut down'' by U.S. goverment in November 2010 by forcing all lookups to \texttt{www.torrent-finder.com} to map to an IP address of a U.S. goverment website.  Do an interative DNS query (with \texttt{+trace} option to \texttt{dig}) to find out who are the authorative DNS severs for the domain \texttt{torrent-finder.com}.
+%\part The site Torrent-Finder was ``shut down'' by U.S. goverment in November 2010 by forcing all lookups to \texttt{www.torrent-finder.com} to map to an IP address of a U.S. goverment website.  Do an interative DNS query (with \texttt{+trace} option to \texttt{dig}) to find out who are the authorative DNS severs for the domain \texttt{torrent-finder.com}.
+
+\part Is your local DNS server the fastest?  You can use \texttt{dig} to find out.
+
+First, use dig to lookup your favourite domain name a few times, note down the query time.  This step uses your default local DNS server (either by your ISP or by the university, depending on where you run the experiments).
+
+Now, you can tell dig to perform DNS lookup using a specific DNS server by passing in the IP address of the server, prefixed with \texttt{@}.  For example, try run \texttt{dig} with the argument \texttt{@8.8.8.8}, like this:
+
+\texttt{dig @8.8.8.8 www.apple.com}
+
+The IP address 8.8.8.8 refers to one of the public DNS server ran by Google (see \url{https://developers.google.com/speed/public-dns/}).
+
+Is Google's public DNS server faster or slower?  Repeat this experiment using different access networks (e.g., with Wireless@SG).
+
 \end{parts}
 
 \question{whois}
 
 The tool \texttt{whois} queries domain name databases and provides information about the registrar of a domain name, contact of the organization/person responsible, domain name servers, etc.  The tool should be available on UNIX and Mac OS X.  You may need to download Windows version of whois here: \url{http://technet.microsoft.com/en-us/sysinternals/bb897435}.
 
+\begin{parts}
+		\part
 Find out who is the domain registrar for the domain \texttt{nus.edu.sg} and \texttt{google.com} by typing: \texttt{whois <domain name>}.  For the latter, observe how hackers exploit the WHOIS database for advertisement.
+
+\part
+The WHOIS database also publishes information about the administrator of a domain, if they choose not to hide it.  Type \texttt{whois jiku.org} to see an example.
+\end{parts}
 
 \end{questions}
 
