@@ -1,7 +1,7 @@
 % Use Myriad Pro as the standard font
 \usepackage{soul}
 \usepackage{fontspec}
-\setsansfont[LetterSpace=-4]{Myriad Pro}
+\setsansfont[LetterSpace=-3]{Myriad Pro}
 %\addfontfeature{LetterSpace=10}
 
 % Load colors
@@ -25,4 +25,11 @@
 \setbeamertemplate{note page}{%
 	\insertslideintonotes{0.25}\\
 	\insertnote%
+}
+
+\newenvironment{cf}[2][c]{
+\begin{frame}[fragile,environment=cf,#1]
+  \begin{center}\large{#2}}{%
+  \end{center}
+\end{frame}
 }
