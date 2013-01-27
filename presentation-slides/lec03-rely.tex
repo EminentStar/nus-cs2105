@@ -1,0 +1,420 @@
+\newcommand{\eventaction}[2]{%
+$\frac{\mbox{\normalsize\color{blue!50!black}{#1}}}%
+      {\mbox{\normalsize\color{red!50!black}{#2}}}$}
+
+\tikzstyle{state}=[draw,circle,text=white,align=center,font=\scriptsize,minimum width=2.5cm]
+\tikzstyle{bluestate}=[state,fill=blue!50!black]
+\tikzstyle{greenstate}=[state,fill=green!50!black]
+\tikzstyle{redstate}=[state,fill=red!50!black]
+\tikzstyle{brownstate}=[state,fill=brown!50!black]
+\tikzstyle{orangestate}=[state,fill=orange!50!black]
+\tikzstyle{blackstate}=[state,fill=gray!50!black]
+
+\begin{cf}
+CS2105 Lecture 3\\
+\huge
+\textbf{Reliable Protocol\\[10pt]}
+\normalsize
+	28 January, 2013
+\end{cf}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{cf}
+Transport layer resides \textbf{on end hosts}
+and provides \textbf{process-to-process} communication.
+\end{cf}
+
+\begin{cf}
+Network layer provides 
+\textbf{host-to-host},\\
+\textbf{best-effort},\\
+\textbf{unreliable}\\
+communication.
+\end{cf}
+
+\begin{cf}{
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=9 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[draw,rectangle,minimum height=.7cm,minimum width=3cm,fill=white!90!yellow]
+\tikzstyle{datagram payload}=[draw,rectangle,minimum height=.7cm,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram header}=[draw,rectangle,minimum height=.7cm,minimum width=.5cm,fill=white!90!red]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[
+		fill=AppBlue,
+		]{};
+	\node[layer](T)[
+		below = 0cm of A,
+		yshift = -0.1cm, 
+		fill=TransportBlue]{};
+    \node[message](M)[
+		below=0.5cm of A.north,
+	]{};
+	\node[layer](N)[
+		below = 0cm of T,
+		yshift = -0.1cm, 
+		fill=NetworkGreen]{Network};
+	\node[interface,
+		below=of A.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of A.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+    \node[datagram header](D1)[
+		below=1cm of FirstArrow,
+		xshift=-2cm
+	]{};
+    \node[datagram payload](D2)[
+		right=0cm of D1,
+	]{};
+    \node[datagram header](D3)[
+		right=0.5cm of D2,
+	]{};
+    \node[datagram payload](D4)[
+		right=0cm of D3,
+	]{};
+    \node[datagram header](D5)[
+		right=0.5cm of D4,
+	]{};
+    \node[datagram payload](D6)[
+		right=0cm of D5,
+	]{};
+	\node[interface,
+		below=of T.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of T.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\end{tikzpicture}
+	}
+\end{cf}
+
+\begin{cf}
+How to build a \textbf{reliable transfer protocol}
+on top of unreliable communication?
+\end{cf}
+
+\begin{cf}
+unreliable: may not deliver at all or deliver with error
+\end{cf}
+
+\begin{cf}{
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=4 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[draw,rectangle,minimum height=.7cm,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram payload}=[draw,rectangle,minimum height=.7cm,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram header}=[draw,rectangle,minimum height=.7cm,minimum width=.5cm,fill=white!90!red]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A1)[
+		fill=AppBlue,
+		]{};
+	\node[layer](A2)[
+		fill=AppBlue,
+		right=0.4cm of A1,
+		]{};
+	\node[layer](T1)[
+		below = 0cm of A1,
+		yshift = -0.1cm, 
+		fill=TransportBlue]{};
+	\node[layer](T2)[
+		below = 0cm of A2,
+		yshift = -0.1cm, 
+		fill=TransportBlue]{};
+	\node[layer,
+		below = 0cm of T1,
+		yshift = -0.1cm, 
+		xshift = 2.2cm,
+		minimum width=8.4cm,
+		fill=NetworkGreen]{};
+	\node[interface,
+		below=of A1.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](){};
+    \node[text=white,
+		above=0cm of A1.south,
+		xshift=.5cm]{
+		\tiny rdt\_send()};
+    \node[text=white,
+		above=0cm of A2.south,
+		xshift=-.7cm]{
+		\tiny deliver\_data()};
+    \node[message,
+		right=of A1.west,
+	]{};
+    \node[message,
+		left=of A2.east,
+	]{};
+	\node[interface,
+		below=of A2.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90](ATup){};
+    \node[datagram header](D1)[
+		right=of T1.west,
+	]{};
+    \node[datagram payload](D2)[
+		right=0cm of D1,
+	]{};
+    \node[datagram payload](D3)[
+		left=of T2.east,
+	]{};
+    \node[datagram header](D4)[
+		left=0cm of D3,
+	]{};
+	\node[interface,
+		below=of T1.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](){};
+    \node[text=white,
+		above=0cm of T1.south,
+		xshift=.5cm]{
+		\tiny udt\_send()};
+	\node[interface,
+		below=of T2.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90](TNup){};
+    \node[text=white,
+		above=0cm of T2.south,
+		xshift=-.5cm]{
+		\tiny udt\_recv()};
+	\end{tikzpicture}
+	}
+\end{cf}
+
+\begin{cf}
+Finite State Machine\\[20pt]
+
+\begin{tikzpicture}[scale=2]
+  \node[brownstate,initial above,initial distance=0.5cm,initial text=](A){A};
+  \node[bluestate](B)[right=of A]{B};
+  \path[->] (A) edge [loop left] node {} (A)
+        edge [bend left] node {} (B)
+    (B) edge [loop right] node {} (B)
+        edge [bend left] node {} (A);
+\end{tikzpicture}\\[20pt]
+
+\eventaction{Event}{Action}
+
+\end{cf}
+
+\begin{cf}{
+		\textbf{rdt 1.0}\\
+		assume underlying channel is reliable
+}
+\end{cf}
+
+\begin{cf}{
+\textbf{rdt 1.0 sender}\\[20pt]
+\begin{tikzpicture}[scale=2]
+  \node[bluestate,initial above,initial distance=0.5cm,initial text=,font=\scriptsize](A){wait\\for\\call};
+	\path[->,align=center] (A) edge [loop right] node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\begin{cf}{
+\textbf{rdt 1.0 receiver}\\[20pt]
+\begin{tikzpicture}[scale=2]
+  \node[bluestate,initial above,initial distance=0.5cm,initial text=,](A){wait\\for\\call};
+	\path[->,align=center] (A) edge [loop right] node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\begin{cf}{
+		\textbf{rdt 2.0}\\
+		underlying channel may introduce bit errors
+		}
+\end{cf}
+
+\begin{cf}{
+		\textbf{ARQ}\\
+		Automated Repeat reQuest
+		}
+\end{cf}
+
+\begin{cf}{
+		receiver detects errors\\
+		receiver feeds back to sender\\
+		sender retransmits
+		}
+\end{cf}
+
+\begin{cf}{
+\textbf{rdt 2.0 sender}\\
+\begin{tikzpicture}[scale=2]
+  \node[bluestate,initial above,initial distance=0.5cm,initial text=](A){wait\\for\\call};
+  \node[greenstate,right=2cm of A](B){wait\\for\\ack/nak};
+  \path[->] 
+    (A) edge [bend left] node {} (B)
+    (B) edge [loop right] node {} (B)
+        edge [bend left] node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\begin{cf}{
+\textbf{rdt 2.0 receiver}\\
+\begin{tikzpicture}[scale=2]
+  \node[redstate,initial above,initial distance=0.5cm,initial text=,](A){wait\\for\\call};
+	\path[->,align=center] (A) edge [loop right] node {} (A);
+	\path[->,align=center] (A) edge [loop left] node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+		\Large
+		\textbf{stop-and-wait}\\
+		protocol
+	}
+\end{cf}
+
+\begin{cf}
+		bug:\\ what if ACK/NAK is corrupted?
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}
+		bug fix:\\ add a sequence number
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+\textbf{rdt 2.1 sender}\\
+\begin{tikzpicture}[scale=2]
+  \node[bluestate,initial above,initial distance=0.5cm,initial text=](A){wait\\for\\call 0};
+  \node[greenstate,right=2cm of A](B){wait\\for ack\\/nak 0};
+  \node[state,minimum width=0.1cm,draw=none](null1)[below=of A]{};
+  \node[state,minimum width=0.1cm,draw=none](null2)[below=of B]{};
+  \path[->] 
+    (A) edge [bend left] node {} (B)
+    (B) edge [loop right] node {} (B)
+        edge node {} (null2)
+    (null1) edge node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\begin{cf}{
+\begin{tikzpicture}[scale=2]
+  \node[bluestate,initial above,initial distance=0.2cm,initial text=](A){wait\\for\\call 0};
+  \node[greenstate,right=2cm of A](B){wait\\for ack\\/nak 0};
+  \node[redstate](C)[below=of A]{wait\\for ack\\/nak 1};
+  \node[brownstate](D)[below=of B]{wait\\for\\call 1};
+  \path[->] 
+    (A) edge [bend left] node {} (B)
+    (D) edge [bend left] node {} (C)
+    (B) edge [loop right] node {} (B)
+        edge node {} (D)
+    (C) edge [loop left] node {} (C)
+	    edge node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\begin{cf}{
+\textbf{rdt 2.1 receiver}\\
+\begin{tikzpicture}[scale=2]
+  \node[orangestate,initial left,initial distance=0.5cm,initial text=](A){wait\\for\\0};
+  \node[blackstate,right=2cm of A](B){wait\\for\\1};
+  \path[->] 
+    (A) edge [loop above] node {} (A)
+        edge [loop below] node {} (A)
+        edge [bend left] node {} (B)
+    (B) edge [loop above] node {} (B)
+	    edge [loop below] node {} (B)
+        edge [bend left] node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+		\textbf{rdt 2.2}\\
+		replace NAK with ACK of the last correctly received packet.
+		}
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+		\textbf{rdt 3.0}\\
+		packet can be loss or corrupted
+		}
+\end{cf}
+
+\begin{cf}{
+		Challenge: if ACK is lost, how to tell if the packet has been received?
+		}
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+		resend after timeout\\
+		(may lead to dups, but OK since we have seq numbers).
+		}
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+\textbf{rdt 3.0 sender}\\
+\begin{tikzpicture}[scale=2]
+  \node[bluestate,initial above,initial distance=0.5cm,initial text=](A){wait\\for\\call 0};
+  \node[greenstate,right=2cm of A](B){wait\\for\\ ack 0};
+  \node[state,minimum width=0.1cm,draw=none](null1)[below=of A]{};
+  \node[state,minimum width=0.1cm,draw=none](null2)[below=of B]{};
+  \path[->] (A) edge [loop left] node {} (A)
+        edge [bend left] node {} (B)
+    (B) edge [loop right] node {} (B)
+        edge [loop above] node {} (B)
+        edge node {} (null2)
+    (null1) edge node {} (A);
+\end{tikzpicture}\\[20pt]
+}
+\end{cf}
+
+\input{lib/two-lines}
+
+\begin{cf}{
+		\textbf{alternating bit protocol}
+	}
+\end{cf}
+
+\begin{cf}[t]{
+		RTT = 30ms\\
+		R = 1 Gbps\\
+		L = 1000 bytes\\
+	}
+\end{cf}
+
+\input{lib/two-lines}
