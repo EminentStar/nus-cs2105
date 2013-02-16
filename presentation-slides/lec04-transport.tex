@@ -1,0 +1,710 @@
+\newcommand{\eventaction}[2]{%
+$\frac{\mbox{\normalsize\color{blue!50!black}{#1}}}%
+      {\mbox{\normalsize\color{red!50!black}{#2}}}$}
+
+\tikzstyle{state}=[draw,circle,text=white,align=center,font=\scriptsize,minimum width=2.5cm]
+\tikzstyle{bluestate}=[state,fill=blue!50!black]
+\tikzstyle{greenstate}=[state,fill=green!50!black]
+\tikzstyle{redstate}=[state,fill=red!50!black]
+\tikzstyle{brownstate}=[state,fill=brown!50!black]
+\tikzstyle{orangestate}=[state,fill=orange!50!black]
+\tikzstyle{blackstate}=[state,fill=gray!50!black]
+
+\begin{cf}{
+CS2105 Lecture 4\\
+\huge
+\textbf{Transport Protocols\\[10pt]}
+\normalsize
+	4 February, 2013
+\note{
+\tiny
+	After this class, you are expected to:
+	\begin{itemize}
+	\item understand the working of Go-Back-N and Selective Repeat protocols
+	\item appreciate the simplicity of UDP and the service it provides
+	\item know how to calculate the checksum of a packet
+	\item understand the operation of TCP, particularly, the sequence number, the acknowledgement number, the receiver window, and connection setup/termination. 
+	\end{itemize}
+}
+}
+\end{cf}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+%\begin{cf}
+%Previously, on CS2105..
+%\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+\textbf{Pipelining}:\\
+	need buffering and larger range of sequence numbers.
+}
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+\textbf{Go-Back-N}
+}
+\end{cf}
+
+\tikzstyle{packet}=[draw,rectangle,rounded corners,
+	minimum height=2 cm, minimum width=.6 cm,text=white] 
+\tikzstyle{window}=[rectangle,minimum height=2.5 cm, minimum width=4.9 cm,fill=gray!25!white] 
+\tikzstyle{acked}=[packet,fill=green!30!white]
+\tikzstyle{sent}=[packet,fill=yellow!30!white]
+\tikzstyle{can-send}=[packet,fill=blue!30!white]
+\tikzstyle{cannot-send}=[packet,fill=red!30!white]
+
+\begin{cf}[t]{
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[sent](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[can-send](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]{
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[sent](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[can-send](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}\\[7pt]
+send a packet\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[sent](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[sent](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]{
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[sent](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[sent](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}\\[7pt]
+receive ACK 3\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[acked](S1)[right=.2cm of A3]{};
+	\node[window](W)[right=.1cm of S1]{};
+	\node[sent](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[sent](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[can-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]{
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[acked](S1)[right=.2cm of A3]{};
+	\node[window](W)[right=.1cm of S1]{};
+	\node[sent](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[sent](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[can-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}\\[7pt]
+receive ACK 5\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[acked](S1)[right=.2cm of A3]{};
+	\node[acked](S2)[right=.2cm of S1]{};
+	\node[acked](S3)[right=.2cm of S2]{};
+	\node[window](W)[right=.1cm of S3]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[sent](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[can-send](N1)[right=.2cm of C2]{};
+	\node[can-send](N2)[right=.2cm of N1]{};
+	\node[can-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]{
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[sent](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[sent](C1)[right=.2cm of S4]{};
+	\node[sent](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}
+}\\[7pt]
+window is full
+\end{cf}
+
+\begin{cf}[t]{
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[can-send](S1)[right=.2cm of A3]{};
+	\node[can-send](S2)[right=.2cm of S1]{};
+	\node[can-send](S3)[right=.2cm of S2]{};
+	\node[can-send](S4)[right=.2cm of S3]{};
+	\node[can-send](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}
+}\\[7pt]
+window is empty
+\end{cf}
+
+\begin{cf}{
+\textbf{Selective Repeat}
+}
+\end{cf}
+
+\input{lib/two-lines.tex}
+
+\begin{cf}{
+1. one timer per packet\\
+2. receiver needs buffer
+}
+\end{cf}
+
+\begin{cf}[t]{
+at sender:\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[acked](S2)[right=.2cm of S1]{};
+	\node[sent](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[can-send](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}\\[7pt]
+receive ACK 5\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[acked](S2)[right=.2cm of S1]{};
+	\node[acked](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[can-send](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}\\[7pt]
+}
+\end{cf}
+
+\begin{cf}[t]{
+at sender:\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[sent](S1)[right=.2cm of A3]{};
+	\node[acked](S2)[right=.2cm of S1]{};
+	\node[acked](S3)[right=.2cm of S2]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[can-send](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}\\[7pt]
+receive ACK 3\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[acked](A1){};
+	\node[acked](A2)[right=.2cm of A1]{};
+	\node[acked](A3)[right=.2cm of A2]{};
+	\node[acked](S1)[right=.2cm of A3]{};
+	\node[acked](S2)[right=.2cm of S1]{};
+	\node[acked](S3)[right=.2cm of S2]{};
+	\node[window](W)[right=.1cm of S3]{};
+	\node[sent](S4)[right=.2cm of S3]{};
+	\node[can-send](C1)[right=.2cm of S4]{};
+	\node[can-send](C2)[right=.2cm of C1]{};
+	\node[cannot-send](N1)[right=.2cm of C2]{};
+	\node[cannot-send](N2)[right=.2cm of N1]{};
+	\node[cannot-send](N3)[right=.2cm of N2]{};
+\end{tikzpicture}\\[7pt]
+}
+\end{cf}
+
+\tikzstyle{delivered}=[packet,fill=green!70!white]
+\tikzstyle{recved}=[packet,fill=yellow!70!white]
+\tikzstyle{can-recv}=[packet,fill=blue!30!white]
+\tikzstyle{cannot-recv}=[packet,fill=red!70!white]
+
+\begin{cf}[t]{
+at receiver:\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[delivered](A1){};
+	\node[delivered](A2)[right=.2cm of A1]{};
+	\node[delivered](A3)[right=.2cm of A2]{};
+	\node[window](W)[right=.1cm of A3]{};
+	\node[can-recv](S1)[right=.2cm of A3]{};
+	\node[recved](S2)[right=.2cm of S1]{};
+	\node[can-recv](S3)[right=.2cm of S2]{};
+	\node[can-recv](S4)[right=.2cm of S3]{};
+	\node[can-recv](C1)[right=.2cm of S4]{};
+	\node[can-recv](C2)[right=.2cm of C1]{};
+	\node[cannot-recv](N1)[right=.2cm of C2]{};
+	\node[cannot-recv](N2)[right=.2cm of N1]{};
+	\node[cannot-recv](N3)[right=.2cm of N2]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]{
+at receiver:\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[delivered](P1){};
+	\node[delivered](P2)[right=.2cm of P1]{};
+	\node[delivered](P3)[right=.2cm of P2]{};
+	\node[window](W)[right=.1cm of P3]{};
+	\node[can-recv](P4)[right=.2cm of P3]{};
+	\node[recved](P5)[right=.2cm of P4]{};
+	\node[can-recv](P6)[right=.2cm of P5]{};
+	\node[can-recv](P7)[right=.2cm of P6]{};
+	\node[can-recv](P8)[right=.2cm of P7]{};
+	\node[can-recv](P9)[right=.2cm of P8]{};
+	\node[cannot-recv](P10)[right=.2cm of P9]{};
+	\node[cannot-recv](P11)[right=.2cm of P10]{};
+	\node[cannot-recv](P12)[right=.2cm of P11]{};
+\end{tikzpicture}\\[7pt]
+receive packet 5
+\begin{tikzpicture}[scale=2]
+	\node[delivered](P1){};
+	\node[delivered](P2)[right=.2cm of P1]{};
+	\node[delivered](P3)[right=.2cm of P2]{};
+	\node[window](W)[right=.1cm of P3]{};
+	\node[can-recv](P4)[right=.2cm of P3]{};
+	\node[recved](P5)[right=.2cm of P4]{};
+	\node[recved](P6)[right=.2cm of P5]{};
+	\node[can-recv](P7)[right=.2cm of P6]{};
+	\node[can-recv](P8)[right=.2cm of P7]{};
+	\node[can-recv](P9)[right=.2cm of P8]{};
+	\node[cannot-recv](P10)[right=.2cm of P9]{};
+	\node[cannot-recv](P11)[right=.2cm of P10]{};
+	\node[cannot-recv](P12)[right=.2cm of P11]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]{
+at receiver:\\[10pt]
+\begin{tikzpicture}[scale=2]
+	\node[delivered](P1){};
+	\node[delivered](P2)[right=.2cm of P1]{};
+	\node[delivered](P3)[right=.2cm of P2]{};
+	\node[window](W)[right=.1cm of P3]{};
+	\node[can-recv](P4)[right=.2cm of P3]{};
+	\node[recved](P5)[right=.2cm of P4]{};
+	\node[recved](P6)[right=.2cm of P5]{};
+	\node[can-recv](P7)[right=.2cm of P6]{};
+	\node[can-recv](P8)[right=.2cm of P7]{};
+	\node[can-recv](P9)[right=.2cm of P8]{};
+	\node[cannot-recv](P10)[right=.2cm of P9]{};
+	\node[cannot-recv](P11)[right=.2cm of P10]{};
+	\node[cannot-recv](P12)[right=.2cm of P11]{};
+\end{tikzpicture}\\[7pt]
+receive packet 3
+\begin{tikzpicture}[scale=2]
+	\node[delivered](P1){};
+	\node[delivered](P2)[right=.2cm of P1]{};
+	\node[delivered](P3)[right=.2cm of P2]{};
+	\node[delivered](P4)[right=.2cm of P3]{};
+	\node[delivered](P5)[right=.2cm of P4]{};
+	\node[delivered](P6)[right=.2cm of P5]{};
+	\node[window](W)[right=.1cm of P6]{};
+	\node[can-recv](P7)[right=.2cm of P6]{};
+	\node[can-recv](P8)[right=.2cm of P7]{};
+	\node[can-recv](P9)[right=.2cm of P8]{};
+	\node[can-recv](P10)[right=.2cm of P9]{};
+	\node[can-recv](P11)[right=.2cm of P10]{};
+	\node[can-recv](P12)[right=.2cm of P11]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\input{lib/two-two-lines}
+
+\begin{cf}{\small
+	\begin{tabular}{|r|c|c|}
+	\hline
+	        & GBN & SR \\
+	\hline
+	ACK	& cumulative & selective \\
+	out-of-order & ignore & keep \\
+	retransmit	& all unack & one unack \\
+	timer &	earliest unack & one per unack \\
+	\hline
+	\end{tabular}
+}
+\end{cf}
+
+\begin{cf}
+How to build a \textbf{reliable transfer protocol}
+on top of unreliable communication?
+\end{cf}
+
+\begin{cf}\normalsize
+error detection\\
+retransmission\\
+timers\\
+sequence numbers\\
+ACK/NAK\\
+window and pipelining
+\end{cf}
+
+\begin{cf}{
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=9 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[draw,rectangle,minimum height=.7cm,minimum width=3cm,fill=white!90!yellow]
+\tikzstyle{datagram payload}=[draw,rectangle,minimum height=.7cm,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram header}=[draw,rectangle,minimum height=.7cm,minimum width=.5cm,fill=white!90!blue]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[
+		fill=AppBlue,
+		]{};
+	\node[layer](T)[
+		below = 0cm of A,
+		yshift = -0.1cm, 
+		fill=TransportBlue]{};
+    \node[message](M)[
+		below=0.5cm of A.north,
+	]{};
+	\node[layer](N)[
+		below = 0cm of T,
+		yshift = -0.1cm, 
+		fill=NetworkGreen]{Network};
+	\node[interface,
+		below=of A.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of A.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+    \node[datagram header](D1)[
+		below=1cm of FirstArrow,
+		xshift=-2cm
+	]{};
+    \node[datagram payload](D2)[
+		right=0cm of D1,
+	]{};
+    \node[datagram header](D3)[
+		right=0.5cm of D2,
+	]{};
+    \node[datagram payload](D4)[
+		right=0cm of D3,
+	]{};
+    \node[datagram header](D5)[
+		right=0.5cm of D4,
+	]{};
+    \node[datagram payload](D6)[
+		right=0cm of D5,
+	]{};
+	\node[interface,
+		below=of T.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of T.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\end{tikzpicture}
+	}
+\end{cf}
+
+\begin{cf}{
+	\textbf{UDP}\\
+	User Datagram Protocol
+\note{\tiny
+Details of Internet protocols are described in documents known as \textit{Request for Comments} (RFC).  UDP is such a simple protocol that its RFC \url{http://www.ietf.org/rfc/rfc768.txt} is only 3 pages.  Interested students should check out the RFC for further details of UDP.
+		}
+	}
+\end{cf}
+
+\tikzstyle{field}=[draw,rectangle,minimum height=1.5 cm, minimum width=4cm-0.4pt, text=gray!80!black,fill=white!90!blue,font=\small]
+\tikzstyle{payload}=[draw,rectangle,minimum height=3 cm, minimum width=8cm, text=gray!80!black,fill=white!90!yellow]
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field](SP){Src Port};
+	\node[field](DP)[right=0cm of SP]{Dest Port};
+	\node[field](LN)[below=0cm of SP]{Length};
+	\node[field](CS)[right=0cm of LN]{Checksum};
+	\node[payload](PL)[below=0cm of LN.south east]{Payload};
+	\node[above=.2cm of SP.north west]{\tiny 1};
+	\node[above=.2cm of SP.north east]{\tiny 16};
+	\node[above=.2cm of DP.north east]{\tiny 32};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}
+	sender computes $f(P) = c$\\
+	sends $P$ and $c$\\[6pt]
+	receiver receives $P'$ and $c'$\\
+	checks if $f(P') = c'$
+\end{cf}
+
+\begin{cf}[t]{ 
+	\texttt{1011 1011 1011 0101}\\
+	\texttt{1000 1111 0000 1100}\\
+}
+\end{cf}
+
+\begin{cf}[t]{ 
+	\texttt{0110 0110 0110 0000}\\
+	\texttt{0101 0101 0101 0101}\\
+	\texttt{1000 1111 0000 1100}\\
+	\texttt{\color{blue} 1011 0101 0011 1101}\\
+}
+\end{cf}
+
+\begin{cf}{
+	\textbf{TCP}\\
+	Transport Control Protocol
+	}
+\note{\tiny
+In constrast to UDP, TCP is complex and is described in tens of RFCs, with new mechanisms or tweaks introduced throughout the years, resulting in many variants of TCP.  We will only be scratching the surface of TCP in CS2105.
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{tabular}{|r|c|c|}
+	\hline
+	        & GBN & SR \\
+	\hline
+	ACK	& cumulative & selective \\
+	out-of-order & ignore & keep \\
+	retransmit	& all unack & one unack \\
+	timer &	earliest unack & one per unack \\
+	\hline
+	\end{tabular}
+}
+\end{cf}
+
+\tikzstyle{field16}=[field,minimum width=4.0cm-0.4pt]
+\tikzstyle{field32}=[field,minimum width=8.0cm-0.4pt]
+\tikzstyle{field06}=[field,minimum width=1.5cm-0.4pt]
+\tikzstyle{field04}=[field,minimum width=1.0cm-0.4pt]
+\tikzstyle{field01}=[field,minimum width=0.25cm-0.4pt,inner sep=0cm]
+\tikzstyle{selected}=[text=white,fill=red!40!black]
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16,selected](SP){src port};
+	\node[field16,selected](DP)[right=0cm of SP]{dst port};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16,selected](CS)[below=0cm of RW]{checksum};
+	\node[field16](X10)[left=0cm of CS]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32,selected](SN)[below=0cm of SP.south east]{sequence number};
+	\node[field32,selected](AN)[below=0cm of SN]{acknowledgement number};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+
+}
+\end{cf}
+
+\input{lib/two-lines}
+\input{lib/two-lines}
+\input{lib/two-lines}
+\input{lib/two-lines}
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16,selected](RW)[right=0cm of X8]{recv window};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+
+}
+\end{cf}
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01,selected](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01,selected](X6)[right=0cm of X5]{};
+	\node[field01,selected](X7)[right=0cm of X6]{};
+	\node[field01,selected](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+\input{lib/two-lines}
+\input{lib/two-lines}
