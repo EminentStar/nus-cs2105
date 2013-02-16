@@ -10,12 +10,22 @@ $\frac{\mbox{\normalsize\color{blue!50!black}{#1}}}%
 \tikzstyle{orangestate}=[state,fill=orange!50!black]
 \tikzstyle{blackstate}=[state,fill=gray!50!black]
 
-\begin{cf}
+\begin{cf}{
 CS2105 Lecture 3\\
 \huge
 \textbf{Reliable Protocol\\[10pt]}
 \normalsize
 	28 January, 2013
+\note{
+\tiny
+	After this class, you are expected to:
+	\begin{itemize}
+	\item  understand the interface between the transport layer and the network layer
+	\item be able to design your own reliable protocols with ACK, NAK, sequence numbers, timeout, and retransmission.
+	\item know how to calculate the utilization of a channel.
+	\end{itemize}
+}
+}
 \end{cf}
 
 \begin{frame}
@@ -114,7 +124,7 @@ on top of unreliable communication?
 \end{cf}
 
 \begin{cf}
-unreliable: may not deliver at all or deliver with error
+Unreliable: may not deliver at all or deliver with error
 \end{cf}
 
 \begin{cf}{
@@ -198,7 +208,7 @@ unreliable: may not deliver at all or deliver with error
     \node[text=white,
 		above=0cm of T2.south,
 		xshift=-.5cm]{
-		\tiny udt\_recv()};
+		\tiny rdt\_recv()};
 	\end{tikzpicture}
 	}
 \end{cf}
@@ -221,7 +231,7 @@ Finite State Machine\\[20pt]
 
 \begin{cf}{
 		\textbf{rdt 1.0}\\
-		assume underlying channel is reliable
+		Assume underlying channel is reliable
 }
 \end{cf}
 
@@ -245,7 +255,7 @@ Finite State Machine\\[20pt]
 
 \begin{cf}{
 		\textbf{rdt 2.0}\\
-		underlying channel may introduce bit errors
+		Underlying channel may introduce bit errors
 		}
 \end{cf}
 
@@ -256,10 +266,11 @@ Finite State Machine\\[20pt]
 \end{cf}
 
 \begin{cf}{
-		receiver detects errors\\
-		receiver feeds back to sender\\
-		sender retransmits
+		Receiver detects errors\\
+		Receiver feeds back to sender\\
+		Sender retransmits
 		}
+\note{We will talk about checksum, the technique to detect errors, in more detail in the subsequent lectures.}
 \end{cf}
 
 \begin{cf}{
@@ -289,19 +300,18 @@ Finite State Machine\\[20pt]
 
 \begin{cf}{
 		\Large
-		\textbf{stop-and-wait}\\
-		protocol
+		\textbf{Stop-and-Wait Protocol}
 	}
 \end{cf}
 
 \begin{cf}
-		bug:\\ what if ACK/NAK is corrupted?
+		Bug:\\ What if ACK/NAK is corrupted?
 \end{cf}
 
 \input{lib/two-lines.tex}
 
 \begin{cf}
-		bug fix:\\ add a sequence number
+		Bug Fix:\\ Add a sequence number
 \end{cf}
 
 \input{lib/two-lines.tex}
@@ -359,7 +369,7 @@ Finite State Machine\\[20pt]
 
 \begin{cf}{
 		\textbf{rdt 2.2}\\
-		replace NAK with ACK of the last correctly received packet.
+		Replace NAK with ACK of the last correctly received packet.
 		}
 \end{cf}
 
@@ -367,19 +377,19 @@ Finite State Machine\\[20pt]
 
 \begin{cf}{
 		\textbf{rdt 3.0}\\
-		packet can be loss or corrupted
+		Packet can be loss or corrupted
 		}
 \end{cf}
 
 \begin{cf}{
-		Challenge: if ACK is lost, how to tell if the packet has been received?
+		Challenge: If ACK is lost, how to tell if the packet has been received?
 		}
 \end{cf}
 
 \input{lib/two-lines.tex}
 
 \begin{cf}{
-		resend after timeout\\
+		Resend after timeout\\
 		(may lead to dups, but OK since we have seq numbers).
 		}
 \end{cf}
@@ -400,13 +410,14 @@ Finite State Machine\\[20pt]
         edge node {} (null2)
     (null1) edge node {} (A);
 \end{tikzpicture}\\[20pt]
+\note{The state diagram for the receiver in rdt 3.0 is given as an exercise.}
 }
 \end{cf}
 
 \input{lib/two-lines}
 
 \begin{cf}{
-		\textbf{alternating bit protocol}
+		\textbf{Alternating Bit Protocol}
 	}
 \end{cf}
 
