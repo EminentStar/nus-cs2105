@@ -1,0 +1,478 @@
+\begin{cf}{
+CS2105 Lecture 8\\
+\large
+\textbf{Network Security\\[10pt]}
+\normalsize
+	18 March, 2013
+\note{
+\tiny
+	After this class, you are expected to be able to: 
+	\begin{itemize}
+	\item describe how network security can be compromised.
+	\item analyze simple security protocols and identify flaws.
+	\item understand (i) how symmetric key cryptography and public key cryptograph can be used to ensure confidentiality; (ii) how MAC (with authentication key and cryptographic hash function) ensure message integrity; (iii) how digital signature (with nonce) ensure source authenticity.
+	\item understand the role of certificate authority and digital certificates.
+	\item understand how the different techniques are applied in secure email, VPN, IPSec, SSL.
+	\end{itemize}
+}
+}
+\end{cf}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\tikzstyle{user}=[draw,circle,text=white,align=center,minimum width=1.5cm,font =\small]
+\tikzstyle{userA}=[user,fill=red!40!black]
+\tikzstyle{userB}=[user,fill=blue!40!black]
+\tikzstyle{userT}=[user,fill=green!40!black]
+\tikzstyle{hidden}=[minimum width=0,inner sep=0]
+\begin{cf}{
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{\normalsize
+	$T$ can \textbf{eavesdrop} on $A$ and $B$.\\
+	Need to ensure \textbf{confidentiality}.\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{\normalsize
+	$T$ can \textbf{modify, insert, delete messages} between $A$ and $B$.\\
+	Need to ensure \textbf{message integrity}.\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{\normalsize
+	$T$ can \textbf{pretend} to be $A$ or $B$.\\
+	Need to ensure \textbf{end-point authenticity}.\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{\normalsize
+	$T$ can \textbf{attack the communication channel} between $A$ or $B$.\\
+	Need to ensure \textbf{operational security}.\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+	\note{We skip two important practical topics in CS2105, firewalls and intrusion detection system, since they are rather straightforward.  You can read all about them yourself in Section 8.9. 
+	}
+}
+\end{cf}
+\begin{cf}{
+	Ensuring \textbf{confidentiality} with \textbf{cryptography}.
+}
+\end{cf}
+\begin{cf}{\normalsize
+	\textbf{Abstraction}\\[20pt]
+
+	ciphertext = encrypt(plaintext, key)\\
+	plaintext = decrypt(ciphertext, key)
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Abstraction}\\[20pt]
+
+	$m' = K_A(m)$\\
+	$m = K_B(K_A(m))$\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Property of $K_A$ and $K_B$}\\[20pt]
+
+	Given $K_A(m)$, it should be computationally hard to compute $m$ without $K_B$.
+	\note{We skip the mathematical details on how $K_A$ and $K_B$ are implemented.  Interested students can read Section 8.2 in details and take CS4236.
+	}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Symmetric Key Cyptography}\\
+	$K_A = K_B$\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Public Key Cyptography}\\[20pt]
+
+	$K_A \not = K_B$\\[20pt]
+	$m' = K_B^+(m)$\\
+	$m = K_B^-(K_B^+(m))$\\[20pt]
+
+}
+\end{cf}
+\begin{cf}{
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node {} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+%\include{lib/two-lines}
+%\include{lib/three-lines}
+\begin{cf}{
+	Ensuring \textbf{message integrity} with \textbf{message authentication code (MAC)}.
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Cryptographic Hash Function}\\[20pt]
+	hash = $H$(message)
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Property of $H$}\\[20pt]
+	Given $H$(m), it should be computationally hard to construct $m'$ such that $H(m') = H(m)$.
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Message Authentication Code}\\
+	\small{(flawed)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {$\leftarrow$ \small{$m$, $H(m)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Message Authentication Code}\\
+	\small{(fixed with authentication key $s$, a shared secret between $A$ and $B$)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {$\leftarrow$ \small{$m$, $H(m+s)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	Verifying \textbf{message source} with\\ \textbf{digital signature}.
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Digital Signature}\\
+	\small{(flawed)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {$\leftarrow$ \small{$m$, $H(m+s)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Digital Signature}\\
+	\small{(fixed with public/private key)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {$\leftarrow$ \small{$m$, $K_B^-(m)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Digital Signature}\\
+	\small{(flawed with untrusted public key)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {} (B);
+	\path[->, line width =3pt] (x) edge node[auto] {$\uparrow$ \small{m, $K_T^-(m)$}} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Digital Certificate}\\[20pt]
+
+	(public key, name)
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Certificate Authority (CA)}\\[20pt]
+
+	issue digitally signed digital certificates
+	\note{
+	Can you trust the digital signature (and therefore the public key) of a CA?
+		We reserve the discussion on this for Problem Set 6.}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Digital Signature}\\
+	\small{(with trusted public key)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[user,fill=purple!40!black,above=1cm of x](CA){CA};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {} (B);
+	\path[->, line width =3pt] (x) edge node[auto] {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{End Point Authentication}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Replay Attack}\\
+	\small{(with digital signature)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA,](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {$\leftarrow$ \small{$m$, $K_B^-(m)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Replay Attack}\\
+	\small{(with MAC)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA](A){A};
+	\node[userB,right=5cm of A](B){B};
+	\node[hidden,right=2.5cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {$\leftarrow$ \small{$m$, $H(m+s)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{nonce}: a number used only once
+}
+\end{cf}
+\begin{cf}{
+	\textbf{End Point Authentication}\\
+	\small{(with MAC and nonce)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA](A){A};
+	\node[userB,right=6cm of A](B){B};
+	\node[hidden,right=3cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {\small{$R$ $\rightarrow$ \vspace{1cm} $\leftarrow$ $m$, $H(m+s+R)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\textbf{End Point Authentication}\\
+	\small{(with public key and nonce)}\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[userA](A){A};
+	\node[userB,right=6cm of A](B){B};
+	\node[hidden,right=3cm of A](x){};
+	\node[userT,below=1.5cm of x](T){T};
+	\path[<->, line width =3pt] (A) edge node[auto] {\small{$R$ $\rightarrow$ \vspace{1cm} $\leftarrow$ $m$, $K_B^-(m+R)$}} (B);
+	\path[->, line width =3pt] (x) edge node {} (T);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	Putting everything together: \textbf{Securing E-mail}
+	\note{Read Section 8.5 in the textbook for how these techniques are used together to send secure e-mails.}
+}
+\end{cf}
+
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+
+\begin{cf}{
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 1.1cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+
+	\node[layer,rounded corners](SSL)[below=0cm of A,fill=AppBlue!50!TransportBlue,rounded corners,font=\small,minimum width=3cm,yshift=.2cm]{SSL};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]
+	1. Establishing a shared master key between $A$ and $B$
+\end{cf}
+\begin{cf}[t]
+	2. Derive encryption keys $E_A$, $E_B$ and MAC keys $M_A$, $M_B$ from the master key.
+\end{cf}
+\begin{cf}[t]
+	3. Transfer data $m$ with sequence number $s$ as $m'$\\
+	$h = H(m + M_B + s)$\\
+	$m' = E_B (m, h)$\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[draw,rectangle split, rectangle split parts=5, 
+	rectangle split horizontal,
+	rectangle split part fill={red!50,blue!50,green!50!black,black!50,brown!50},
+	text=white,font=\footnotesize]{
+		type 
+		\nodepart{two} version 
+		\nodepart{three} length
+		\nodepart{four} data
+		\nodepart{five} MAC
+	};
+	\end{tikzpicture}
+\end{cf}
+
+\begin{cf}{
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 1.1cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer,rounded corners, minimum width=3cm,font=\small](IPSec)[below=0cm of T,fill=TransportBlue!50!NetworkGreen,yshift=.2cm]{IPSec};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}
+	IPSec is a suite of protocols 
+\end{cf}
+
+\begin{cf}{
+	\textbf{Authentication Header (AH)} protocol: source authentication and data integrity.
+}
+\end{cf}
+
+\begin{cf}{
+	\textbf{Encapsulation Security Payload (ESP)} protocol: source authentication, data integrity and confidentiality.
+}
+\end{cf}
+
+\begin{frame}\normalsize
+	\textbf{Security Association (SA)}: a one-way logical connection, consisting of:
+	\begin{itemize}
+	\item an SA ID (Security Parameter Index)
+	\item src and dst IP addresses
+	\item type and key for encryption
+	\item type and key for integrity check
+	\end{itemize}
+\end{frame}
+
+\begin{cf}{\normalsize
+	$m = E_B$(IP datagram + padding)\\
+	$h = H(i + n + m, M_B)$\\
+	\vspace{1cm}
+	\begin{tikzpicture}
+	\node[draw,rectangle split, 
+	rectangle split parts=6, 
+	rectangle split horizontal,
+	rectangle split part fill={red!50,blue!50,green!50!black,black!50,black!50,brown!50},
+	text=white,font=\footnotesize]{
+		IP hdr 
+		\nodepart{two} SPI $i$
+		\nodepart{three} Seq\# $n$
+		\nodepart{four} IP datagram
+		\nodepart{five} pad
+		\nodepart{six} hash $h$
+	};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\textbf{VPN}: Virtual Private Network\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right]
+	\node[userA,on chain](A){A};
+	\node[draw,rectangle,on chain](VPN1){};
+	\node[cloud,draw,cloud puffs=10.4,cloud ignores aspect, minimum width=2.5cm, minimum height=1.6cm,on chain,line width=2pt](Internet){};
+	\node[draw,rectangle,on chain](VPN2){};
+	\node[userB,on chain](B){B};
+	\draw[style=<->] (A) -- (VPN1);
+	\draw[style=<->,line width=2pt] (VPN1) -- (Internet);
+	\draw[style=<->,line width=2pt] (Internet) -- (VPN2);
+	\draw[style=<->] (VPN2) -- (B);
+	\end{tikzpicture}
+	\note{VPN can run over either IPSec or SSL.  We will discuss the pros and cons of these approaches in Problem Set 6.}
+}
+\end{cf}

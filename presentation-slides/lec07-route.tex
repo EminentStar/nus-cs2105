@@ -1,0 +1,275 @@
+\begin{cf}{
+CS2105 Lecture 7\\
+\large
+\textbf{Routing\\[10pt]}
+\normalsize
+	4 March, 2013
+\note{
+\tiny
+	After this class, you are expected to understand
+	\begin{itemize}
+	\item the purpose of routing protocols on the Internet
+	\item the differences between inter-domain and intra-domain routing.
+	\item the workings of link-state and distance vector routing
+	\item the principle of Bellman-Ford equation
+	\item how RIP works
+	\end{itemize}
+}
+}
+\end{cf}
+
+\begin{cf}{
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+\end{tikzpicture}
+}
+\end{cf}
+
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=9 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[draw,rectangle,minimum height=.7cm,minimum width=3cm,fill=white!90!yellow]
+\tikzstyle{segment payload}=[draw,rectangle,minimum height=.7cm,minimum width=1cm,inner sep=0cm, fill=white!90!yellow]
+\tikzstyle{segment header}=[draw,rectangle,minimum height=.7cm,minimum width=.4cm,inner sep=0cm, fill=white!90!red]
+\tikzstyle{datagram header}=[draw,rectangle,minimum height=.7cm,minimum width=.4cm,inner sep=0cm, fill=white!50!NetworkGreen]
+
+\begin{cf}{
+	\begin{tikzpicture}[scale=2]
+	\node[layer](T)[
+		below = 0cm of A,
+		yshift = -0.1cm, 
+		fill=TransportBlue]{Transport};
+	\node[layer](N)[
+		below = 0cm of T,
+		yshift = -0.1cm, 
+		fill=NetworkGreen]{};
+        \node[layer](IP)[
+		below = 0.1cm of T,
+		yshift = -0.1cm,
+		xshift = -3cm,
+		fill=NetworkGreen!70!white,
+		minimum width=2.8cm,
+		minimum height=2.3cm
+	]{IP};
+        \node[layer](ICMP)[
+		right = 0.1cm of IP,
+		fill=NetworkGreen!70!white,
+		minimum width=2.8cm,
+		minimum height=2.3cm
+	]{ICMP};
+        \node[layer](RP)[
+		right = 0.1cm of ICMP,
+		fill=NetworkGreen!70!white,
+		minimum width=2.7cm,
+		text width=2.4cm,
+		align=center,
+		minimum height=2.3cm
+	]{\small Routing Protocols};
+	\node[layer](L)[
+		below = 0cm of N,
+		yshift = -0.1cm, 
+		fill=LinkBrown]{Link};
+	\end{tikzpicture}
+}
+\end{cf}
+
+
+\tikzstyle{router}=[draw,cylinder,aspect=1.5,rotate=90,minimum height=2.5 cm, minimum width=3.5cm, text=gray!80!black,fill=white!90!NetworkGreen,font=\small]
+\begin{cf}{
+	\begin{tikzpicture}
+		\node[router](Router){};
+		\node[draw,single arrow](L)[left=1cm of Router.north]{};
+		\node[draw,single arrow](R)[right=1cm of Router.south]{};
+		\node[draw,single arrow, rotate=-45](L1)[above=of L]{};
+		\node[draw,single arrow, rotate=45](R1)[above=of R]{};
+		\node[draw,single arrow, rotate=45](L2)[below=of L]{};
+		\node[draw,single arrow, rotate=-45](R2)[below=of R]{};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]
+	forwarding table
+\end{cf}
+
+\begin{cf}[t]
+	longest prefix matching
+\end{cf}
+
+\begin{cf}
+The Internet is a ``network-of-networks'', organized into autonomous systems (AS), each own by an organization.
+\end{cf}
+
+\begin{cf}{
+\textbf{Inter}-AS routing\\
+\textbf{Intra}-AS routing
+}
+\end{cf}
+
+\tikzstyle{AS}=[cloud,draw,cloud puffs=10.4,cloud ignores aspect, minimum width=2.5cm, minimum height=1.6cm]
+\begin{cf}{
+\begin{tikzpicture}
+	\node[AS](A)[]{\small NUS};
+	\node[AS](B)[below=of A]{\small HKIX};
+	\node[AS](C)[below=of B]{\small SingNet};
+	\node[AS](D)[right=2cm of B]{\small AT\&T};
+	\node[AS](E)[below=of D]{\small UUNet};
+	\draw[draw](A)--(B);
+	\draw[draw](B)--(C);
+	\draw[draw](A)--(D);
+	\draw[draw](C)--(D);
+	\draw[draw](B)--(D);
+	\draw[draw](A)--(E);
+	\draw[draw](C)--(E);
+	\draw[draw](D)--(E);
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	\textbf{Abstract} view of intra-domain routing
+}
+\end{cf}
+
+\begin{cf}{
+	Routing: finding the \textbf{least cost path} in a graph.
+}
+\end{cf}
+
+\begin{cf}{
+	\textbf{Link-State} Routing
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	1. Broadcast link cost to each other\\
+	2. Compute least cost path locally
+	\note{
+	We will not cover Step 2 in CS2105.  The algorithm will be covered in CS2010.
+	}
+}
+\end{cf}
+
+\begin{cf}{
+	\textbf{Distance Vector} Routing
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	1. Swap local view with neighbors\\
+	2. Update own's local view\\
+	3. Repeat
+}
+\end{cf}
+
+\tikzstyle{rtr}=[draw,cylinder,aspect=1.5,rotate=90,minimum height=1 cm, minimum width=1.5cm, text=gray!80!black,fill=white!90!NetworkGreen,font=\small]
+
+\begin{cf}{\normalsize
+	$d_x(y)$: the cost to reach $y$ from $x$'s view\\[1cm]
+	\begin{tikzpicture}
+			\node[rtr](X)[label=left:x]{};
+			\node[rtr](Y)[label=left:y,right=3cm of X.south]{};
+			\draw[->,decorate,decoration={snake}](X)--(Y);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	$c(x,y)$: the cost between $x$ and $y$.\\[1cm]
+	\begin{tikzpicture}
+			\node[rtr](X)[label=left:x]{};
+			\node[rtr](Y)[label=left:y,right=2cm of X.south]{};
+			\draw[](X)--(Y);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	decentralized\\
+	self-terminating\\
+	iterative\\
+	asynchronous\\
+}
+\end{cf}
+\begin{cf}{
+	``count-to-infinity''
+}
+\end{cf}
+\begin{cf}{
+	``poisoned reverse''
+}
+\end{cf}
+\begin{cf}{
+	\textbf{link state vs. distance vector}\\
+	message complexity\\
+	convergence speed\\
+	robustness (error)\\
+}
+\end{cf}
+\begin{cf}{
+	\textbf{RIP:} Routing Information Protocol
+}
+\end{cf}
+\begin{cf}{
+	Routing Table
+	\begin{tabular}{c|c|c}
+	dest & next hop & hop count \\
+	\hline
+	v & z & 3\\
+	w & z & 7\\
+	x & x & 1\\
+	y & z & 5\\
+	\end{tabular}
+}
+\end{cf}
+\begin{cf}{
+	Route is \textbf{static} and \textbf{load insensitive}.
+}
+\end{cf}
+\begin{cf}{
+	Exchange routing table every 30 seconds over UDP port 520
+}
+\end{cf}
+\begin{cf}{
+	``Self-repair'': if no update from a neighbor for 3 minutes, assume neighbor has failed
+}
+\end{cf}
+
+\begin{cf}{
+\textbf{Inter}-AS routing\\
+\textbf{Intra}-AS routing
+}
+\end{cf}
+
+\begin{cf}{
+	\textbf{BGP:} Border Gateway Protocol
+}
+\end{cf}
+
+\begin{cf}{
+	Hot Potato Routing: route to AS whose gateway has the least cost.
+}
+\end{cf}
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[AS](A)[]{\small NUS};
+	\node[AS](B)[below=of A]{\small HKIX};
+	\node[AS](C)[below=of B]{\small SingNet};
+	\node[AS](D)[right=of B]{\small AT\&T};
+	\node[AS](E)[below=of D]{\small UUNet};
+	\draw[draw](A)--(B);
+	\draw[draw](B)--(C);
+	\draw[draw](A)--(D);
+	\draw[draw](C)--(D);
+	\draw[draw](B)--(D);
+	\draw[draw](A)--(E);
+	\draw[draw](C)--(E);
+	\draw[draw](D)--(E);
+\end{tikzpicture}
+}
+\end{cf}

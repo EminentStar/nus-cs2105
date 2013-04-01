@@ -1,0 +1,419 @@
+\begin{cf}{
+CS2105 Lecture 9\\
+\large
+\textbf{Link Layer\\[10pt]}
+\normalsize
+	25 March, 2013
+\note{
+\tiny
+	After this class, you are expected to be able to understand:
+	\begin{itemize}
+	\item how the role of link layer and the services it could provide.
+	\item how parity and CRC schemes work
+	\item different methods for accessing shared medium
+	\item how ALOHA, Slotted ALOHA, CSMA, and CSMA/CD works
+	\item how the DOCSIS standard incorperate different medium access techniques
+	\item the framing of an Ethernet frame 
+	\end{itemize}
+}
+}
+\end{cf}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{cf}{
+\tikzstyle{packet}=[draw,rectangle,minimum height=.7cm]
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=9 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[packet,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram payload}=[packet,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram header}=[packet,minimum width=.5cm,fill=white!90!blue]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[
+		fill=NetworkGreen,
+		]{};
+	\node[layer](T)[
+		below = 0cm of A,
+		yshift = -0.1cm, 
+		fill=LinkBrown]{};
+    \node[message](M1)[below=0.5cm of A.north]{};
+    \node[message](M2)[left=0.5cm of M1]{};
+    \node[message](M3)[right=0.5cm of M1]{};
+	\node[layer](N)[
+		below = 0cm of T,
+		yshift = -0.1cm, 
+		fill=PhysicalRed]{\small 101011001...};
+	\node[interface,
+		below=of A.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of A.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+    \node[datagram header](D1)[below=1cm of FirstArrow, xshift=-2cm]{};
+    \node[datagram payload](D2)[right=0cm of D1]{}; 
+    \node[datagram header](D3)[right=0.5cm of D2]{};
+    \node[datagram payload](D4)[right=0cm of D3]{};
+    \node[datagram header](D5)[right=0.5cm of D4]{};
+    \node[datagram payload](D6)[right=0cm of D5]{};
+	\node[interface,
+		below=of T.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of T.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\end{tikzpicture}
+	}
+\end{cf}
+
+\begin{cf}
+	Link layer provides \textbf{node-to-node} communication services of \textbf{frames}.
+\end{cf}
+	
+\begin{cf}
+	Possible services:\\
+	\textbf{Framing}
+\end{cf}
+
+\begin{cf}{
+	Possible services:\\
+	\textbf{Link Access}
+}
+\end{cf}
+
+\begin{cf}{
+	Possible services:\\
+	\textbf{Reliable Delivery}
+}
+\end{cf}
+
+\begin{cf}{
+	Possible services:\\
+	\textbf{Error Detection and Correction}
+}
+\end{cf}
+
+\begin{cf}[t]
+	Parity Bit
+\end{cf}
+
+\begin{cf}[t]
+	2D Parity
+\end{cf}
+
+\begin{cf}[t]
+	Cyclic Redundancy Check\\[10pt]
+
+	$D 2^r + R = nG$ \\
+	$R$ is remainder of $D2^r / G$
+\end{cf}
+
+\begin{cf}[t]
+	CRC calculation is done in base-2 arithmatic without carry or borrow.
+\end{cf}
+
+\begin{cf}[t]
+	Example: G = 1001, D = 101110
+\end{cf}
+\begin{cf}{
+	\textbf{Multiple Access Protocol}\\
+	\small (for a shared medium)
+}
+\end{cf}
+
+\begin{cf}{
+	1. Partition the Channel \\
+	2. Take Turns\\
+	3. Randomly Access\\
+}
+\end{cf}
+
+\begin{cf}{
+	Time-Division Multiplexing\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=4cm]
+	\node[draw,rectangle,on chain,fill=red!30!white](){1};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){2};
+	\node[draw,rectangle,on chain,fill=green!30!white](){3};
+	\node[draw,rectangle,on chain,fill=blue!30!white](){4};
+	\node[draw,rectangle,on chain,fill=red!30!white](){1};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){2};
+	\node[draw,rectangle,on chain,fill=green!30!white](){3};
+	\node[draw,rectangle,on chain,fill=blue!30!white](){4};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	Frequency-Division Multiplexing\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going below,node distance=0cm,minimum height=1cm, minimum width=6cm]
+	\node[draw,rectangle,on chain,fill=red!30!white](){4-8kHz};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){8-12kHz};
+	\node[draw,rectangle,on chain,fill=green!30!white](){12-16kHz};
+	\node[draw,rectangle,on chain,fill=blue!30!white](){16-20kHz};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	1. Partition the Channel \\
+	2. Take Turns\\
+	3. Randomly Access\\
+}
+\end{cf}
+
+\begin{cf}{
+	Polling
+}
+\end{cf}
+
+\begin{cf}{
+	Token Passing
+}
+\end{cf}
+
+\begin{cf}{
+	Admin Matters
+}
+\end{cf}
+
+\begin{cf}{
+	Midterm and Assignment 1 marks posted on IVLE Gradebook.
+	Please check for surprises.
+}
+\end{cf}
+
+\begin{cf}{
+	Assignment 2 due this coming Sunday 23:59.
+}
+\end{cf}
+
+\begin{cf}{
+	1. Partition the Channel \\
+	2. Take Turns\\
+	3. Randomly Access\\
+}
+\end{cf}
+
+\begin{cf}{
+	Slotted ALOHA\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm]
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=2cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=2cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=2cm]{};
+	\node[draw,rectangle,on chain=going below,gray!40!white,minimum width=2cm]{};
+	\node[draw,rectangle,on chain=going left,gray!40!white,minimum width=2cm]{};
+	\node[draw,rectangle,on chain=going left,gray!40!white,minimum width=2cm]{};
+        \node[draw,rectangle,on chain=going below,gray!40!white,minimum width=2cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=2cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=2cm]{};
+	\end{tikzpicture}
+	\\
+	\note{
+		The discussions about effeciency of ALOHA, Slotted ALOHA, CSMA, and CSMA/CD in the textbook is outside the scope of CS2105.
+	}
+}
+\end{cf}
+
+\begin{cf}{
+	ALOHA\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going below,node distance=0cm,minimum height=1cm]
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\end{tikzpicture}
+}
+\end{cf}
+
+%\begin{frame}
+%When has a frame to send:
+%	\begin{itemize}
+%	\item wait until beginning of next slot
+%	\item send
+%	\item while there is a collision 
+%	\begin{itemize}
+%	\item retransmit at next slot with probability $p$
+%	\end{itemize}
+%	\end{itemize}
+%\end{frame}
+
+\begin{cf}{
+	CSMA (Carrier Sense Multiple Access)\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going below,node distance=0cm,minimum height=1cm]
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	CSMA/CD (Carrier Sense Multiple Access/Collision Detection)\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going below,node distance=0cm,minimum height=1cm]
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\node[draw,rectangle,on chain,gray!40!white,minimum width=6cm]{};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	While channel is not idle, wait\\
+	\vspace{1cm}
+	\begin{tikzpicture}[scale=2]
+		\draw[solid] (0,0) -- (0,3);
+		\draw[solid] (2,0) -- (2,3);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	if collide during transmission, stop\\
+	\vspace{1cm}
+	\begin{tikzpicture}[scale=2]
+		\draw[solid] (0,0) -- (0,3);
+		\draw[solid] (2,0) -- (2,3);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	At $n$-th consecutive collision, let $m = \min(n, 10)$.
+	Pick $K$ randomly from $\{0, 1, .. 2^{m-1}\}$.  Wait for 512K bit time.\\
+	\vspace{1cm}
+	\begin{tikzpicture}[scale=2]
+		\draw[solid] (0,0) -- (0,2);
+		\draw[solid] (2,0) -- (2,2);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	Example: DOCSIS \\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going below,node distance=0cm,minimum height=1cm, minimum width=6.2cm]
+	\node[draw,rectangle,on chain,minimum width=6cm,fill=yellow!30!white]{$\rightarrow$};
+	\node[draw,rectangle,on chain,minimum width=6cm,fill=yellow!30!white]{$\rightarrow$};
+	\node[draw,rectangle,on chain,minimum width=6cm,fill=yellow!30!white]{$\rightarrow$};
+	\end{tikzpicture}\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, minimum width=1.2cm]
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){$\leftarrow$};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\end{tikzpicture}\\
+}
+\end{cf}
+
+\begin{cf}{
+	Ethernet Framing Example\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black]{};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red]{};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white]{};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white]{};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](P){};
+        \node[below=2cm of P, align=center,font=\small](PL){Preamble\\(8 bytes)};
+	\draw[black](PL) -- (P);
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red]{};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white]{};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white]{};
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](P){};
+        \node[below=2cm of P, align=center,xshift=-1cm,font=\small](PL){Src MAC\\Address\\(6 bytes)};
+	\draw[black](PL) -> (P);
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white](Q){};
+        \node[below=2cm of Q, align=center,xshift=1cm,font=\small](QL){Dest MAC\\Address\\(6 bytes)};
+	\draw[black](QL) -> (Q);
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white]{};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white]{};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](P){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white](Q){};
+        \node[below=2cm of Q, align=center,font=\small](QL){Type\\(2 bytes)};
+	\draw[black](QL) -> (Q);
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white]{};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white]{};
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](P){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white](Q){};
+        \node[below=2cm of Q, align=center,font=\small](QL){Data\\(46-1474 bytes)};
+	\draw[black](QL) -> (Q);
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white]{};
+	\end{tikzpicture}
+}
+\end{cf}
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](P){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white]{};
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white](Q){};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white](Q){};
+        \node[below=2cm of Q, align=center,font=\small](QL){CRC\\(4 bytes)};
+	\draw[black](QL) -> (Q);
+	\end{tikzpicture}
+}
+\end{cf}
