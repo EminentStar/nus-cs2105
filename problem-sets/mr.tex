@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{exam}
+\documentclass[a4paper,11pt,answers]{exam}
     \usepackage{hyperref}
     \ifx\pdftexversion\undefined
        \usepackage{epsfig}
@@ -11,9 +11,15 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Midterm Review}%
-    {\large\sf Semester 2 10/11}
+    {\large\sf Semester 2 12/13}
     \firstpageheadrule
     \pagestyle{headandfoot}
+
+
+\textsf{For MCQ, pick the most appropriate answer and write the corresponding choice (A, B, C, D, or E) in the answer box.  If multiple answers are equally appropriate, pick one and
+write the chosen answer in the answer box.  Do NOT write more than one 
+answers in the answer box.  \textbf{If none of the answers are appropriate, write \texttt{X} in the answer box.}}
+
 
 \begin{questions}
 \question
@@ -39,6 +45,10 @@ incoming connections.
 \choice (i),(iii) and (iv) only      
 \end{choices}
 
+\begin{solution}
+(i), (ii) are correct.  C.
+\end{solution}
+
 \question
 Consider the sender's view of the sequence numbers in \textbf{Go-Back-N}         protocol.
 Suppose the first sequence number in the sender's window is $k$, and the last
@@ -51,6 +61,10 @@ number $i$ be $p_i$.  Which of the following MUST be TRUE?
 \choice If $p_{k+2}$ is not sent, then $p_{k+1}$ must not have been sent.
 \choice The receiver is currently expecting $p_k$.
 \end{choices}
+
+\begin{solution}
+C
+\end{solution}
 
 \question
 Consider a sender and a receiver, communicating using \textbf{Selective-Repeat}
@@ -65,6 +79,10 @@ of the next packet transmitted by the sender?
 \choice 12
 \end{choices}
 
+\begin{solution}
+X 
+\end{solution}
+
 \question
 Consider the checksum algorithm used to compute the checksum field in UDP   header and TCP header.  Although UDP and TCP uses 16-bits words in computing the checksum, in this  question you are asked to consider 8-bits summands.
 
@@ -75,7 +93,7 @@ Suppose a receiver received the following four 8-bit bytes over a           comm
 1001 1011
 1011 0110
 \end{verbatim}
-One of the given byte is the checksum (but I am not telling you which one), and the other three bytes is the data used to compute the checksum.  Which of the         following MUST BE TRUE?
+One of the given byte is the checksum (but I am not telling you which one), and the other three bytes is the data used to compute the checksum.  Which of the following MUST BE TRUE?
 								          \begin{choices} 
 \choice There are no errors in the received bytes.
 \choice There is a one bit error in the received bytes.
@@ -83,6 +101,10 @@ One of the given byte is the checksum (but I am not telling you which one), and 
 \choice The last byte \texttt{1011 0110} must be the checksum.
 \choice The first byte \texttt{1101 1011} must be the checksum.
 \end{choices}
+
+\begin{solution}
+X.  Very likely we have no errors, but it is possible that two bits are flipped and the checksum is still correct.
+\end{solution}
 
 \question
 Consider the following abbreviated output from the command
@@ -120,6 +142,13 @@ Give the IP address of
 \part host a3.nstld.com\\
 \end{parts}
 
+\begin{solution}
+202.12.27.33\\
+192.26.92.30\\
+137.132.90.2\\
+192.5.6.32
+\end{solution}
+
 \question
 Suppose we want to design a stop-and-wait, reliable protocol for communication 
 between a sender S and a receiver R, over a channel with the following 
@@ -141,6 +170,12 @@ of the protocol.  Justify your answer.
 (ii) Negative Acknowledgement
 (iii) Timeout
 (iv) Sequence Number
+\begin{solution}
+(i) Yes, to detect if a packet is lost
+(ii) No, since no packet will be corrupted.
+(iii) Yes, to detect lost packet
+(iv) No, since we know D, we will not have pre-mature timeout.  Duplicate is not possible.
+\end{solution}
 
 \part Using \textit{only} the necessary techniques above, design
 a stop-and-wait protocol for reliable communication between S and R 
@@ -153,6 +188,16 @@ actions in your FSM.
 Note that for full credit, your protocol should not only be correct, 
 but should also be as simple as possible.
 \end{parts}
+
+\begin{solution}
+Sender: wait for call: \\
+- when it has data to send, send a packet, set timer to D+1\\
+- when timeout, resend the packet, set timer to D+1\\
+- if receive ACK, reset the timer\\
+
+Receiver: wait for packet: \\
+- when receive a packet, deliver to application, send back ACK\\
+\end{solution}
 
 \question
 The following figure shows two hosts X and Y communicating over 
@@ -171,6 +216,11 @@ acknowledgement numbers.
         \includegraphics[scale=0.7]{tcp.eps}
 }
 
+\begin{solution}
+1st packet from Y to X: S = 120, A = 1100\\
+1st packet from X to Y: S = 1300, A = 220\\
+2nd packet from Y to X: S = 220, A = 1100\\
+\end{solution}
 
 \question
 Two hosts A and B are connected by a link with bandwidth-delay 
@@ -182,10 +232,25 @@ a packet of size $L$ bits to B.
 Let $T$ be the time between the first bit of the packet leaving A and the 
 last bit of the packet arriving at B.  Express $T$ in terms of $P$, $R$ and $L$.
 
+\begin{solution}
+Transmission time = $L/R$\\
+Propagation  time = $P/R$\\
+Total time $T = (L + P)/R$\\
+\end{solution}
+
 \part
 Suppose A and B are using alternating-bit protocol.  Assuming no packets are 
 lost, express the link utilization in terms of $P$, $R$, and $L$.
 
+\begin{solution}
+Time from sending the first bit of one packet until first bit of next packet = 
+$L/R + RTT = L/R + 2P/R$
+
+Utilization = $\frac{L/R}{L/R + 2P/R} = \frac{L}{L + 2P}$
+\end{solution}
+
 \end{parts}
 \end{questions}
+\vfill
+\center\Huge\sf THE END
 \end{document}

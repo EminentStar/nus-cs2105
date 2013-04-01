@@ -11,34 +11,45 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Problem Set 3}%
-    {\large\sf Semester 2 10/11}
+    {\large\sf Semester 2 12/13}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
     \begin{questions}
-	\question \textbf{(KR, Chapter 3, Problem 7)} 
-	Draw the FSM for the receiver side of protocol rdt 3.0.
+	\question \textbf{(KR, Chapter 3, P8)} 
+	Draw the FSM for the receiver side of protocol \texttt{rdt3.0}.
 
-	\question \textbf{(KR, Chapter 3, Problem 11)} 
+	\question \textbf{(KR, Chapter 3, P12)} 
+	The sender side of \texttt{rdt3.0} simply ignores (that 
+	is, take no action on) all received packets that are either 
+	in error or have the wrong value in the \texttt{acknum} 
+	field of an acknowledgement packet.  Suppose that in such 
+	circumstances, \texttt{rdt3.0} were simply to retransmit 
+	the current data packet.  Would the protocol still work?  
+	(\textit{Hint}: Consider what would happen if there were 
+	only bit errors; there are no packet losses but premature 
+	timeouts can occur.  Consider how many times the $n$th packet 
+	is sent).
+
+	\question \textbf{(Modified from KR, Chapter 3, P13)} 
 	Show that if the network connection between the sender and 
 	receiver can reorder messages (that is, that two messages 
 	propagating in the medium between the sender and receiver 
-	can be reordered), then the alternting-bit protocol rdt 3.0 
-	will not work correctly.  
+	can be reordered), then \texttt{rdt3.0} will not work correctly.  
 
-	\question \textbf{(KR, Chapter 3, Problem 13)} 
-	Consider a reliable data transfer protocol that uses \textit{only}
-	negative acknowledgements.  Suppose the sender sends data only
-	infrequently.  Would a NAK-only protocol be preferable to 
-	a protocol that uses ACKs?  Why?  
-	
-	Now suppose the sender has a lot of data to send and the 
-	end-to-end connection experiences few losses.  In this
-	second case, would a NAK-only protocol be preferable to a 
-	protocol that uses ACKs?  Why?
+%	\question \textbf{(KR, Chapter 3, Problem 13)} 
+%	Consider a reliable data transfer protocol that uses \textit{only}
+%	negative acknowledgements.  Suppose the sender sends data only
+%	infrequently.  Would a NAK-only protocol be preferable to 
+%	a protocol that uses ACKs?  Why?  
+%	
+%	Now suppose the sender has a lot of data to send and the 
+%	end-to-end connection experiences few losses.  In this
+%	second case, would a NAK-only protocol be preferable to a 
+%	protocol that uses ACKs?  Why?
 
-	\question \textbf{(KR, Chapter 3, Problem 14)} 
-	Consider the GBN (Go-Back-N) protocol with a sender window size of 3 and a sequence
+	\question \textbf{(KR, Chapter 3, P22)} 
+	Consider the GBN (Go-Back-N) protocol with a sender window size of 4 and a sequence
 	number range of 1,024. Suppose that at time $t$, the next in-order packet
 	that the receiver is expecting has a sequence number of $k$. Assume that the
 	medium does not reorder messages. Answer the following questions:
@@ -49,17 +60,7 @@
 	currently propagating back to the sender at time $t$? Justify your answer.
     \end{parts}
 
-	\question \textbf{(KR, Chapter 3, Problem 20)} 
-	Answer true-or-false to the following questions and briefly justify your
-	answer.
-	\begin{parts}
-	\part The alternating-bit protocol is the same as the SR protocol with a sender and receiver window size of 1.
-	\part The alternating-bit protocol is the same as the GBN protocol with a sender and receiver window size of 1.
-	\part With GBN, it is possible for the sender to receive an ACK for a packet that falls outside of its current window. 
-	\part With SR, it is possible for the sender to receive an ACK for a packet that falls outside of its current window. 
-	\end{parts}
-
-	\question \textbf{(KR, Chapter 3, Problem 22)} 
+	\question \textbf{(KR, Chapter 3, P23)} 
 	Consider the GBN and SR protocols. Suppose the sequence
 	number space is of size $k$. What is the largest allowable sender window that
 	will avoid the occurrence of problems such as that in Figure 3.27 for each of

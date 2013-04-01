@@ -11,13 +11,13 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Problem Set 4}%
-    {\large\sf Semester 2 10/11}
+    {\large\sf Semester 2 12/13}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
     \begin{questions}
 \question 
-\textbf{(KR, Chapter 3, Problem 2)} 
+\textbf{(Modified from KR, Chapter 3, P2)} 
 UDP and TCP use 1s complement for their checksums.  Suppse you have the following three 8-bit bytes, 01010011, 01010100, 01110100.  What is the 1s complement of the sum of these 8-bit bytes?  \footnote{Note that although UDP and TCP use 16-bit words in computing the checkusm, for this problem you are being asked to consider 8-bit sums}.  
 
 (Answer: 11100011)
@@ -36,15 +36,15 @@ For each segment in your figure, provide the sequence number and the number of b
 \end{parts}
 
 \question 
-\textbf{(KR, Chapter 3, Problem 24)} 
-Consider transferring an enormous file of $L$ bytes from Host A to Host B.
+\textbf{(Modified from KR, Chapter 3, P37)}
+Compare GBN, SR, and TCP. Assume that the timeout values for all three protcols are sufficiently long such that 5 consecutive data segments and their corresponding ACKs can be received (if not lost in the channel) by the receiving host $R$ and the sending host $S$ respectively.  
+
+Suppose that $S$ sends 5 data segments, back-to-back, to $R$, and the second segment from $S$ is lost.  In the end, all 5 data segments have been correctly received by $R$.
 
 \begin{parts}
-\part What is the maximum value of $L$ such that TCP sequence numbers are not exhausted? (Recall that the TCP sequence number field has 4 bytes).
-
-\part For the $L$ you obtain in (a), find how long it takes to transmit the file.  Assume that a total of 66 bytes of transport/network/link-layer header are added to each segment before the resulting packet is sent out over a 10Mbps link.  Ignore flow control and congestion control so A can pump out the segments back to back and continuously.
+\part How many segments has $S$ sent in total and how many ACKs have $R$ sent in total?  Answer this question for all three protocols.
+\part If the timeout values for all three protocols are much longer than 5 RTT, then which protocol successfully delivers all five data segments in shortest time interval?
 \end{parts}
-
 
 \question Older version of Microsoft Windows fixed the maximum TCP receiver window 
 to a constant (e.g., Windows 95 uses 8192 bytes).  Is this a good idea?  Why or why not?

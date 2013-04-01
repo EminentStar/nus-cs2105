@@ -11,83 +11,32 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Problem Set 6}%
-    {\large\sf Semester 2 10/11}
+    {\large\sf Semester 2 12/13}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
     \begin{questions}
 
-	\question \textbf{(CS2105 Final Exam, April 2006)}
-	The following diagram shows a simple network topology with 4 nodes.
-	The links in the diagram are labeled with the cost of each link. 
-	The nodes run distance vector routing protocol.  The protocol has
-	terminated, and each node knows the cost of the minimum cost path
-	to every other node.
+\question Suppose Alice wants to send a secure email $m$ to Bob, and wants to ensure confidentiality, sender authentication, and message integrity.  Alice performs the following steps (See Figure 8.21):
+\begin{enumerate}
+	\item generates a random session key $K_s$ 
+	\item encrypts the session key $K_s$ with Bob's public key, $K_B^+$, obtaining $K_B^+(K_s)$
+	\item hashes the message $m$ with a cryptographic hash function $H$, obtaining $H(m)$  \label{hash}
+	\item encrypts the hash with Alice's private key $K_A^-$, obtaining $K_A^-(H(m))$ \label{private}
+	\item encrypts the message $m$, concatenated ($\oplus$) with $K_A^-(H(m))$, using the session key $K_s$, obtaining $K_s(m \oplus K_A^-(H(m)))$
+	\item finally, sends $K_s(m \oplus K_A^-(H(m))) \oplus K_B^+(K_s)$ to Bob
+\end{enumerate}
 
-    \centerline{
-        \includegraphics[scale=.6]{dv}
-    }
+Show what Bob has to do to verify that $m$ is indeed from Alice and has not been modified.
 
-\begin{parts}
+Explain how these steps ensure confidentiality (prevents eavesdropping), sender authentication (prevents impersonation of Alice), and message integrity (prevents tempering with $m$), with the help of a certification authority.
 
-\part The following table shows an incomplete routing table at node $x$.
-Fill in the missing distance vector for $x$ and $z$.
+\question A certificate issued by a certification authority (CA) is digitally signed.  To verify the digital signature of the CA, however, the public key of the CA is needed.  How can we know that the given public key of a CA is trustable?
 
-\vspace{0.5cm}
-\centerline{
-\begin{tabular}{|r|c|c|c|c|}
-\hline
-& cost to $w$ & cost to $x$ & cost to $y$ & cost to $z$ \\
-\hline
-from $x$ &  & 0 &  &  \\[10pt]
-\hline
-from $y$ &  &   & 0 &  \\[10pt]
-\hline
-from $z$ &  &   &  &  0 \\[10pt]
-\hline
-\end{tabular}
-}
-\vspace{0.5cm}
+\question Ah Kow goes to the website www.ura.gov.sg to pay his parking fines to URA over unsecure HTTP.  When he clicks the ``pay'' button on the website, he is redirected to a website www.paymenow.com, which runs HTTPS and asks for his credit card number.  The certificate for www.paymenow.com is properly signed by Verisign.  Should Ah Kow give his credit card number?  Why or why not?
 
-\part Now, suppose the cost of the link between $x$ and $w$ 
-increases from 3 to 20.  Node $x$ detects the changes in the 
-cost.  Before $x$ receives any new distance vector 
-from its neighbors, triggered by these changes, $x$ recomputes its 
-new minimum-cost path to $w$, $y$, and $z$, and updates its distance
-vector.
+\question The School of Computing's VPN runs over SSL instead of IPSec.  
+What are the advantages of running a VPN over SSL versus over IPSec?  
 
-Suppose that poisoned reverse is NOT used.  
-What is the new computed cost from $x$ to $w$?
-
-
-\part Suppose that poisoned reverse is used.
-What is the new computed cost from $x$ to $w$?
-
-
-\end{parts}
-
-	\question \textbf{(KR, Chapter 4, Problem 25)}
-	Consider the network fragment shown below.  $x$ has only two attached
-	neighbors, $w$ and $y$.  $w$ has a minimum-cost path to destination $u$
-	(not shown) of 5, and $y$ has a minimum-cost path to $u$ of 6.  The
-	complete paths from $w$ and $y$ to $u$ (and between $w$ and $y$) are not
-	shown.  All link costs in the network have strictly positive integer
-	values.
-
-	\begin{center}
-	\includegraphics[scale=0.5]{ps6fig}
-	\end{center}
-
-	\begin{parts}
-	\part Give $x$'s distance vector for destinations $w$, $y$ and $u$.
-	\part Give a link-cost change for either $c(x,w)$ or $c(x,y)$ such that
-	$x$ will inform its neighbors of a new minimum-cost path to $u$ as a
-	result of executing the distance vector algorithm.
-	\part Give a link-cost change for either $c(x,w)$ or $c(x,y)$ such that
-	$x$ will \textit{not} inform its neighbors of a new minimum-cost path to
-	$u$ as a result of executing the distance vector algorithm.
-	\end{parts}
-
-    \end{questions}
-
+\end{questions}
 \end{document}
