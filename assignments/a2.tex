@@ -12,23 +12,23 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Assignment 2}%
-    {\large\sf Semester 2 10/11}
+    {\large\sf Semester 2 12/13}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
     \section*{Deadline}
 
-    27 March, 2011 (Sunday), 11:59pm.
+    31 March, 2013 (Sunday), 11:59pm.
 
     \section*{Objective}
 
-    In this assignment, you will implement a reliable transfer protocol on top of a unreliable channel that can drop packets randomly (but always deliver in order and corruption-free).
+    In this assignment, you will implement a reliable transfer protocol on top of a unreliable channel that can drop packets or corrupt packets randomly (but always deliver packets in order).
 
     \section*{Pre-requisite}
 
 You are expected to be familiar with the alternating bit protocol (rdt 3.0).
 
-The assignment will be done under a controlled, UNIX environment. Familarity with UNIX environment (how to copy/move/delete/edit files, how to compile and run programs, etc.) is assumed.
+The assignment will be done under a controlled, UNIX environment. Familiarity with UNIX environment (how to copy/move/delete/edit files, how to compile and run programs, etc.) is assumed.
 
 \section*{Administrative Matters}
 
@@ -42,9 +42,9 @@ If you have any questions or encounter any problems with the steps discussed in 
 
 For this assignment, you are given the code for a receiver and sender for three network layers: application, reliable transport (RDT), and unreliable transport (UDT).
 
-The UDTSender and UDTReceiver classes simulate a networking layer that delivers packets unreliably.  Packet can get loss randomly.  However, for simplicity, you can assume that this layer delivers packets in order and never corrupts the packets.
+The \texttt{UDTSender} and \texttt{UDTReceiver} classes simulate a networking layer that delivers packets unreliably.  A packet can get loss or get corrupted randomly.  However, for simplicity, you can assume that this layer delivers packets in order.
 
-The FileSender and FileReceiver classes are the application that we use for this assignment.  The FileReceiver basically is a server that waits for connection, receives a file, and saves the file onto the disk with a given name.  To run FileReceiver, use
+The \texttt{FileSender} and \texttt{FileReceiver} classes implement a file transfer application for this assignment.  \texttt{FileReceiver} basically waits for a connection, receives a file, and saves the file onto the disk with a given name.  To run \texttt{FileReceiver}, use
 \begin{verbatim}
   java FileReceiver <port> <filename>
 \end{verbatim}
@@ -52,25 +52,25 @@ For example,
 \begin{verbatim}
   java FileReceiver 9000 foo.zip
 \end{verbatim}
-listens on port 9000 for connection and dumps the bytes received into a file named foo.zip.
+listens on port 9000 for connection and dumps the bytes received into a file named \texttt{foo.zip}.
 
-The FileSender program is basically a file uploader that connects to FileReceiver and sends the data read from a given file to FileReceiver.  To run FileSender, 
+The \texttt{FileSender} program is basically a file uploader that connects to the \texttt{FileReceiver} and sends the data read from a given file to \texttt{FileReceiver}.  To run \texttt{FileSender}, 
 \begin{verbatim}
   java FileSender <filename> <hostname> <port>
 \end{verbatim}
 For example, 
 \begin{verbatim}
-  java FileSender foo.zip suna.comp.nus.edu.sg 9000
+  java FileSender foo.zip sunfire.comp.nus.edu.sg 9000
 \end{verbatim}
-connects to a FileReceiver running on suna.comp.nus.edu.sg at port 9000 and uploads foo.zip to the server.
+connects to a \texttt{FileReceiver} running on sunfire.comp.nus.edu.sg at port 9000 and uploads \texttt{foo.zip} to the server.
 
-Obviously, FileSender and FileReceiver require data delivery to be reliable (data sent cannot be lost).  This is where you come in.  
+Obviously, \texttt{FileSender} and \texttt{FileReceiver} require data delivery to be reliable. This is where you come in.  
 
 \section*{Your Tasks}
 
-You are also provided with two classes, RDTSender and RDTReceiver, that interface between the application (FileSender and FileReceiver) and the unreliable data transport (UDTSender and UDTReceiver).  RDTSender and RSTReceiver should employ techniques from Lecture 3, including acknowledgement, retransmission, timeout, and sequence number, to make sure that data to be delivered from ``above'' is sent correctly to the other side.   You need not, however, implement windowing nor checksum.
+You are also provided with two classes, \texttt{RDTSender} and \texttt{RDTReceiver}, that interface between the application (\texttt{FileSender} and \texttt{FileReceiver}) and the unreliable data transport (\texttt{UDTSender} and \texttt{UDTReceiver}).  \texttt{RDTSender} and \texttt{RDTReceiver} should employ techniques from Lecture 3, including acknowledgement, retransmission, timeout, and sequence number, to make sure that data to be delivered from ``above'' is sent correctly to the other side.   You need not, however, implement windowing nor checksum.  You can assume that a corrupted packet can be magically detected through checking the \texttt{isCorrupted} flag of a packet.
 
-So, your task in this assignment is to modify the given RDTSender.java and RDTReceiver.java such that FileSender and FileReceiver will work correctly -- the received file is exactly the same as the file uploaded.  
+So, your task in this assignment is to modify the given \texttt{RDTSender.java} and \texttt{RDTReceiver.java} such that \texttt{FileSender} and \texttt{FileReceiver} will work correctly -- the received file is exactly the same as the file uploaded.  
 
 You should read the given set of source code carefully to understand the interaction between the different classes.  The code is documented and should be pretty self-explanatory.  There are only about 300 lines of code in total.
 
@@ -87,7 +87,7 @@ Figure 1 shows the overall relationship between the classes in this assignment.
 
 \subsection*{Timer}
 
-You will need two java.util.* classes to implement timeout.  The Timer class schedules a task to be executed periodically after a certain delay, while the TimerTask class implements the code that you want to execute periodically.  For example, to print a given number after 5 seconds, and subsequently every 5 seconds, you create the following task, 
+You will need two java.util.* classes to implement timeout.  The \texttt{Timer} class schedules a task to be executed periodically after a certain delay, while the \texttt{TimerTask} class implements the code that you want to execute periodically.  For example, to print a given number after 5 seconds, and subsequently every 5 seconds, you create the following task, 
 \newpage
 
 \begin{verbatim}
@@ -111,13 +111,44 @@ When you want to stop printing,
   timer.cancel();
 \end{verbatim}
 
+You can read the Java document on these two classes for more details.
+You should write your own private class that implements the timer.
+
+\subsection*{Timeout Value}
+
+Your implementation should work for any retransmission timeout values.  Note, however, that if you set your timeout value to be too small (in order of milliseconds), you will have many unnecessary retransmissions due to premature timeout.  On the other hand, if your timeout value is too large (in order of seconds), then the file transfer will take a long time to complete.  A timeout value of a few hundred milliseconds work well for me.
+
 \subsection*{Sending and Receiving Packets}
 
-(This has been done for you, so this section is for your information only)
+(This operation has been done for you, so this section is for your information only)
 
-To send and receive packets, the given code uses object serialization.  Two types of packets are defined, DataPacket and AckPacket.  They are implemented in DataPacket.java and AckPacket.java respectively.  Both classes implement the Java object serialization interface, which allows an object to be ``serialized'', i.e., to be converted into a byte stream that can be written somewhere (for instance, to disk, to a socket).  The byte stream can be read and transformed back into an object.
+To send and receive packets, the given code uses object serialization.  Two types of packets are defined, \texttt{DataPacket} and \texttt{AckPacket}.  They are implemented in \texttt{DataPacket.java} and \texttt{AckPacket.java} respectively.  Both classes implement the Java object serialization interface, which allows an object to be ``serialized'', i.e., to be converted into a byte stream that can be written somewhere (for instance, to disk, to a socket).  The byte stream can be read and transformed back into an object.
 
-To send and receive data packets and ack packets, the given code wraps an object I/O stream around a socket, and calls readObject() and writeObject() to read and write DataPacket objects and AckPacket objects, effectively sending and receiving packet objects between the sender and the receiver.
+To send and receive data packets and ack packets, the given code wraps an object I/O stream around a socket, and calls \texttt{readObject()} and \texttt{writeObject()} to read and write \texttt{DataPacket} objects and \texttt{AckPacket} objects, effectively sending and receiving packet objects between the sender and the receiver.
+
+\subsection*{Dropping and Corrupting Probability}
+
+The UDT layer randomly corrupts or drops packets according to the probability \texttt{P\_DROP} and \texttt{P\_CORRUPT} respectively.  You can set these value to anything you want during testing.  If you have trouble getting the code to work, it might be useful to set one or more of these variables to 0 for debugging purposes.
+
+\subsection*{Detecting Closed Connection}
+One practical issue that needs to be dealt with for rdt 3.0 is the closing of the connection.  In this assignment, the sender sends a packet with no data (0 byte) to signal that there is no more packet.  The receiver closes the connection when it receives all the data correctly.  This action may lead to an \texttt{EOFException} being thrown at the sender.
+
+You may handle this exception at the sender side by gracefully closing the connection.  You need not implement a TCP-like four-way handshake (FIN/ACK) to close the connection.
+
+\section*{Verifying The Received File}
+One way to check if the file received is the same as the file sent is to use cryptographic hash functions (Lecture 8).
+
+On cs2105-z, the command \texttt{digest} can be used to compute a hash value for a file.  Different algorithms can be used, including MD5 and SHA-1, two popular MAC hashing function.  Here is what you can do:
+\begin{enumerate}
+\item Check the hash value of the file you want to send.  Suppose the file is called \texttt{foo.zip}:
+\begin{verbatim}
+bash$ digest -a md5 foo.zip
+6e47011c85bf4532141b726105e11c0a
+\end{verbatim}
+You will see a hex string printed after running the command.  That is the hash of your file computing using the MD5 algorithm.
+
+\item Repeat the command above for the received file and compared its hash to the hash computed at the sender.  They must be identical if the two files are identical.  The chances that the file is corrupted during transmission but still produce the same hash value is small, due to the property of cryptographic hash function.
+\end{enumerate}
 
 \section*{Your cs2105-z Account}
 
@@ -133,15 +164,15 @@ Note that you must put your files inside the directory \texttt{a2} directly unde
 
 You will be responsible for the security of your own source code. Please be careful and set the correct permission for your files. They should not be readable by anyone else except the owner (chmod 600 *.java will ensure that).
 
-Note that you will be running your FileReceiver on the same host, and therefore must use a different port number. To prevent collision, you should avoid "nice" port numbers such as 8000 or 8080.
+Note that many of you will be running \texttt{FileReceiver} on the same host, and therefore must use a different port number. To prevent collision, you should avoid "nice" port numbers such as 8000 or 8080.
 
 \section*{Submission and Grading}
 
 There is no need to submit the program by email or IVLE workbin. We will collect your assignment from your home directory on cs2105-z.comp.nus.edu.sg when the deadline is over.
 
-We will test your assignment automatically using a grading program. For this to work, you must not modify other java files (except RDTSender and RDTReceiver) in any signficant way (println of debugging statement is OK).  If you suspect that there is a bug in these code, please contact us by posting on the blog.  
+We will test your assignment automatically using a grading program. For this to work, you must not modify other java files (except \texttt{RDTSender} and \texttt{RDTReceiver}) in any signficant way (changing loss/corruption probability and adding printing debugging statement is OK).  If you suspect that there is a bug in these code, please contact us by posting on the blog.  
 
-You MUST name your java program RDTSender.java and RDTReceiver.java.  We will only compile these two files when we grade. You MUST not implement additional classes in other *.java files.
+You MUST name your java program \texttt{RDTSender.java} and \texttt{RDTReceiver.java}.  We will only compile these two files when we grade. You MUST not implement additional classes in other *.java files.
 
 \section*{Using Another Platform}
 
@@ -154,10 +185,9 @@ You are free to discuss the assignment with your peers. But, ultimately, you sho
 \section*{Grading}
 
 \begin{itemize}
-\item 2 marks: Implement sequence number correctly.
-\item 2 marks: Implement acknowledgement correctly.
-\item 2 marks: Implement retransmission correctly.
-\item 4 marks: Implement timeout correctly.
+\item 3 marks: Correctly handle corrupted packets.
+\item 3 marks: Correctly handle duplicate packets.
+\item 4 marks: Correctly handle lost packets.
 \end{itemize}
 
 We will deduct one marks for every failure to following instructions (wrong directory name, wrong filename, etc.)
