@@ -18,7 +18,7 @@
 \firstpageheader{\large\sf CS2105}%
 {\large\sf National University of Singapore\\ School of Computing \\
 \LARGE\sf DIY Exercise 3}%
-{\large\sf Semester 2 10/11}
+{\large\sf Semester 2 12/13}
 \firstpageheadrule
 \pagestyle{headandfoot}
 
@@ -51,12 +51,21 @@ Now, look at the content of the DHCP ACK packets, and pay attention to the optio
 	\item Domain Name Server
 \end{itemize}
 
+\begin{parts}
+\part
 What is the meaning of each of these options?
 
+\part
 Now repeat this using different network connections (e.g., at home, at school, public WiFi such as Wireless@SG, Internet tethering with 3G, etc.).  Do you see a different set of values?  Which network gives the longest lease time? the shortest lease time?
+\end{parts}
 
 \question
+Restart your capture.  Run \texttt{traceroute} to \texttt{www.google.com}
+(or \texttt{tracert} on Windows).  Let the IP address of the host www.google.com being tracerouted to be $x$.  In the field ``Filter:'', enter \texttt{ip.dst == x}.  You should now see a sequence of packets sent and received during the traceroute operation.
 
+Analyze the sequence of UDP and ICMP messages sent and received, and related it to how \texttt{traceroute} works.  Pay attention to the TTL field in the IP header of UDP packets and the source IP addresses of the ICMP packets.
+
+\question
 Find out all the interfaces on your computer.  On Windows, run \texttt{ipconfig /all} in a command window.  If you are using a Mac or Linux, run \texttt{ifconfig}.
 
 What is the IP addresses associated with each of the interface, if any?  Are they public IPs or private IPs?  What is your current active interface?
@@ -65,7 +74,7 @@ What is the IP addresses associated with each of the interface, if any?  Are the
 
 Print out the routing table on your computer.  If you are on Windows, type \texttt{ROUTE PRINT} in a command window.  If you are using Mac or Linux, run \texttt{netstat -rn}.
 
-You should see three columns that correspond to the destination IP, the gateway, and the interface, respectively.  
+Identify the columns that correspond to the destination IP, the gateway, and the interface.  
 
 What is the meaning of the column labeled ``gateway''?
 
