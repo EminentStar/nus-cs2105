@@ -1,0 +1,21 @@
+<p>
+11 February, 2013.
+</p>
+
+<p>
+This is a screencast-only lecture on socket programming.  I will show how to write simple TCP applications, include a Web server.  I will also show UDP-based networked application.
+</p>
+<p>
+Related sections from Java API documentation: <a href="http://download.oracle.com/javase/6/docs/api/java/net/Socket.html">Socket</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/net/ServerSocket.html">ServerSocket</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/net/DatagramSocket.html">DatagramSocket</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/net/DatagramPacket.html"DatagramPacket</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/net/InetAddress.html">InetAddress</a>
+</p>
+<p>
+Download source code: 
+<a href="http://www.comp.nus.edu.sg/~cs2105/1213s2/code/TCPServer.java">TCPServer</a>, 
+<a href="http://www.comp.nus.edu.sg/~cs2105/1213s2/code/WebServer.java">WebServer</a>,
+<a href="http://www.comp.nus.edu.sg/~cs2105/1213s2/code/TCPClient.java">TCPClient</a>,
+<a href="http://www.comp.nus.edu.sg/~cs2105/1213s2/code/UDPServer.java">UDPServer</a>,
+<a href="http://www.comp.nus.edu.sg/~cs2105/1213s2/code/UDPClient.java">UDPClient</a>.
+</p>
+<p>
+There is no corresponding sections in the textbook (the book uses Python for socket programming).  
+</p>

@@ -1,0 +1,3 @@
+Here are <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/mr.pdf">the midterm review questions</a>, selected from past CS2105 midterms and finals.  
+
+No solution will be posted, but you are more than welcome to show the teaching staff your solution and discuss them with us, either online or during our office hours.

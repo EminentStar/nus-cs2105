@@ -1,0 +1,16 @@
+<p>
+4 March, 2013.
+</p>
+
+<p>
+This week we will look at how routing is done on the Internet, focusing on distance vector routing protocol and RIP, used in intra-AS routing.
+</p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1011s2/lec07-route.pdf">PDF</a>
+<p>
+Please read the following sections in the textbook.
+Reading:<br>
+Chapter 4 of KR.<br>
+<ul><li>4.5 Routing Algorithms
+<ul><li>4.6.1 Intra-AS Routing in the Internet: RIP
+</ul>
+

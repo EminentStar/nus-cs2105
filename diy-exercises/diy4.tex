@@ -18,7 +18,7 @@
 \firstpageheader{\large\sf CS2105}%
 {\large\sf National University of Singapore\\ School of Computing \\
 \LARGE\sf DIY Exercise 4}%
-{\large\sf Semester 2 10/11}
+{\large\sf Semester 2 12/13}
 \firstpageheadrule
 \pagestyle{headandfoot}
 
@@ -36,6 +36,26 @@
 \end{itemize}
 
 Are these root certificates unsigned or self-signed?  Who issued the root certificates?
+
+\question
+This questions assume that you have the School of Computing Virtual Private Network (SoC VPN) setup on your computer.  For documentation on SoC VPN and setup instructions, see \url{https://docs.comp.nus.edu.sg/node/1553}.  For help with setup, please approach the Technical Help Desk at COM1 Level 1.
+
+We also assume that you are comfortable with running Wireshark, capturing packets, and 
+filtering the display of packets. 
+
+You can follow this exercise even if you are connected to the Internet from within NUS.
+
+\begin{parts}
+		\part First, pick one of the IP addresses of www.google.com by running \texttt{dig}.  Suppose the IP address you pick is 123.45.67.89.
+	\part Leave the SoC VPN off.  Run Wireshark and start capturing packets.  Run the following command:
+	\begin{verbatim}
+		curl -I 123.45.67.89
+	\end{verbatim}
+	Use Wireshark to filter out the packets you sent and received from this IP address with the filter \texttt{ip.addr == 123.45.67.89}.  Take a good look at the packets.
+	\part Now, turn on SoC VPN.  Run Wireshark and restart your packet capture.  Run the same \texttt{curl} command again, and using the same filter to filter the packets capture.  What do you see (or not see)?  
+	\part Stop capturing, remove the filters, and observes all the TCP traffic captured.  Where has all the TCP traffic gone to?
+
+\end{parts}
 
 \question
 In this question, you will learn to setup a pair of private key and public key for communication between your sunfire account and your cs2105-z account.  With these setup, you no longer have to key in your password everytime you ssh into cs2105-z from sunfire!

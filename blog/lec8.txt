@@ -1,0 +1,22 @@
+<p>
+18 March, 2013.
+</p>
+
+<p>
+This week we will look at network security at the application, transport, and network layer. We will skip the mathematics involved (there are other modules for that) and focus on the concepts that enable secure communication via SSL and IPsec.
+</p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec08-secure.pdf">PDF</a>
+<p>
+Please read the following sections in the textbook.
+Reading:<br>
+<ul>
+<li>1.6 Networks Under Attack
+<li>8.1 What is Network Security?
+<li>8.2 Principles of Cryptography (exclude 8.2.1)
+<li>8.2.2 Public Key Encryption (exclude RSA and subsequent paragraphs)
+<li>8.3 Message Integry and Digital Signatures
+<li>8.4 End-Point Authentication
+<li>8.6 Securing TPC Connections: SSL (exclude 8.6.2)
+<li>8.7 Network-Layer Security: IPsec and VPN (exclude 8.7.5)
+<li>8.9 Firewalls and Intrusion Detection Systems (FYI only)
+</ul>

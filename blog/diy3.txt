@@ -1,0 +1,3 @@
+Here is <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/diy3.      pdf">your third DIY exercise</a>.  This is an ungraded exercise, but completing the exercise should deepen you understanding of the materials covered in class.
+
+You are encouraged to ask questions and discuss your results online on the blog.

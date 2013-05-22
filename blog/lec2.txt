@@ -1,0 +1,14 @@
+<p>
+21 January, 2013.
+</p>
+<p>
+In this lecture, I will cover three topics on application-layer. First, I will explain networked applications and the interface to the transport layer. Second, I will describe an example protocol that lives in the application layer, HTTP. Third, I will talk about DNS, a directory service used by networked applications.
+</p>
+<p>
+Reading: Chapter 2 of KR.
+<ul>
+<li>2.1 Principles of Network Applications</li>
+<li>2.2 The Web and HTTP</li>
+<li>2.5 DNS -- The Internet's Directory Service</li>
+</ul>
+Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec02-app.pdf">PDF</a>

@@ -1,0 +1,18 @@
+<p>
+1 April, 2013.
+</p>
+
+<p>
+This week we will take a look at another multiple access protocol, CSMA/CA for WiFi, and discuss the roles of hubs, switch, and routers in forming a LAN.  ARP will be discussed as well.
+</p>
+<p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec10-lan.pdf">PDF</a>
+</p>
+<p>
+Please read the following sections in the textbook.
+<ul>
+<li>5.4 Switched Local Area Network (exclude 5.4.4)
+<li>6.3.1 The 802.11 Architecture
+<li>6.3.2 The 802.11 MAC Protocol
+</ul>
+</p>

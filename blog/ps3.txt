@@ -1,0 +1,3 @@
+We will discuss Problem Set 3 during the tutorial sessions of Week 5.
+
+<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/ps3.pdf">Download</a> the PDF version of Problem Set 3 here.  Please attempt the questions before coming to class and be prepared to present your solutions.

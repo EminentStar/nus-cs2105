@@ -1,0 +1,14 @@
+Here is your first assignment.  
+
+You may download the <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/a1.pdf">PDF version of Assignment 1</a> here. 
+
+You have two and a half week to complete this assignment (excluding recess week) in a team of two.  The assignment is due on 10 March 2013.
+
+Some word of advice:
+<ol>
+<li>Start early.  Plan your time properly.
+<li>Write your own code.  Do not copy from your class mates.
+<li>Read the description carefully.  It is long, but is full of useful information.  The assignment is rather straight forward once you understand what to do.
+<li>Read the instructions carefully and follow them exactly.
+<li>Ask for help from teaching staff if you have questions.
+</ol>

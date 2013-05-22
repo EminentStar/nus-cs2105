@@ -1,0 +1,3 @@
+We will start the discussion of Problem Set 6 next week.
+
+<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/ps6.pdf">Download</a> the PDF version of Problem Set 6 here.  Please attempt the questions before coming to class, and be prepared to present your solutions.

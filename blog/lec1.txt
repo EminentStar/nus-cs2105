@@ -1,0 +1,21 @@
+<p>
+14 January, 2013.
+</p>
+
+<p>
+In this first lecture, I will give a brief introduction to the module and introduce many basic concepts, including: host, protocol, packet, packet switching, circuit switching, store-and-forward, delay, throughput, bottleneck link, packet loss, traceroute, and the five layers of the Internet.
+</p>
+<p>
+Please read the following for a high-level introduction to computer networks and the Internet.  We will revisit many of the concepts again in future lectures.
+Reading:<br>
+Chapter 1 of KR.<br>
+<ul><li>1.1 What is the Internet?
+<li>1.2 The Network Edge
+<li>1.3 The Network Core
+<li>1.4 Delay, Loss, and Throughout (except 1.4.2)
+<li>1.5 Protocol Layers and Their Service Models
+</ul>
+</p>
+<p>
+Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec01-intro.pdf">PDF</a>
+</p>

@@ -1,0 +1,19 @@
+<p>
+25 March, 2013.
+</p>
+
+<p>
+This week we continue our venture down the protocol stack, and look at the 
+link layer.  We will review the services provided by the link layer, how error detection/correction is done, how shared medium are accessed, and finish up with a discussion on Ethernet frame format.
+
+</p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec09-link-post.pdf">PDF</a>
+<p>
+Please read the following sections in the textbook.
+Reading: Chapter 5<br>
+<ul>
+<li>5.1 Introduction to the Link Layer
+<li>5.2 Error-Detection and -Correction Techniques
+<li>5.3 Multiple Access Links and Protocols (skip efficiency analysis in 5.3.2)
+<li>5.4.2 Ethernet - Ethernet Frame Structure (page 497 - 499)
+</ul>

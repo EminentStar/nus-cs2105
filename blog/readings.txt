@@ -1,0 +1,64 @@
+<p>
+Here is the list of sections from the textbook that I plan to cover over this semester.
+</p>
+<p>
+Please note that:
+<ul>
+<li>I do not cover the sections in order.
+<li>I may remove some sections later if time is an issue.
+</ul>
+</p>
+<ul>
+<li>Chapter 1
+	<ul><li>1.1 What is the Internet?
+	<li>1.2 The Network Edge
+	<li>1.3 The Network Core
+	<li>1.4 Delay, Loss, and Throughout (exclude 1.4.2).
+	<li>1.5 Protocol Layers and Their Service Models
+	<li>1.6 Networks Under Attack
+	</ul>
+<li>Chapter 2
+	<ul><li>2.1 Principles of Network Applications
+	<li>2.2 The Web and HTTP
+	<li>2.5 DNS -- The Internet's Directory Service
+	</ul>
+<li>Chapter 3 of KR
+	<ul>
+	<li>3.1 Introduction
+	<li>3.2 Multiplexing and Demultiplexing
+	<li>3.3 Connectionless Transport: UDP
+	<li>3.4 Principles of Reliable Data Transfer
+	<li>3.5 Connection-oriented Transport: TCP (exclude 3.5.3) 
+	</ul>
+<li>Chapter 4 of KR.<br>
+	<ul><li>4.1 Introduction
+	<li>4.4 The Internet Protocol (IP) (exclude 4.4.4, 4.4.5)
+	<li>4.5 Routing Algorithms
+	<li>4.6.1 Intra-AS Routing in the Internet: RIP
+	</ul>
+<li>Chapter 5
+	<ul>
+	<li>5.1 Link Layer: Introduction and Services
+	<li>5.2 Error Detection and Correction Techniques
+	<li>5.3 Multiple Access Protocols (but skip efficiency analysis)
+	<li>5.4 Switched Local Area Networks (exclude 5.4.4)
+	<li>5.7 A Day in the Life of a Web Page Request
+	</ul>
+<li>Chapter 6
+	<ul>
+	<li>6.1 Introduction
+	<li>6.3.1 The 802.11 Architecture
+	<li>6.3.2 The 802.11 MAC Protocol
+	</ul>
+<li>Chapter 8
+	<ul>
+	<li>8.1 What is Network Security?
+	<li>8.2 Principles of Cryptography (exclude 8.2.1)
+	<li>8.2.2 Public Key Encryption (exclude RSA and subsequent paragraphs)
+	<li>8.3 Message Integrity and Digital Signatures
+	<li>8.4 End-Point Authentication
+	<li>8.6 Securing TPC Connections: SSL (exclude 8.6.2)
+	<li>8.7 Network-Layer Security: IPsec and VPN (exclude 8.7.5)
+	<li>8.9 Firewalls and Intrusion Detection Systems
+	</ul>
+</ul>
