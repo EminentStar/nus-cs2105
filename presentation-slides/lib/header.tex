@@ -1,0 +1,32 @@
+% Use Myriad Pro as the standard font
+\usepackage{soul}
+\usepackage{fontspec}
+\setsansfont[LetterSpace=-3]{Myriad Pro}
+%\addfontfeature{LetterSpace=10}
+
+% Load colors
+%\usepackage{color}
+%\usepackage[usenames]{xcolor}
+
+\definecolor{AppBlue}{HTML}{031E89}
+\definecolor{TransportBlue}{HTML}{0D65A9}
+\definecolor{NetworkGreen}{HTML}{0D7544}
+\definecolor{LinkBrown}{HTML}{7F7C16}
+\definecolor{PhysicalRed}{HTML}{7D0F08}
+
+\usepackage{tikz}
+\usetikzlibrary[chains,positioning,arrows,shapes,trees,automata,shapes.multipart,decorations,decorations.pathmorphing]
+
+% Set default font size
+\setbeamerfont{block title}{size=\Huge}
+\setbeamertemplate{footline}[text line]{%
+	\color{white!80!gray}\parbox{\linewidth}{\tiny{\vspace*{-8pt}CS2105\hfill Lecture \lecturenumber\hfill\insertpagenumber}}}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{note page}{%
+	\insertslideintonotes{0.25}\\
+	\insertnote%
+}
+
+\newenvironment{cf}[2][c]{
+\begin{frame}[fragile,environment=cf,#1]
+\begin{center}\large{#2}}{\end{center}\end{frame}}

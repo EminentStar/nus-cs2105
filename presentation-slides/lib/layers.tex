@@ -1,0 +1,19 @@
+\begin{cf}{
+	\begin{tikzpicture}[scale=2, start chain=going below]
+	\foreach \color / \label in {
+		AppBlue/Application,
+		TransportBlue/Transport,
+		NetworkGreen/Network,
+		LinkBrown/Link,
+		PhysicalRed/Physical
+	}
+	\node[draw,rectangle,
+	minimum height=1.5 cm, 
+	minimum width=5 cm, 
+	text=white, 
+	node distance=0cm,
+	on chain, fill=\color]{\label};
+	\end{tikzpicture}
+}
+\end{cf}
+

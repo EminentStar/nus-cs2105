@@ -1,0 +1,16 @@
+\begin{cf}{
+	\begin{tikzpicture}
+	\node[draw,circle](R){};
+	\node[below=.5cm of R,font=\footnotesize](){router};
+	\node[draw,circle,right=of R](M){};
+	\node[below=.5cm of M,font=\footnotesize](){modem};
+	\node[cloud,draw,cloud puffs=10.4,cloud ignores aspect, minimum width=2.5cm, minimum height=1.6cm,on chain,right=of M](I){\footnotesize Internet};
+	\path[draw] (M) -- (R);
+	\path[draw] (M) -- (I);
+
+	\node[draw,circle,above=of R](C){};
+	\node[above=.5cm of C](){\footnotesize laptop};
+	\end{tikzpicture}
+}
+\end{cf}
+
