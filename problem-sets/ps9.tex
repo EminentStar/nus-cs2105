@@ -11,39 +11,45 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Problem Set 9}%
-    {\large\sf Semester 2 10/11}
+    {\large\sf Semester 2 12/13}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
-    \begin{questions}
-	\question 
-	Consider three LANs interconnected by two routers, as shown below
-	\begin{figure}
-	\includegraphics[scale=0.5]{fig05_38.png}
-	\end{figure}
-	Use these IP and MAC addresses:
-	\begin{itemize}
-		\item A: 111.111.111.001, 00-00-00-00-00-00
-		\item B: 111.111.111.003, 11-11-11-11-11-11
-		\item Left router, interface on Subnet 1: 111.111.111.002, 22-22-22-22-22-22
-		\item Left router interface on Subnet 2: 122.222.222.002, 33-33-33-33-33-33
-		\item C: 122.222.222.001, 44-44-44-44-44-44
-		\item D: 122.222.222.004, 66-66-66-66-66-66
-		\item 	Right router, interface on Subnet 2: 122.222.222.003, 55-55-55-55-55-55
-		\item 	Right router, interface on Subnet 3: 133.333.333.002, 88-88-88-88-88-88
-		\item 	E: 133.333.333.001, 77-77-77-77-77-77
-		\item 	F: 133.333.333.003, 99-99-99-99-99-99
-	\end{itemize}
-	\begin{parts}
-\part
-Consider sending an IP datagram from Host E to Host B. Suppose all of the ARP tables are up to date. Enumerate all the steps.
-\part
-Repeat the above problem, now assuming that the ARP table in the sending host is empty (and the other tables are up to date).
-\part Suppose the router between subnets 2 and 3 is replaced by a switch. Explain how your answers to (b) and (c) will change.
-\end{parts}
+\begin{questions}
+\question 
+	For each of the encoding methods below, show how the bit 
+	sequence 01011001 is encoded: RZ, NRZ-I, NRZ-L, Manchester, Differential Manchester.  
+	
+	Assume that the signal for the first bit (i.e, bit 0) starts at positive value.
 
 \question 
-Give an example where collision can still happen with CSMA/CA in a wireless network, even if RTS/CTS is used and propagation delay is zero.  
+	The following signal is received.  The first bit is 0.  Decode the bit sequence if (i) NRZ-I is used; (ii) Manchester coding is used; and (iii) Differential Manchester coding is used.  
 
-    \end{questions}
+	\begin{center}
+	\includegraphics[scale=0.2]{signal-crop.pdf}
+	\end{center}
+
+\question A given transmission medium has a SNR of 127 and supports frequency ranging from 1Mhz to 3MHz.  A signal is transmitted using the following modulation scheme:
+	\[
+	s(t) = \left\{\begin{array}{lr}
+		5 \cos(2\pi ft + 45^\circ)  & 000\\
+		5 \cos(2\pi ft + 135^\circ)  & 001\\
+		5 \cos(2\pi ft + 225^\circ)  & 010\\
+		5 \cos(2\pi ft + 315^\circ)  & 011\\
+		10 \cos(2\pi ft + 45^\circ)  & 100\\
+		10 \cos(2\pi ft + 135^\circ)  & 101\\
+		10 \cos(2\pi ft + 225^\circ)  & 110\\
+		10 \cos(2\pi ft + 315^\circ)  & 111\\
+	\end{array}
+		\right.
+		\]
+\begin{parts}
+\part Draw the constellation for the modulation scheme above.
+\part What is the theoretical maximum bit rate that can transmitted through the medium?  
+\part What is the maximum baud rate achieved?
+\part If the transmission medium is noiseless, what is the achievable bitrate?
+\end{parts}
+\question 
+
+\end{questions}
 \end{document}
