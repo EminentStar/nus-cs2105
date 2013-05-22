@@ -1,0 +1,806 @@
+\begin{cf}{
+CS2105 Lecture 12\\
+\large
+\textbf{Putting Everything Together\\[10pt]}
+\normalsize
+15 April, 2013
+}
+\end{cf}
+
+\include{lib/layers}
+
+\begin{cf}{
+	\begin{tikzpicture}
+	\node[draw,circle](R){};
+	\node[below=.5cm of R,font=\footnotesize](){router};
+	\node[draw,circle,right=of R](M){};
+	\node[below=.5cm of M,font=\footnotesize](){modem};
+	\node[cloud,draw,cloud puffs=10.4,cloud ignores aspect, minimum width=2.5cm, minimum height=1.6cm,on chain,right=of M](I){\footnotesize Internet};
+	\path[draw] (M) -- (R);
+	\path[draw] (M) -- (I);
+
+	\node[draw,circle,above=of R](C){};
+	\node[above=.5cm of C](){\footnotesize laptop};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	Turn on modem\\
+	Turn on router\\
+	Turn on laptop\\
+	Visit IVLE\\
+}
+\end{cf}
+	
+\begin{cf}{
+	Turn on Modem
+}
+\end{cf}
+
+\begin{cf}{
+	Modulate between Digital (Manchester Coding) and Analog (QAM/QPSK)
+}
+\end{cf}
+
+\begin{cf}{
+	Turn on Router
+}
+\end{cf}
+
+\begin{cf}{
+	Router broadcasts DHCP Discover
+}
+\end{cf}
+
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=9 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[draw,rectangle,minimum height=.7cm,minimum width=3cm,fill=white!90!yellow]
+\tikzstyle{segment payload}=[draw,rectangle,minimum height=.7cm,minimum width=1cm,inner sep=0cm, fill=white!90!yellow]
+\tikzstyle{segment header}=[draw,rectangle,minimum height=.7cm,minimum width=.4cm,inner sep=0cm, fill=white!90!red]
+\tikzstyle{datagram header}=[draw,rectangle,minimum height=.7cm,minimum width=.4cm,inner sep=0cm, fill=white!50!NetworkGreen]
+
+\newcommand{\segment}[3]{
+    \node[segment header](#1)[#3]{};
+    \node[segment payload](#2)[right=0cm of #1]{};
+}
+\newcommand{\datagramwithsegmentheader}[3]{
+    \node[datagram header](#1)[#3]{};
+    \node[segment header](#1-P)[right=0cm of #1]{};
+    \node[segment payload](#2)[minimum width=0.6cm, right=0cm of #1-P]{};
+}
+\newcommand{\datagramwithoutsegmentheader}[3]{
+    \node[datagram header](#1)[#3]{};
+    \node[segment payload](#2)[minimum width=0.4cm, right=0cm of #1]{};
+}
+\begin{cf}{
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[
+		fill=AppBlue,
+		]{};
+	\node[layer](T)[
+		below = 0cm of A,
+		yshift = -0.1cm, 
+		fill=TransportBlue]{};
+    \node[message](M)[
+		below=0.5cm of A.north,
+	]{};
+	\node[layer](N)[
+		below = 0cm of T,
+		yshift = -0.1cm, 
+		fill=NetworkGreen]{};
+	\node[interface,
+		below=of A.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of A.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\segment{D1}{D2}{below=1cm of FirstArrow, xshift=-2cm}
+	\segment{D3}{D4}{right=0.5cm of D2}
+	\segment{D5}{D6}{right=0.5cm of D4}
+	\node[interface,
+		below=of T.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](Arrow2){};
+	\node[interface,
+		below=of T.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\datagramwithsegmentheader{P1}{P2}{below=1cm of Arrow2, xshift=-2.8cm}
+	\datagramwithoutsegmentheader{P3}{P4}{right=0.3cm of P2}
+	\datagramwithsegmentheader{P5}{P6}{right=0.3cm of P4}
+	\datagramwithoutsegmentheader{P7}{P8}{right=0.3cm of P6}
+	\datagramwithsegmentheader{P9}{P10}{right=0.3cm of P8}
+	\datagramwithoutsegmentheader{P11}{P12}{right=0.3cm of P10}
+	\end{tikzpicture}
+	}
+\end{cf}
+
+% UDP HEADER
+\tikzstyle{udpfield}=[draw,rectangle,minimum height=1.5 cm, minimum width=4cm-0.4pt, text=gray!80!black,fill=white!90!blue,font=\small]
+\begin{cf}{
+\begin{tikzpicture}
+\tikzstyle{payload}=[draw,rectangle,minimum height=3 cm, minimum width=8cm, text=gray!80!black,fill=white!90!yellow]
+	\node[udpfield](SP){68};
+	\node[udpfield](DP)[right=0cm of SP]{67};
+	\node[udpfield,fill=white](LN)[below=0cm of SP]{};
+	\node[udpfield,fill=white](CS)[right=0cm of LN]{};
+	\node[above=.2cm of SP.north west]{\tiny 1};
+	\node[above=.2cm of SP.north east]{\tiny 16};
+	\node[above=.2cm of DP.north east]{\tiny 32};
+\end{tikzpicture}
+}
+\end{cf}
+
+\tikzstyle{ipfield}=[draw,rectangle,minimum height=1.5 cm, minimum width=4cm-0.4pt, text=gray!80!black,fill=white!90!NetworkGreen,font=\small]
+\tikzstyle{ipfield16}=[ipfield,minimum width=4.0cm-0.4pt]
+\tikzstyle{ipfield12}=[ipfield,minimum width=3.0cm-0.4pt]
+\tikzstyle{ipfield32}=[ipfield,minimum width=8.0cm-0.4pt]
+\tikzstyle{ipfield08}=[ipfield,minimum width=2.0cm-0.4pt]
+\tikzstyle{ipfield06}=[ipfield,minimum width=1.5cm-0.4pt]
+\tikzstyle{ipfield04}=[ipfield,minimum width=1.0cm-0.4pt]
+\tikzstyle{ipfield01}=[ipfield,minimum width=0.25cm-0.4pt,inner sep=0cm]
+\tikzstyle{ipselected}=[text=white,fill=NetworkGreen!40!black]
+
+% IP HEADER
+\begin{cf}{
+	\begin{tikzpicture}
+		\node[ipfield04](A1){};
+		\node[ipfield04](A2)[right=0cm of A1]{};
+		\node[ipfield08](A3)[right=0cm of A2]{};
+		\node[ipfield16](A4)[right=0cm of A3]{};
+		\node[ipfield16](B1)[below=0cm of A2.south east]{};
+		\node[ipfield04](B2)[right=0cm of B1]{};
+		\node[ipfield12](B3)[right=0cm of B2]{};
+		\node[ipfield08,ipselected](C1)[below=0cm of B1.south west,xshift=1cm]{255};
+		\node[ipfield08,ipselected](C2)[right=0cm of C1]{UDP};
+		\node[ipfield16](C3)[right=0cm of C2]{};
+		\node[ipfield32,ipselected](D1)[below=0cm of C3.south west]{0.0.0.0};
+		\node[ipfield32,ipselected](D2)[below=0cm of D1]{255.255.255.255};
+	\end{tikzpicture}
+}
+\end{cf}
+
+% ETHERNET HEADER
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](S){};
+        \node[below=2cm of S, align=center,xshift=-2cm,font=\small](SL){\texttt{04:42:00:31:98:12}};
+	\draw[black](SL) -> (S);
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white](D){};
+        \node[below=2cm of D, align=center,xshift=-0.5cm,yshift=-1cm,font=\small](DL){\texttt{ff:ff:ff:ff:ff:ff}};
+	\draw[black](DL) -> (D);
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white](T){};
+        \node[below=2cm of T, align=center,font=\small](TL){IP};
+	\draw[black](TL) -> (T);
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white](Q){};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white](Q){};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\include{lib/lec12-setup}
+
+\begin{cf}{
+	Manchester
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	% draw verticle guides
+	\foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	DOCSIS \\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going below,node distance=0cm,minimum height=1cm, minimum width=6.2cm]
+	\node[draw,rectangle,on chain,minimum width=6cm,fill=yellow!30!white]{$\leftarrow$};
+	\node[draw,rectangle,on chain,minimum width=6cm,fill=yellow!30!white]{$\leftarrow$};
+	\node[draw,rectangle,on chain,minimum width=6cm,fill=yellow!30!white]{$\leftarrow$};
+	\end{tikzpicture}\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, minimum width=1.2cm]
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){$\rightarrow$};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
+	\end{tikzpicture}\\
+}
+\end{cf}
+
+\begin{cf}{
+	64-QAM
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (-2,0) -- (2, 0);
+	\path[draw,->] (0,-2) -- (0,2);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\include{lib/lec12-setup}
+
+\begin{cf}{
+	Router receives DHCP Offer
+}
+\end{cf}
+
+\begin{cf}{
+	Router broadcasts ARP Request
+}
+\end{cf}
+
+\begin{cf}{
+\tikzstyle{packet}=[draw,rectangle,minimum height=.7cm]
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=9 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[packet,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram payload}=[packet,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram header}=[packet,minimum width=.5cm,fill=white!90!blue]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[
+		fill=NetworkGreen,
+		]{};
+	\node[layer](T)[
+		below = 0cm of A,
+		yshift = -0.1cm, 
+		fill=LinkBrown]{};
+    \node[message](M1)[below=0.5cm of A.north]{};
+    \node[message](M2)[left=0.5cm of M1]{};
+    \node[message](M3)[right=0.5cm of M1]{};
+	\node[layer](N)[
+		below = 0cm of T,
+		yshift = -0.1cm, 
+		fill=PhysicalRed]{\small 101011001...};
+	\node[interface,
+		below=of A.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of A.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+    \node[datagram header](D1)[below=1cm of FirstArrow, xshift=-2cm]{};
+    \node[datagram payload](D2)[right=0cm of D1]{}; 
+    \node[datagram header](D3)[right=0.5cm of D2]{};
+    \node[datagram payload](D4)[right=0cm of D3]{};
+    \node[datagram header](D5)[right=0.5cm of D4]{};
+    \node[datagram payload](D6)[right=0cm of D5]{};
+	\node[interface,
+		below=of T.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of T.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\end{tikzpicture}
+	}
+\end{cf}
+
+% ETHERNET HEADER
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](S){};
+        \node[below=2cm of S, align=center,xshift=-2cm,font=\small](SL){\texttt{04:42:00:31:98:12}};
+	\draw[black](SL) -> (S);
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white](D){};
+        \node[below=2cm of D, align=center,xshift=-0.5cm,yshift=-1cm,font=\small](DL){\texttt{ff:ff:ff:ff:ff:ff}};
+	\draw[black](DL) -> (D);
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white](T){};
+        \node[below=2cm of T, align=center,font=\small](TL){ARP};
+	\draw[black](TL) -> (T);
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white](Q){};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white](Q){};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	Router receives ARP Respond
+}
+\end{cf}
+
+\begin{cf}{
+	Router sends DHCP Request
+}
+\end{cf}
+
+% UDP HEADER
+\begin{cf}{
+\begin{tikzpicture}
+	\node[udpfield](SP){68};
+	\node[udpfield](DP)[right=0cm of SP]{67};
+	\node[udpfield](LN)[below=0cm of SP,fill=white]{};
+	\node[udpfield](CS)[right=0cm of LN,fill=white]{};
+	\node[above=.2cm of SP.north west]{\tiny 1};
+	\node[above=.2cm of SP.north east]{\tiny 16};
+	\node[above=.2cm of DP.north east]{\tiny 32};
+\end{tikzpicture}
+}
+\end{cf}
+
+% IP HEADER
+\begin{cf}{
+	\begin{tikzpicture}
+		\node[ipfield04](A1){};
+		\node[ipfield04](A2)[right=0cm of A1]{};
+		\node[ipfield08](A3)[right=0cm of A2]{};
+		\node[ipfield16](A4)[right=0cm of A3]{};
+		\node[ipfield16](B1)[below=0cm of A2.south east]{};
+		\node[ipfield04](B2)[right=0cm of B1]{};
+		\node[ipfield12](B3)[right=0cm of B2]{};
+		\node[ipfield08,ipselected](C1)[below=0cm of B1.south west,xshift=1cm]{255};
+		\node[ipfield08,ipselected](C2)[right=0cm of C1]{UDP};
+		\node[ipfield16](C3)[right=0cm of C2]{};
+		\node[ipfield32,ipselected](D1)[below=0cm of C3.south west]{0.0.0.0};
+		\node[ipfield32,ipselected](D2)[below=0cm of D1]{218.186.2.1};
+	\end{tikzpicture}
+}
+\end{cf}
+
+% ETHERNET HEADER
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](S){};
+        \node[below=2cm of S, align=center,xshift=-2cm,font=\small](SL){\texttt{04:42:00:31:98:12}};
+	\draw[black](SL) -> (S);
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white](D){};
+        \node[below=2cm of D, align=center,xshift=-0.5cm,yshift=-1cm,font=\small](DL){\texttt{00:1c:f6:03:11:94}};
+	\draw[black](DL) -> (D);
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white](T){};
+        \node[below=2cm of T, align=center,font=\small](TL){IP};
+	\draw[black](TL) -> (T);
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white](Q){};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white](Q){};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	Router receives DHCP ACK
+}
+\end{cf}
+
+\include{lib/lec12-setup}
+
+\begin{cf}{
+	\includegraphics[scale=0.4]{figures/airport-utility-screenshort.png}
+}
+\end{cf}
+
+\begin{cf}{
+	Turn on Laptop and
+	connects to WiFi
+	\note{
+		There are packet exchanges when the laptop associates itself and authenticate itself with the WiFi AP, which we skip here.
+	}
+}
+\end{cf}
+
+\begin{cf}{
+	Laptop runs DHCP client\\
+	Router runs DHCP server
+}
+\end{cf}
+
+\include{lib/two-lines}
+
+\begin{cf}{
+	\includegraphics[scale=0.4]{figures/dhcp-server-screenshot.png}
+}
+\end{cf}
+
+\begin{cf}{
+	\includegraphics[scale=0.4]{figures/network-preference-screenshot.png}
+}
+\end{cf}
+
+\begin{cf}{
+	Visit https://ivle.nus.edu.sg/
+}
+\end{cf}
+
+\begin{cf}{
+	DNS lookup for ivle.nus.edu.sg
+}
+\end{cf}
+
+\begin{cf}{
+	\includegraphics[scale=0.4]{figures/airport-utility-screenshort.png}
+}
+\end{cf}
+
+% UDP HEADER
+\begin{cf}{
+\begin{tikzpicture}
+	\node[udpfield](SP){59424};
+	\node[udpfield](DP)[right=0cm of SP]{53};
+	\node[udpfield,fill=white](LN)[below=0cm of SP]{};
+	\node[udpfield,fill=white](CS)[right=0cm of LN]{};
+	\node[above=.2cm of SP.north west]{\tiny 1};
+	\node[above=.2cm of SP.north east]{\tiny 16};
+	\node[above=.2cm of DP.north east]{\tiny 32};
+\end{tikzpicture}
+}
+\end{cf}
+
+
+% IP HEADER
+\begin{cf}{
+	\begin{tikzpicture}
+		\node[ipfield04](A1){};
+		\node[ipfield04](A2)[right=0cm of A1]{};
+		\node[ipfield08](A3)[right=0cm of A2]{};
+		\node[ipfield16](A4)[right=0cm of A3]{};
+		\node[ipfield16](B1)[below=0cm of A2.south east]{};
+		\node[ipfield04](B2)[right=0cm of B1]{};
+		\node[ipfield12](B3)[right=0cm of B2]{};
+		\node[ipfield08](C1)[below=0cm of B1.south west,xshift=1cm]{};
+		\node[ipfield08,ipselected](C2)[right=0cm of C1]{UDP};
+		\node[ipfield16](C3)[right=0cm of C2]{};
+		\node[ipfield32,ipselected](D1)[below=0cm of C3.south west]{10.0.1.7};
+		\node[ipfield32,ipselected](D2)[below=0cm of D1]{218.186.2.6};
+	\end{tikzpicture}
+}
+\end{cf}
+
+% ETHERNET HEADER
+\begin{cf}{
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right,node distance=0cm,minimum height=1cm, draw, rectangle]
+	\node[draw,rectangle,on chain,minimum width=2cm,fill=red!80!black](){};
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=orange!30!red](S){};
+        \node[below=2cm of S, align=center,xshift=-2cm,font=\small](SL){\texttt{69:1b:04:42:33:12}};
+	\draw[black](SL) -> (S);
+	\node[draw,rectangle,on chain,minimum width=1.5cm,fill=yellow!50!white](D){};
+        \node[below=2cm of D, align=center,xshift=-0.5cm,yshift=-1cm,font=\small](DL){\texttt{70:56:81:c7:11:e2}};
+	\draw[black](DL) -> (D);
+	\node[draw,rectangle,on chain,minimum width=0.5cm,fill=green!50!white](T){};
+        \node[below=2cm of T, align=center,font=\small](TL){IP};
+	\draw[black](TL) -> (T);
+	\node[draw,rectangle,on chain,minimum width=3cm,fill=blue!30!white](Q){};
+	\node[draw,rectangle,on chain,minimum width=1cm,fill=purple!50!white](Q){};
+        \node[below=2cm of Q, align=center,font=\small](QL){};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{frame}[fragile]\footnotesize
+\begin{verbatim}
+laptop:~ ooiwt$ arp -an
+? (10.0.1.1) at 70:56:81:c7:11:e2 on en0 
+? (10.0.1.8) at d0:23:db:47:64:6f on en0 
+? (10.0.1.255) at ff:ff:ff:ff:ff:ff on en0
+? (10.0.1.255) at ff:ff:ff:ff:ff:ff on en1
+\end{verbatim}
+
+\end{frame}
+
+\include{lib/lec12-setup}
+
+\begin{frame}[fragile]\footnotesize
+\begin{verbatim}
+traceroute to 218.186.2.6 (218.186.2.6)
+ 1  10.0.1.1  1.354 ms  0.826 ms  0.913 ms
+ 2  218.186.176.1  14.015 ms  7.879 ms  12.394 ms
+ 3  172.20.12.1  11.866 ms  11.813 ms  7.667 ms
+ 4  172.20.7.82  10.794 ms  15.408 ms  11.775 ms
+ 5  172.20.7.38  9.464 ms  8.032 ms  11.391 ms
+ 6  172.20.8.5  12.319.ms 13.101 ms  55.906 ms
+ 7  218.186.2.6  12.111 ms  11.196 ms  9.436 ms
+\end{verbatim}
+\end{frame}
+
+\begin{cf}{
+	Laptop receives DNS response
+	}
+\end{cf}
+
+\begin{frame}[fragile]\footnotesize
+\begin{verbatim}
+
+;; QUESTION SECTION:
+;ivle.nus.edu.sg.		IN	A
+
+;; ANSWER SECTION:
+ivle.nus.edu.sg.	294	IN	A	137.132.39.20
+
+\end{verbatim}
+\end{frame}
+
+\begin{cf}{
+	Laptop initiates HTTPS connection
+	(sends TCP SYN to port 443)
+	}
+\end{cf}
+
+% TCP Header
+\begin{cf}{
+\begin{tikzpicture}
+	\node[ipfield16,ipselected](SP){52123};
+	\node[ipfield16,ipselected](DP)[right=0cm of SP]{443};
+	\node[ipfield32](SN)[below=0cm of SP.south east]{};
+	\node[ipfield32](AN)[below=0cm of SN]{};
+	\node[ipfield04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[ipfield06](X2)[right=0cm of X1]{};
+	\node[ipfield01](X3)[right=0cm of X2]{};
+	\node[ipfield01](X4)[right=0cm of X3]{};
+	\node[ipfield01](X5)[right=0cm of X4]{};
+	\node[ipfield01](X6)[right=0cm of X5]{};
+	\node[ipfield01](X7)[right=0cm of X6]{};
+	\node[ipfield01](X8)[right=0cm of X7]{};
+	\node[ipfield16](RW)[right=0cm of X8]{};
+	\node[ipfield16](CS)[below=0cm of RW]{};
+	\node[ipfield16](X10)[left=0cm of CS]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+% IP HEADER
+\begin{cf}{
+	\begin{tikzpicture}
+		\node[ipfield04](A1){};
+		\node[ipfield04](A2)[right=0cm of A1]{};
+		\node[ipfield08](A3)[right=0cm of A2]{};
+		\node[ipfield16](A4)[right=0cm of A3]{};
+		\node[ipfield16](B1)[below=0cm of A2.south east]{};
+		\node[ipfield04](B2)[right=0cm of B1]{};
+		\node[ipfield12](B3)[right=0cm of B2]{};
+		\node[ipfield08](C1)[below=0cm of B1.south west,xshift=1cm]{};
+		\node[ipfield08,ipselected](C2)[right=0cm of C1]{TCP};
+		\node[ipfield16](C3)[right=0cm of C2]{};
+		\node[ipfield32,ipselected](D1)[below=0cm of C3.south west]{10.0.1.7};
+		\node[ipfield32,ipselected](D2)[below=0cm of D1]{137.132.39.20};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\include{lib/lec12-setup}
+
+\begin{cf}{
+	Router creates NAT table entry
+	}
+\end{cf}
+
+% TCP Header
+\begin{cf}{
+\begin{tikzpicture}
+	\node[ipfield16,ipselected](SP){10000};
+	\node[ipfield16,ipselected](DP)[right=0cm of SP]{443};
+	\node[ipfield32](SN)[below=0cm of SP.south east]{};
+	\node[ipfield32](AN)[below=0cm of SN]{};
+	\node[ipfield04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[ipfield06](X2)[right=0cm of X1]{};
+	\node[ipfield01](X3)[right=0cm of X2]{};
+	\node[ipfield01](X4)[right=0cm of X3]{};
+	\node[ipfield01](X5)[right=0cm of X4]{};
+	\node[ipfield01](X6)[right=0cm of X5]{};
+	\node[ipfield01](X7)[right=0cm of X6]{};
+	\node[ipfield01](X8)[right=0cm of X7]{};
+	\node[ipfield16](RW)[right=0cm of X8]{};
+	\node[ipfield16](CS)[below=0cm of RW]{};
+	\node[ipfield16](X10)[left=0cm of CS]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+% IP HEADER
+\begin{cf}{
+	\begin{tikzpicture}
+		\node[ipfield04](A1){};
+		\node[ipfield04](A2)[right=0cm of A1]{};
+		\node[ipfield08](A3)[right=0cm of A2]{};
+		\node[ipfield16](A4)[right=0cm of A3]{};
+		\node[ipfield16](B1)[below=0cm of A2.south east]{};
+		\node[ipfield04](B2)[right=0cm of B1]{};
+		\node[ipfield12](B3)[right=0cm of B2]{};
+		\node[ipfield08,](C1)[below=0cm of B1.south west,xshift=1cm]{};
+		\node[ipfield08,ipselected](C2)[right=0cm of C1]{TCP};
+		\node[ipfield16](C3)[right=0cm of C2]{};
+		\node[ipfield32,ipselected](D1)[below=0cm of C3.south west]{218.186.176.42};
+		\node[ipfield32,ipselected](D2)[below=0cm of D1]{137.132.39.20};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\include{lib/two-lines}
+
+\begin{frame}[fragile]\footnotesize
+\begin{verbatim}
+GET / HTTP/1.1
+Host: ivle.nus.edu.sg
+User-Agent: Mozilla/5.0 
+Keep-Alive: 300
+Connection: keep-alive
+Cookie:__utma=145952555.278120873
+\end{verbatim}
+\end{frame}
+
+\begin{cf}
+	Transfer data $m$ with sequence number $s$ as $m'$\\
+  \vspace{1cm}
+	$h = H(m + M_B + s)$\\
+	$m' = E_B (m, h)$\\
+\end{cf}
+
+
+\begin{cf}
+	Receives $m'$ with expected sequence number $s'$
+  \vspace{1cm}
+	$m, h = E_A(m')$\\
+	check if $h = H(m + M_A + s') ?$\\
+\end{cf}
+
+\begin{frame}[fragile]\footnotesize
+\begin{verbatim}
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Server: Microsoft-IIS/7.5
+Set-Cookie: ASP.NET_SessionId=jzhnyhv20h..
+Date: Thu, 14 Apr 2011 15:58:41 GMT
+Content-Length: 39616
+Connection: Keep-Alive
+\end{verbatim}
+\end{frame}
+
+\include{lib/two-lines}
+
+\begin{cf}
+	General Lessons from CS2105
+\end{cf}
+
+\begin{cf}
+	How to build a complex system
+\end{cf}
+
+\begin{frame}\begin{center}\normalsize
+Many issues to consider, to support different applications running on large number of hosts through different access technology and physical media.
+\end{center}\end{frame}
+
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+	\node[at=(current page.center)] {
+		\includegraphics[width=\paperwidth]{figures/confused-jackie.jpg}
+	}; 
+\end{tikzpicture}
+\end{frame}
+
+\begin{cf}
+	1. Layering
+\end{cf}
+
+
+\include{lib/layers}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Lower layers hide details from upper layer
+	\item Upper layers make minimum assumptions about lower layer
+	\item Protocols in layers are interchangeable
+	\item Keep lower layer simple, more features at higher layer.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}
+	2. Decouple name from address\\
+	\vspace{1cm}
+	hostname, cname, IP addr, MAC addr
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Rotate hosts for load balancing
+	\item Change hosts based on geo-location, network conditions
+  \item Replace or move hosts without affecting names
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}
+	3. Hierarchical Naming/Routing\\
+	\vspace{1cm}
+	www.nus.edu.sg\\
+	137.132/16
+\end{cf}
+
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item More organized
+	\item Allow distribution of responsibility
+  \item Allow aggregation of addresses for forwarding
+	\item Other examples: files, zip code
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}
+	4. Periodically Forget\\
+	\vspace{1cm}
+	DNS caches, switching table, DHCP leases, RIP
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Systems adapt quickly
+	\item Prevent stale information automatically
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}
+	5. Randomization\\
+	\vspace{1cm}
+	nonce, TCP sequence numbers, BEB
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Avoid expensive coordination
+	\item Avoid ``coincidence'' (collision, TCP sequence numbers)
+	\item Avoid malicious party from guessing
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}
+	6. Learn by observation\\
+	\vspace{1cm}
+	NAT, Switch, BEB
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Avoid expensive manual configuration
+	\item Adapt to changes automatically
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}
+What's Next?
+\end{cf}
+
+\begin{frame}\small
+\textbf{CS2105R} 1MC extension\\
+\textbf{CS3103} Computer Networks and Protocols\\
+\textbf{CS4222} Wireless and Sensor Networks\\
+\textbf{CS4274} Mobile and Multimedia Networking\\
+\textbf{CS4344} Networked and Mobile Gaming\\
+\textbf{CS5229} Advanced Computer Networks\\
+\textbf{CS5248} Systems Support for Continuous Media
+\end{frame}
+
+\begin{cf}
+Acknowledgement
+\end{cf}
+
+\begin{cf}
+The End
+\end{cf}
+

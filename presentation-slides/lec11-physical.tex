@@ -1,0 +1,446 @@
+\begin{cf}{
+CS2105 Lecture 11\\
+\large
+\textbf{Physical Layer\\[10pt]}
+\normalsize
+8 April, 2013
+\note{
+\tiny
+	After this class, you are expected to be able to understand:
+	\begin{itemize}
+        \setlength{\itemsep}{1pt}
+	\item how NRZ, RZ, Manchester, and DM, are used to encode 0s and 1s, and their pros and cons.
+	\item how $A$, $f$ and $\phi$ can be used to encode 0s and 1s, and their pros and cons.
+	\item the term bandwidth and the theoretical capacabity of a medium using Nyquist's and Shannon's formula.
+	\item how a signal can be viewed in frequency domain and how frequency can be shifted to multiplex multiple signals.
+	\item how QAM works and its representation as a constellation.
+	\end{itemize}
+}
+}
+\end{cf}
+
+\begin{cf}{
+	\begin{tikzpicture}[scale=2, start chain=going below]
+	\foreach \color / \label in {
+		AppBlue/Application,
+		TransportBlue/Transport,
+		NetworkGreen/Network,
+		LinkBrown/Link,
+		PhysicalRed/Physical
+	}
+	\node[draw,rectangle,
+	minimum height=1.5 cm, 
+	minimum width=5 cm, 
+	text=white, 
+	node distance=0cm,
+	on chain, fill=\color]{\label};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item 0s and 1s can be transmitted either as digital signal or analog signal over a medium.
+	\item WiFi uses analog signal.  Ethernet uses digital signal.
+	\end{itemize}
+}
+\end{cf}
+	
+\begin{cf}{
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\path[draw,->] (0,-4) -- (7, -4);
+	\path[draw,->] (0.5,-5) -- (0.5, -3);
+	\end{tikzpicture}
+
+}
+\end{cf}
+
+\begin{cf}{
+	Digital Encoding
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item A digital signal has a limited number of defined values (e.g., -1, 0, and 1 only)
+	\item The value of a digital signal is determined by the voltage sent over the wire.
+	\item Polar encoding uses two levels: -1 and 1.
+	\item Bipolar encoding uses three levels: -1, 0, and 1.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item 0s and 1s can be encoded into digital signals in different ways.
+	\item \textbf{NRZ} encoding is a polar encoding scheme.
+	\item Two variants: \textbf{NRZ-L} encodes the bit value using the level of the signal;
+	\textbf{NRZ-I} inverts the signal if bit 1 is encountered.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	NRZ-L
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	NRZ-I
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item \textbf{RZ} is a bi-polar encoding scheme, always returning the signal to zero halfway through the bit interval.
+	\item It allows synchronization of clock at the sender and receiver, without which clock drift could lead to bit errors.
+	\item E.g., if the sender is sending 111111..., the receiver may lost track of how many 1s have been received.  This is known as a \textbf{bit slip}.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	RZ
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item \textbf{Machester} coding inverts the signal in the middle of a bit.  A -ve to +ve trasition represents 1.  A +ve to -ve trasition represents 0.
+	\item \textbf{Differential Manchester (DM)} uses the presence of absence of a transition at the beginning of the interval to identify a bit.  A transition means 0.  No transition means 1.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	Manchester
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	Differential Manchester
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Detecting transition is less error prone than comparing against a threshold.
+	\item DM works even if the signals are swapped.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+		\textbf{Final Exam}\\
+		\vspace{1cm}
+		\textbf{10} MCQs (A,B,C,D,E,X)\\
+		\textbf{5} Short Questions
+}
+\end{cf}
+
+\begin{cf}{
+		\textbf{Scope}\\
+		\vspace{1cm}
+		Lecture 1-12\\
+		Problem Set 1-9\\
+		DIY Exercises 1-4\\
+		Assignment 1-3\\
+		\tiny{(less emphasis on the topics covered in midterm)}
+}
+\end{cf}
+
+\begin{cf}{
+	One\\
+	A4-size\\
+	double-sided\\
+	crib sheet\\
+	allowed
+}
+\end{cf}
+
+\begin{cf}{
+	Digital-to-Analog Modulation
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item The most basic analog signal is a sine wave:
+	\[
+		A sin(2\pi ft + \phi)
+	\]
+	where $A$ is the peak amplitude, $f$ is the frequency and $\phi$ is the phase.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\path[draw,->] (0,-4) -- (7, -4);
+	\path[draw,->] (0.5,-5) -- (0.5, -3);
+	\end{tikzpicture}
+
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item We can combine sine waves to form composite signals.
+	\item Composite signal can be decomposed to multiple sine waves.
+	\item It is useful to visualize a composite signal using the frequency of its composition (i.e., in \textbf{frequency domain} instead of time domain).
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\end{tikzpicture}
+
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item A transmission medium only allows a frequency range to pass through.
+	\item The difference in highest and lowest frequency that can pass through a medium is kown as the \textbf{bandwidth of the medium}.
+	\item The difference in the highest and lowest frequency that represent a signal is known as the \textbf{bandwidth of the signal}.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item A transmission medium also introduces noise, which distorts the signal, limiting the number of bits that can go through.
+	\item For an ideal, noiseless channel, the \textbf{Nyquist bit rate formula} gives the theorectical maximum bit rate:
+	\[
+	2 B \times log_2 L
+	\]
+	where $B$ is the channel bandwidth (in Hz) and $L$ is the number of signal levels.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}[t]{\small
+	If we use Machester coding on a noiseless 1 MHz channel, the maximum data rate is 2 Mbps.
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item For a noisy channel, characterized by a signal-to-noise ratio $SNR$, the theoretical maximum is given by \textbf{Shannon Capacity}
+	\[
+	B \times log_2 ( 1 + SNR )
+	\]
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}[t]{\small
+	Phone line has a bandwidth of 3000 Hz and SNR of 3162.  The capacity of the channel is 34860 bps.
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Let's revisit how FDM works on a medium with large enough bandwidth to support multiple signals.
+	\item The signals' frequencies are shifted, added together, and transmitted.
+	\item At the receiver, we filter out different frequency range, and shift the signal back to their original frequency.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	Frequency-Division Multiplexing\\
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going below,node distance=0cm,minimum height=1cm, minimum width=6cm]
+	\node[draw,rectangle,on chain,fill=red!30!white](){4-8kHz};
+	\node[draw,rectangle,on chain,fill=yellow!30!white](){8-12kHz};
+	\node[draw,rectangle,on chain,fill=green!30!white](){12-16kHz};
+	\node[draw,rectangle,on chain,fill=blue!30!white](){16-20kHz};
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}[t]{
+	FDM
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item To transmit 0s and 1s with an analog signal, we can change either $A$, $f$, or $\phi$.
+	\item Amplitude Shift Keying (ASK) changes peak amplitude to represent 0s and 1s.
+	\item Frequency Shift Keying (FSK) changes frequency to represent 0s and 1s.
+	\item Phase Shift Keying (PSK) changes phase to represent 0s and 1s.
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	ASK
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {2.5, 4.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	FSK
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {2.5, 4.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item ASK is vulnerable to noise.
+	\item FSK is limited by bandwidth
+	\end{itemize}
+}
+\end{cf}
+
+\begin{cf}{
+	PSK
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (0,0) -- (7, 0);
+	\path[draw,->] (0.5,-1) -- (0.5, 1);
+	\foreach \x in {2.5, 4.5, 6.5} 
+		\path[draw,-,color=gray!50] (\x,-1) -- (\x, 1);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	PSK constellation
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (-2,0) -- (2, 0);
+	\path[draw,->] (0,-2) -- (0,2);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	QPSK constellation
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (-2,0) -- (2, 0);
+	\path[draw,->] (0,-2) -- (0,2);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Quadrature Amplitude Modulation (QAM) combines ASK and PSK.  Many combinations are possible.
+	\item A signal unit n a $2^k$-QAM scheme is a combination of amplitude and phase that represents $k$ bits.
+	\item Baud rate is the number of signal units per second (unit is Bd).
+	\end{itemize}
+}
+\end{cf}
+
+
+\begin{cf}{
+	QPSK constellation
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (-2,0) -- (2, 0);
+	\path[draw,->] (0,-2) -- (0,2);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	4-QAM
+	\vspace{1cm}
+
+	\begin{tikzpicture}
+	\path[draw,->] (-2,0) -- (2, 0);
+	\path[draw,->] (0,-2) -- (0,2);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{
+	8-QAM
+	\vspace{1cm}
+
+
+	\begin{tikzpicture}
+	\path[draw,->] (-2,0) -- (2, 0);
+	\path[draw,->] (0,-2) -- (0,2);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{itemize}
+	\item Singapore TV broadcast uses DVB-T, which uses QPSK, 16-QAM, or 64-QAM.
+	\item 802.11a uses BPSK, QPSK, 16-QAM or 64-QAM.
+	\item Ethernet, RFID, and NFC use Machester coding.
+	\item USB uses NRZ-I.
+	\end{itemize}
+}
+\end{cf}
