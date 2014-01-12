@@ -1,4 +1,4 @@
-FILE=lec10-lan
+#FILE=lec10-lan
 #FILE=lec09-link
 #FILE=lec08-secure
 #FILE=lec07-route
@@ -7,7 +7,7 @@ FILE=lec10-lan
 #FILE=lec04-transport
 #FILE=lec03-rely
 #FILE=lec02-app
-#FILE=lec01-intro
+FILE=lec01-intro
 POST_FILE=$(FILE)-post
 SHOW_FILE=$(FILE)-show
 
