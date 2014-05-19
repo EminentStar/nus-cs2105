@@ -1,0 +1,26 @@
+<p>
+10 February, 2014.
+</p>
+<p><b>
+    ``You Won't Believe How Simple the UDP Protocol is.  But The Complexity of TCP Will   Make You Cry.''
+</b>
+</p>
+<p>
+We will continue our discussion of generic reliable protocols, finishing it off with 
+Selective Repeat protocol.
+</p>
+<p>
+We will then look at the two major transport protocols on the Internet, namely, UDP and TCP in more details.  
+</p>
+</p>
+Please read the following sections in the textbook.
+Reading:<br>
+Chapter 3 of KR.<br>
+<ul>
+<li>3.3 Connectionless Transport: UDP
+<li>3.5 Connection-oriented Transport: TCP
+</ul>
+</p>
+<p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec05-transport.pdf">PDF</a>
+</p>

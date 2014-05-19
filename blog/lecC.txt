@@ -1,0 +1,13 @@
+<p>
+14 April, 2014.
+</p>
+
+<p>
+Today, we are going to see how the five layers work together through the examples.  We will end the lecture by distilling some of the most important tricks that engineers have used to build computer networks, and higlight how it is used in different parts of CS2105.
+</p>
+<p>
+Reading: 5.7 A Day in the Life of a Web Page Request
+</p>
+<p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec12-together.pdf">PDF</a>
+</p>

@@ -1,0 +1,12 @@
+<p>
+7 April, 2014.
+</p>
+
+<p>
+Finally, we have reached the bottom layer: let's get physical!  
+We will see how 1s and 0s can encoded into digital and analog signals for 
+transmissions.
+</p>
+<p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec11-physical.pdf">PDF</a>
+</p>

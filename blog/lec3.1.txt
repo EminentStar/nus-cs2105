@@ -1,0 +1,16 @@
+<p>
+27 January, 2014.
+</p>
+<p><b>
+You Won't Believe How Many Lines of Code It Takes To Write a Minimum Workable Web Server.  You Have to See It!
+</b></p>
+
+<p>
+After finishing off our discussion on DNS, I will show how to write simple TCP applications, include a Web server, in Java.  I will also show you how to program a UDP-based networked application.
+</p>
+<p>
+Related sections from Java API documentation: <a href="http://download.oracle.com/javase/7/docs/api/java/net/Socket.html">Socket</a>, <a href="http://download.oracle.com/javase/7/docs/api/java/net/ServerSocket.html">ServerSocket</a>, <a href="http://download.oracle.com/javase/7/docs/api/java/net/DatagramSocket.html">DatagramSocket</a>, <a href="http://download.oracle.com/javase/7/docs/api/java/net/DatagramPacket.html"DatagramPacket</a>, <a href="http://download.oracle.com/javase/7/docs/api/java/net/InetAddress.html">InetAddress</a>
+</p>
+<p>
+There is no corresponding sections in the textbook (the book uses Python for socket programming).  
+</p>

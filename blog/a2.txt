@@ -1,0 +1,5 @@
+Here's your <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/a2.pdf">Assignment 2</a> on simulating alternating-bit protocol.
+
+This is a simple assignment (the solution is only ~40 lines of code) to be completed and submitted INDIVIDUALLY before 30 March, 2014, 11:59PM.
+
+Despite the simplicity, please start early!

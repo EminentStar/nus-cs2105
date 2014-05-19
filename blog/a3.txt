@@ -1,0 +1,15 @@
+<p>
+Here's your <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/a3.pdf">Assignment 3</a> on understanding packet traces.
+</p>
+
+<p>
+This is an INDIVIDUAL assignment, due 18 April 2014, 6:00pm.
+</p>
+
+<p>
+Please write your answers in the <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/a3-answer.pdf">answer sheet</a> and submit a hardcopy to Wei Tsang before the deadline.
+</p>
+
+<p>
+(Please ignore the Assignment 3 posted in IVLE -- we were struggling to get online assignment working in IVLE, resulting in delay releasing the assignment.)
+</p>
