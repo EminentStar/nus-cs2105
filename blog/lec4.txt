@@ -1,5 +1,5 @@
 <p>
-4 February, 2013.
+10 February, 2014.
 </p>
 <p>
 We will continue our discussion of generic reliable protocol, extending alternating bit protocol to use pipelining, leading to Go-Back-N protocol and Selective Repeat protocol.
@@ -12,11 +12,10 @@ Please read the following sections in the textbook.
 Reading:<br>
 Chapter 3 of KR.<br>
 <ul>
-<li>3.4.2 Pipelined Reliable Data Transfer Protocols
 <li>3.3 Connectionless Transport: UDP
-<li>3.5 Connection-oriented Transport: TCP (exclude 3.5.3) 
+<li>3.5 Connection-oriented Transport: TCP
 </ul>
 </p>
 <p>
-Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec04-transport.pdf">PDF</a>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec05-transport.pdf">PDF</a>
 </p>

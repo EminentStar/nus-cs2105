@@ -1,8 +1,12 @@
 <p>
-21 January, 2013.
+20 January, 2014.
+</p>
+<p><b>
+"This Application Level Protocol is Used by Every Other Internet Application.  If You Think I am Refering to the Web or HTTP, You Would Be Wrong."
+</b>
 </p>
 <p>
-In this lecture, I will cover three topics on application-layer. First, I will explain networked applications and the interface to the transport layer. Second, I will describe an example protocol that lives in the application layer, HTTP. Third, I will talk about DNS, a directory service used by networked applications.
+In this lecture, I will cover three topics on the application layer. First, I will explain networked applications and their interface to the transport layer.  Second, I will describe an example protocol that lives in the application layer, HTTP. Third, I will talk about DNS, a directory service used by networked applications.
 </p>
 <p>
 Reading: Chapter 2 of KR.
@@ -11,4 +15,4 @@ Reading: Chapter 2 of KR.
 <li>2.2 The Web and HTTP</li>
 <li>2.5 DNS -- The Internet's Directory Service</li>
 </ul>
-Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec02-app.pdf">PDF</a>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec02-app.pdf">PDF</a>

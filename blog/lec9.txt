@@ -1,13 +1,17 @@
 <p>
-25 March, 2013.
+24 March, 2014.
 </p>
-
+<p>
+<b>
+``These Protocols Transmit At Random Interval. It May Sound Ridiculous, But The Reason They Do It Is Simply Beautiful.''
+</b>
+</p>
 <p>
 This week we continue our venture down the protocol stack, and look at the 
 link layer.  We will review the services provided by the link layer, how error detection/correction is done, how shared medium are accessed, and finish up with a discussion on Ethernet frame format.
 
 </p>
-Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec09-link-post.pdf">PDF</a>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec09-link-post.pdf">PDF</a>
 <p>
 Please read the following sections in the textbook.
 Reading: Chapter 5<br>

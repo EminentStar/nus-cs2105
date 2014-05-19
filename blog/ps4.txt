@@ -1,3 +1,3 @@
-We will start the discussion of Problem Set 4 during the tutorial sessions of Week 6, after completing the previous problem sets.
+We will start the discussion of Problem Set 4 after the recess week.
 
-<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/ps4.pdf">Download</a> the PDF version of Problem Set 4 here.  Please watch <a href="http://blog.nus.edu.sg/cs2105/2013/02/15/screencast-4-extended-materials/">the extra video on TCP</a>, attempt the questions before coming to class, and be prepared to present your solutions.
+<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/ps4.pdf">Download</a> the PDF version of Problem Set 4 here.  Please attempt the questions before coming to class, and be prepared to present your solutions.

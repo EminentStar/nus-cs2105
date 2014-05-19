@@ -1,11 +1,15 @@
 <p>
-4 March, 2013.
+3 March, 2014.
 </p>
 
 <p>
+<b>
+Millions of Routers Work in Concert to Route Packets on the Internet, Based on This One Simple Equation. Amazing.</b>
+</p>
+<p>
 This week we will look at how routing is done on the Internet, focusing on distance vector routing protocol and RIP, used in intra-AS routing.
 </p>
-Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1011s2/lec07-route.pdf">PDF</a>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec07-route.pdf">PDF</a>
 <p>
 Please read the following sections in the textbook.
 Reading:<br>

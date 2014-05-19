@@ -5,5 +5,5 @@ Here is the first DIY exercise.  This is an ungraded exercise, but completing th
 You are encouraged to ask questions and discuss your results online on the blog.
 </p>
 <p>
-Here is the <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/diy1.pdf">PDF version</a> of DIY Exercise 1.
+Here is the <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/diy1.pdf">PDF version</a> of DIY Exercise 1.
 </p>

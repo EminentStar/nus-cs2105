@@ -1,11 +1,14 @@
 <p>
-18 February, 2013.
+18 February, 2014.
 </p>
-
 <p>
-We now venture into the network layer and look at IP and the associated protocols and mechanisms (DHCP, ICMP, NAT, forwarding) in more details.
+<b>
+  ``The Internet has Ran Out of IPv4 Addresses. These Hacks, Used to Keep the   Internet Growing, Are Absolutely Brilliant."</b>
 </p>
-Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec06-network.pdf">PDF</a>
+<p>
+We now venture into the network layer and look at IP and the associated protocols (DHCP, ICMP, NAT) in more details.
+</p>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec06-network.pdf">PDF</a>
 <p>
 Please read the following sections in the textbook.
 Reading:<br>

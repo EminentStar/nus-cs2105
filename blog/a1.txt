@@ -1,8 +1,8 @@
 Here is your first assignment.  
 
-You may download the <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/a1.pdf">PDF version of Assignment 1</a> here. 
+You may download the <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/a1.pdf">PDF version of Assignment 1</a> here. 
 
-You have two and a half week to complete this assignment (excluding recess week) in a team of two.  The assignment is due on 10 March 2013.
+You have three weeks to complete this assignment in a team of two.  The assignment is due on 21 February 2014.
 
 Some word of advice:
 <ol>

@@ -1,11 +1,11 @@
 <p>
-18 March, 2013.
+17 March, 2014.
 </p>
 
 <p>
 This week we will look at network security at the application, transport, and network layer. We will skip the mathematics involved (there are other modules for that) and focus on the concepts that enable secure communication via SSL and IPsec.
 </p>
-Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec08-secure.pdf">PDF</a>
+Slides: <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec08-secure.pdf">PDF</a>
 <p>
 Please read the following sections in the textbook.
 Reading:<br>

@@ -1,5 +1,5 @@
 <p>
-14 January, 2013.
+13 January, 2014.
 </p>
 
 <p>
@@ -17,5 +17,5 @@ Chapter 1 of KR.<br>
 </ul>
 </p>
 <p>
-Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec01-intro.pdf">PDF</a>
+Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec01-intro.pdf">PDF</a>
 </p>

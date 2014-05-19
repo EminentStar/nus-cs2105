@@ -1,7 +1,9 @@
 <p>
-28 January, 2013.
+3 February, 2014.
 </p>
 <p>
+``Sending Data Reliably over the Internet is Harder than You Think.  The Intricacy Involved in Ensuring Reliability   Will Make Your Head Explode.''
+</p>
 This is the first lecture on transport layer.  After briefly describing the role of transport layer, I will delve deep into the question of how to build a reliable protocol on top of an unreliable delivery service.
 </p>
 <p>
@@ -13,8 +15,9 @@ Chapter 3 of KR.<br>
 <ul>
 <li>3.1 Introduction
 <li>3.4.1 Building a Reliable Data Transfer Protocol
+<li>3.4.2 Pipelined Reliable Data Transfer Protocols
 </ul>
 </p>
 <p>
-Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/lec03-rely.pdf">PDF</a>
+Slides:<a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/lec04-rely.pdf">PDF</a>
 </p>

@@ -2,4 +2,4 @@ We will discuss Problem Set 2 during the tutorial sessions of Week 4.
 
 <a href="http://www.comp.nus.edu.sg/~ooiwt/cs2105/1213s2/ps2.pdf">Download</a> the PDF version of Problem Set 2 here.  Please attempt the questions before coming to class and be prepare to present your solutions.
 
-During Week 4, if time permits, you will have an opportunity to ask and discuss any doubts that you may have from <a href="http://blog.nus.edu.sg/cs2105/2013/01/22/diy-exercise-1-2/">DIY Exercise 1</a>.  Please attempt the exercise before coming to class next week.
+During Week 4, if time permits, you will have an opportunity to ask and discuss any doubt that you may have from DIY Exercise 1.  Please attempt the exercise before coming to class next week.
