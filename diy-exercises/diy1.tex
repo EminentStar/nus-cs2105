@@ -9,20 +9,16 @@
 
 \usepackage{fancyvrb}
 
-%\rhead{\textsf{CS2106 Lab 1}}
-%\lhead{\textsf{Matriculation Number: \underline{\hspace{1.2in}}}}
-%\headrule
-
 \begin{document}
 \extraheadheight{.5in}
 \firstpageheader{\large\sf CS2105}%
 {\large\sf National University of Singapore\\ School of Computing \\
 \LARGE\sf DIY Exercise 1}%
-{\large\sf Semester 2 12/13}
+{\large\sf Semester 2 13/14}
 \firstpageheadrule
 \pagestyle{headandfoot}
 
-You may run the following tools on Solaris (e.g., SunFire), Linux, Mac OS X, or Microsoft Windows.  The behaviour may be slightly different (but should not impact your learning).
+You may run the following tools on Solaris (e.g., SunFire), Linux, Mac OS X, or Microsoft Windows.  The behavior may be slightly different (but should not impact your learning).
 
 To access the SunFire server, use any ssh client and ssh into:
 \texttt{sunfire.comp.nus.edu.sg}.   Use your SoC UNIX username and password to login.  If you do not have an account on SunFire, apply for one here: \url{http://mysoc.comp.nus.edu.sg/~newacct}.
@@ -36,7 +32,7 @@ To access the SunFire server, use any ssh client and ssh into:
 
 \texttt{netstat} is a command line tool that displays various information about your computer's network stack.
 
-Find out what are some open sockets on your computer.  Can you recorgnize some of the establish connections?  Do you see some sockets that are in listening state?
+Find out what are some open sockets on your computer.  Can you recognize some of the establish connections?  Do you see some sockets that are in listening state?
 \begin{itemize}
 \item If you are running Windows or Linux, type the command \texttt{netstat -a}.
 \item If you are running Mac OS X, type the command \texttt{netstat -a -f inet}.
@@ -51,17 +47,18 @@ On your computer, run traceroute to \texttt{mail.google.com}.  Repeat several ti
 
 (Note: the equivalent of \texttt{traceroute} utility on Windows is \texttt{tracert}.)
 
-(Note: the utility \texttt{traceroute} is located under \texttt{/usr/sbin} on SunFire.  To run \texttt{traceroute}, you need to either add \texttt{/usr/sbin} to your \texttt{PATH} environment variable, or type the full path everytime.)
+(Note: the utility \texttt{traceroute} is located under \texttt{/usr/sbin} on SunFire.  To run \texttt{traceroute}, you need to either add \texttt{/usr/sbin} to your \texttt{PATH} environment variable, or type the full path every time.)
 
 
 \question{dig}
+\label{digq}
 
-Use \texttt{dig} to answer the following questions.  You may have to download and install \texttt{dig} if it is not already available.  Dig for Windows is available here \url{http://members.shaw.ca/nicholas.fong/dig/}.
+Use \texttt{dig} to answer the following questions.  You may have to download and install \texttt{dig} if it is not already available.  One of many online instructions for installing dig on Windows is available at \url{https://www.cites.illinois.edu/dns/tools.html}.
 
 \begin{parts}
-	\part Find the IP addresses of \texttt{mail.google.com}.  Repeat several time and observe the changes.  Why do you think different answers are given out at different time?
+	\part Find the IP addresses of \texttt{mail.google.com}.  Repeat several times and observe the changes.  Why do you think different answers are given out at different time?
 
-	\part Use the dig server at URL \url{http://www.kloth.net/services/dig.php} (using your Web browser) and find the IP addresses of \texttt{mail.google.com}. Do you get the same results as part (b)?  Why do you think that the same hostnme provides a different answer when \texttt{dig} is run from different places?
+	\part Use the dig server at URL \url{http://www.kloth.net/services/dig.php} (using your Web browser) and find the IP addresses of \texttt{mail.google.com}. Do you get the same results as part (b)?  Why do you think that the same hostname provides a different answer when \texttt{dig} is run from different places?
 
 	\part Find the TTL value for the A-type DNS record of the following hosts at their authoritative DNS server: (a) \texttt{sentosa.comp.nus.edu.sg}, (b) \texttt{liubei.ddns.comp.nus.edu.sg}.  What do you think there are differences in the range of TTL values of these records?  (Hint: ddns stands for Dynamic DNS.)
 
@@ -69,21 +66,52 @@ Use \texttt{dig} to answer the following questions.  You may have to download an
 
 %\part Wikileaks was ``shut down'' in December 2010 when its DNS service provider removed its mapping from its server.  As a result, users can only access the Wikileaks website through its IP address and not through hostname.  The site has since been up with the domain name \texttt{wikileaks.ch}.  Find out who is providing the DNS server (i.e., authoritative DNS servers) for the domain \texttt{wikileaks.ch} now.
 
-%\part The site Torrent-Finder was ``shut down'' by U.S. goverment in November 2010 by forcing all lookups to \texttt{www.torrent-finder.com} to map to an IP address of a U.S. goverment website.  Do an interative DNS query (with \texttt{+trace} option to \texttt{dig}) to find out who are the authorative DNS severs for the domain \texttt{torrent-finder.com}.
+%\part The site Torrent-Finder was ``shut down'' by U.S. government in November 2010 by forcing all lookups to \texttt{www.torrent-finder.com} to map to an IP address of a U.S. goverment website.  Do an interative DNS query (with \texttt{+trace} option to \texttt{dig}) to find out who are the authorative DNS severs for the domain \texttt{torrent-finder.com}.
 
 \part Is your local DNS server the fastest?  You can use \texttt{dig} to find out.
 
-First, use dig to lookup your favourite domain name a few times, note down the query time.  This step uses your default local DNS server (either by your ISP or by the university, depending on where you run the experiments).
+First, use dig to look up your favorite domain name a few times, note down the query time.  This step uses your default local DNS server (either by your ISP or by the university, depending on where you run the experiments).
 
-Now, you can tell dig to perform DNS lookup using a specific DNS server by passing in the IP address of the server, prefixed with \texttt{@}.  For example, try run \texttt{dig} with the argument \texttt{@8.8.8.8}, like this:
+Now, you can tell dig to perform DNS lookup using a specific DNS server by passing in the IP address of the server, prefixed with \texttt{@}.  For example, try to run \texttt{dig} with the argument \texttt{@8.8.8.8}, like this:
 
 \texttt{dig @8.8.8.8 www.apple.com}
 
-The IP address 8.8.8.8 refers to one of the public DNS server ran by Google (see \url{https://developers.google.com/speed/public-dns/}).
+The IP address 8.8.8.8 refers to one of the public DNS servers ran by Google (see \url{https://developers.google.com/speed/public-dns/}).
 
 Is Google's public DNS server faster or slower?  Repeat this experiment using different access networks (e.g., with Wireless@SG).
 
 \end{parts}
+
+\question{ping}
+
+The tool \texttt{ping} is useful to measure the round trip time to another host.
+
+For instance, to measure the round trip time to \texttt{www.nus.edu.sg}, you run:
+
+\texttt{ping www.nus.edu.sg}
+
+You will see output that looks like:
+
+\begin{verbatim}
+PING www.nus.edu.sg (137.132.21.27): 56 data bytes
+64 bytes from 137.132.21.27: icmp_seq=0 ttl=122 time=1.591 ms
+64 bytes from 137.132.21.27: icmp_seq=1 ttl=122 time=1.458 ms
+64 bytes from 137.132.21.27: icmp_seq=2 ttl=122 time=1.550 ms
+64 bytes from 137.132.21.27: icmp_seq=3 ttl=122 time=1.673 ms
+\end{verbatim}
+
+On UNIX-based platforms, \texttt{ping} will continuously.  In this case, type Control-C to stop.  The following statistics will
+be shown.
+
+\begin{verbatim}
+--- www.nus.edu.sg ping statistics ---
+6 packets transmitted, 6 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 1.458/1.566/1.673/0.086 ms
+\end{verbatim}
+
+The last line gives the information about the round trip time to \texttt{www.nus.edu.sg}.
+
+Earlier, you found that DNS returns different IP addresses for \texttt{mail.google.com} when you run \texttt{dig} from different host.  Use \texttt{ping} to find the average round trip time to different IP addresses you found in Question \ref{digq}, Parts (a) and (b).
 
 \question{whois}
 

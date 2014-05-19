@@ -18,7 +18,7 @@
 \firstpageheader{\large\sf CS2105}%
 {\large\sf National University of Singapore\\ School of Computing \\
 \LARGE\sf DIY Exercise 2}%
-{\large\sf Semester 2 12/13}
+{\large\sf Semester 2 13/14}
 \firstpageheadrule
 \pagestyle{headandfoot}
 
@@ -62,7 +62,7 @@ Wait until the connection closes.  Type Ctrl-E in Wireshark to stop capturing.
 
 Wireshark have captured the TCP packets exchanged between your computer and www.nus.edu.sg.  A sequence of exchanges between two host/ports is called a \textit{conversation}.  You can right click on a packet that belongs to that conversation and choose ``Conversation Filter'' $\rightarrow$  ``TCP'', to show only that conversation.  You may want to colorize the conversation so that the text is easier to read. 
 
-You should now see seven packets, three for connection establishment, four for connection termination.  Examine various header fields in the TCP headers of these seven packets, relate them to what you have learnt about the functions of these fields, and how TCP establishes/terminates connection.
+You should see some packets used for connection establishment and for connection termination.  Examine various header fields in the TCP headers of these packets and relate them to what you have learnt about (i) the functions of these fields and (ii) how TCP establishes/terminates connection.
 
 \question 
 
@@ -89,7 +89,7 @@ Look for packets that are marked as ``TCP Out-Of-Order,'' ``TCP Previous segment
 \part
 Roughly count the number of ACK packets and data packets.  What is the ratio of the number of ACK packets to data packets?  
 
-Why isn't the ratio equal to one?
+Why isn't the ratio equal to one?  (Hint: Read up about how TCP actually acknowledges segments in the textbook).
 \end{parts}
 
 \end{questions}

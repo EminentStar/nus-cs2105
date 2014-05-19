@@ -18,7 +18,7 @@
 \firstpageheader{\large\sf CS2105}%
 {\large\sf National University of Singapore\\ School of Computing \\
 \LARGE\sf DIY Exercise 3}%
-{\large\sf Semester 2 12/13}
+{\large\sf Semester 2 13/14}
 \firstpageheadrule
 \pagestyle{headandfoot}
 
@@ -30,7 +30,7 @@ You need a network connection for this exercise.
 	\textbf\textsf{HAVE FUN, AND BE CURIOUS}
 \end{center}
 
-We will continue to learn about network protocols with wireshark. 
+We will continue to explore network protocols using wireshark. 
 
 \begin{questions}
 
@@ -56,7 +56,7 @@ Now, look at the content of the DHCP ACK packets, and pay attention to the optio
 What is the meaning of each of these options?
 
 \part
-Now repeat this using different network connections (e.g., at home, at school, public WiFi such as Wireless@SG, Internet tethering with 3G, etc.).  Do you see a different set of values?  Which network gives the longest lease time? the shortest lease time?
+Now repeat this using different network connections (e.g., at home, at school, public WiFi such as Wireless@SG, Internet tethering with 3G/4G, etc.).  Do you see a different set of values?  Which network gives the longest lease time? the shortest lease time?
 \end{parts}
 
 \question
@@ -77,6 +77,12 @@ Print out the routing table on your computer.  If you are on Windows, type \text
 Identify the columns that correspond to the destination IP, the gateway, and the interface.  
 
 What is the meaning of the column labeled ``gateway''?
+
+\question
+
+Use \texttt{dig} to look up the IP address of \texttt{cs2105-z.comp.nus.edu.sg} when you are not connecting to the NUS campus network (and are not use SoC-VPN).
+
+Does this IP address explain why you cannot access this host from outside the NUS campus network without SoC-VPN?  Why is that?
 
 \end{questions}
 
