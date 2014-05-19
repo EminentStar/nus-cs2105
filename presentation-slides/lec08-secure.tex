@@ -3,7 +3,7 @@ CS2105 Lecture 8\\
 \large
 \textbf{Network Security\\[10pt]}
 \normalsize
-	18 March, 2013
+	17 March, 2014
 \note{
 \tiny
 	After this class, you are expected to be able to: 
@@ -160,6 +160,14 @@ CS2105 Lecture 8\\
 	$K_A \not = K_B$\\[20pt]
 	$m' = K_B^+(m)$\\
 	$m = K_B^-(K_B^+(m))$\\[20pt]
+
+}
+\end{cf}
+\begin{cf}{
+	\textbf{Other Properties}\\[20pt]
+
+	$K_B^+(K_B^-(m)) = K_B^-(K_B^+(m))$\\[20pt]
+	Much slower than symmetric key cryptography
 
 }
 \end{cf}
@@ -386,7 +394,7 @@ CS2105 Lecture 8\\
 	2. Derive encryption keys $E_A$, $E_B$ and MAC keys $M_A$, $M_B$ from the master key.
 \end{cf}
 \begin{cf}[t]
-	3. Transfer data $m$ with sequence number $s$ as $m'$\\
+	3. Encrypt $m$ with MAC $h$ as $m'$.  Send $m'$.\\
 	$h = H(m + M_B + s)$\\
 	$m' = E_B (m, h)$\\
 	\vspace{1cm}
@@ -417,6 +425,23 @@ CS2105 Lecture 8\\
 
 \begin{cf}
 	IPSec is a suite of protocols 
+\end{cf}
+
+\begin{cf}
+	host mode and tunnel mode
+
+	\vspace{1cm}
+	\begin{tikzpicture}[start chain=going right]
+	\node[userA,on chain](A){A};
+	\node[draw,rectangle,on chain](VPN1){};
+	\node[cloud,draw,cloud puffs=10.4,cloud ignores aspect, minimum width=2.5cm, minimum height=1.6cm,on chain,line width=2pt](Internet){};
+	\node[draw,rectangle,on chain](VPN2){};
+	\node[userB,on chain](B){B};
+	\draw[style=<->] (A) -- (VPN1);
+	\draw[style=<->,line width=2pt] (VPN1) -- (Internet);
+	\draw[style=<->,line width=2pt] (Internet) -- (VPN2);
+	\draw[style=<->] (VPN2) -- (B);
+	\end{tikzpicture}
 \end{cf}
 
 \begin{cf}{

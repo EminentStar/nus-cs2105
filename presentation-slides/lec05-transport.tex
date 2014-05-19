@@ -1,0 +1,387 @@
+\newcommand{\eventaction}[2]{%
+$\frac{\mbox{\normalsize\color{blue!50!black}{#1}}}%
+      {\mbox{\normalsize\color{red!50!black}{#2}}}$}
+
+\tikzstyle{state}=[draw,circle,text=white,align=center,font=\scriptsize,minimum width=2.5cm]
+\tikzstyle{bluestate}=[state,fill=blue!50!black]
+\tikzstyle{greenstate}=[state,fill=green!50!black]
+\tikzstyle{redstate}=[state,fill=red!50!black]
+\tikzstyle{brownstate}=[state,fill=brown!50!black]
+\tikzstyle{orangestate}=[state,fill=orange!50!black]
+\tikzstyle{blackstate}=[state,fill=gray!50!black]
+
+\begin{cf}{
+CS2105 Lecture 5\\
+\large
+\textbf{UDP and TCP\\[10pt]}
+\normalsize
+	10 February, 2014
+\note{
+\tiny
+	After this class, you are expected to:
+	\begin{itemize}
+	\item appreciate the simplicity of UDP and the service it provides
+	\item know how to calculate the checksum of a packet
+	\item understand the operation of TCP, particularly, the sequence number, the acknowledgement number, retransmission, the receiver window, and connection setup/termination. 
+	\end{itemize}
+}
+}
+\end{cf}
+
+\begin{frame}
+	``You Won't Believe How Simple the UDP Protocol is.  But The Complexity of TCP Will Make You Cry.''
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[fill=AppBlue]{Application};
+	\node[layer](T)[below = 0cm of A,fill=TransportBlue]{Transport};
+	\node[layer](N)[below = 0cm of T,fill=NetworkGreen]{Network};
+	\node[layer](L)[below = 0cm of N,fill=LinkBrown]{Link};
+	\node[layer](P)[below = 0cm of L,fill=PhysicalRed]{Physical};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+%\begin{cf}
+%Previously, on CS2105..
+%\end{cf}
+
+% segment
+% mux/demux
+% MSS
+\begin{cf}{
+\tikzstyle{layer}=[draw,rectangle,minimum height=2.5 cm, minimum width=9 cm, text=white]
+\tikzstyle{interface}=[draw,single arrow,fill=white, minimum width=0.9cm, minimum height=1.2cm]
+\tikzstyle{message}=[draw,rectangle,minimum height=.7cm,minimum width=3cm,fill=white!90!yellow]
+\tikzstyle{datagram payload}=[draw,rectangle,minimum height=.7cm,minimum width=1cm,fill=white!90!yellow]
+\tikzstyle{datagram header}=[draw,rectangle,minimum height=.7cm,minimum width=.5cm,fill=white!90!blue]
+	\begin{tikzpicture}[scale=2]
+	\node[layer](A)[
+		fill=AppBlue,
+		]{};
+	\node[layer](T)[
+		below = 0cm of A,
+		yshift = -0.1cm, 
+		fill=TransportBlue]{};
+    \node[message](M)[
+		below=0.5cm of A.north,
+	]{};
+	\node[layer](N)[
+		below = 0cm of T,
+		yshift = -0.1cm, 
+		fill=NetworkGreen]{Network};
+	\node[interface,
+		below=of A.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of A.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+    \node[datagram header](D1)[
+		below=1cm of FirstArrow,
+		xshift=-2cm
+	]{};
+    \node[datagram payload](D2)[
+		right=0cm of D1,
+	]{};
+    \node[datagram header](D3)[
+		right=0.5cm of D2,
+	]{};
+    \node[datagram payload](D4)[
+		right=0cm of D3,
+	]{};
+    \node[datagram header](D5)[
+		right=0.5cm of D4,
+	]{};
+    \node[datagram payload](D6)[
+		right=0cm of D5,
+	]{};
+	\node[interface,
+		below=of T.south, 
+		xshift=-0.5cm, 
+		yshift=1cm, 
+		rotate=270](FirstArrow){};
+	\node[interface,
+		below=of T.south, 
+		xshift=0.5cm, 
+		yshift=1cm, 
+		rotate=90]{};
+	\end{tikzpicture}
+	}
+\end{cf}
+
+\begin{cf}{
+	\textbf{UDP}\\
+	User Datagram Protocol
+\note{\tiny
+Details of Internet protocols are described in documents known as \textit{Request for Comments} (RFC).  UDP is such a simple protocol that its RFC \url{http://www.ietf.org/rfc/rfc768.txt} is only 3 pages.  Interested students should check out the RFC for further details of UDP.
+		}
+	}
+\end{cf}
+
+\tikzstyle{field}=[draw,rectangle,minimum height=1.5 cm, minimum width=4cm-0.4pt, text=gray!80!black,fill=white!90!blue,font=\small]
+\tikzstyle{payload}=[draw,rectangle,minimum height=3 cm, minimum width=8cm, text=gray!80!black,fill=white!90!yellow]
+
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field](SP){Src Port};
+	\node[field](DP)[right=0cm of SP]{Dest Port};
+	\node[field](LN)[below=0cm of SP]{Length};
+	\node[field](CS)[right=0cm of LN]{Checksum};
+	\node[payload](PL)[below=0cm of LN.south east]{Payload};
+	\node[above=.2cm of SP.north west]{\tiny 1};
+	\node[above=.2cm of SP.north east]{\tiny 16};
+	\node[above=.2cm of DP.north east]{\tiny 32};
+\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}
+	sender computes $f(P) = c$\\
+	sends $P$ and $c$\\[6pt]
+	receiver receives $P'$ and $c'$\\
+	checks if $f(P') = c'$
+\end{cf}
+
+\begin{cf}[t]{ 
+	\texttt{1011 1011 1011 0101}\\
+	\texttt{1000 1111 0000 1100}\\
+	\note{Quick recap on binary addition: 
+	\begin{itemize}
+		\item 0+0 = 0
+		\item 1+0 = 0+1 = 1
+		\item 1+1 = 10
+		\item 1+1+1 = 11
+		\end{itemize}	
+	}
+}
+\end{cf}
+
+\begin{cf}[t]{ 
+	\texttt{0110 0110 0110 0000}\\
+	\texttt{0101 0101 0101 0101}\\
+	\texttt{1000 1111 0000 1100}\\
+	\texttt{\color{blue} 1011 0101 0011 1101}\\
+}
+\end{cf}
+
+\begin{cf}{
+	\textbf{TCP}\\
+	Transport Control Protocol
+	}
+\note{\tiny
+In constrast to UDP, TCP is complex and is described in tens of RFCs, with new mechanisms or tweaks introduced throughout the years, resulting in many variants of TCP.  We will only be scratching the surface of TCP in CS2105.
+}
+\end{cf}
+
+\begin{cf}{\small
+	\begin{tabular}{|r|c|c|}
+	\hline
+	        & GBN & SR \\
+	\hline
+	ACK	& cumulative & selective \\
+	out-of-order & ignore & keep \\
+	retransmit	& all unack & one unack \\
+	timer &	earliest unack & one per unack \\
+	\hline
+	\end{tabular}
+}
+\end{cf}
+
+\tikzstyle{field16}=[field,minimum width=4.0cm-0.4pt]
+\tikzstyle{field32}=[field,minimum width=8.0cm-0.4pt]
+\tikzstyle{field06}=[field,minimum width=1.5cm-0.4pt]
+\tikzstyle{field04}=[field,minimum width=1.0cm-0.4pt]
+\tikzstyle{field01}=[field,minimum width=0.25cm-0.4pt,inner sep=0cm]
+\tikzstyle{selected}=[text=white,fill=red!40!black]
+
+% header structure
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+% source and destination port #
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16,selected](SP){src port};
+	\node[field16,selected](DP)[right=0cm of SP]{dst port};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16,selected](CS)[below=0cm of RW]{checksum};
+	\node[field16](X10)[left=0cm of CS]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+% sequence # and ACK #
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32,selected](SN)[below=0cm of SP.south east]{sequence number};
+	\node[field32,selected](AN)[below=0cm of SN]{acknowledgement number};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+% draw picture depicting the send and receive buffer
+% label seq num and ack num
+\begin{cf}[t]{
+Sender's buffer
+}
+\end{cf}
+
+% draw picture depicting the send and receive buffer
+% label seq num and ack num
+\begin{cf}[t]{
+Receiver's buffer
+
+}
+\end{cf}
+
+% Example of segment exchanges, no lost.
+\input{lib/two-lines}
+
+% Duplex
+\input{lib/two-lines}
+
+% Got one loss.  ACK next expected.  Retransmission after timeout.  One timer.
+\input{lib/two-lines}
+
+% Got one reorder.  ACK next expected.  Cumulative ACK.
+\input{lib/two-lines}
+
+% exponential backoff
+\input{lib/two-lines}
+
+% fast retransmission
+\input{lib/two-lines}
+
+\begin{cf}{
+CS2105 Lecture 5\\
+\large
+\textbf{UDP and TCP\\[10pt]}
+\normalsize
+	Online Bonus Material
+\note{
+\tiny
+	After this class, you are expected to:
+	\begin{itemize}
+	\item appreciate the simplicity of UDP and the service it provides
+	\item know how to calculate the checksum of a packet
+	\item understand the operation of TCP, particularly, the sequence number, the acknowledgement number, retransmission, the receiver window, and connection setup/termination. 
+	\end{itemize}
+}
+}
+\end{cf}
+
+% How RTO is estimated.
+\begin{cf}{
+	Setting RTO
+	\normalsize
+	\begin{align*}
+		Avg_i &= (1-\alpha)Avg_{i-1} + \alpha RTT_i \\
+		Err_i &= (1-\beta)Err_{i-1} + \beta|Avg_{i-1} - RTT_i|\\
+		RTO_i &= Avg_i + 4Err_i
+	\end{align*}
+		}
+\end{cf}
+
+% recv window
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01](X6)[right=0cm of X5]{};
+	\node[field01](X7)[right=0cm of X6]{};
+	\node[field01](X8)[right=0cm of X7]{};
+	\node[field16,selected](RW)[right=0cm of X8]{recv window};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+% flow control explained.
+\begin{cf}[t]{
+Setting rwnd
+}
+\end{cf}
+
+% SYN, FIN, and ACK bit
+\begin{cf}{
+\begin{tikzpicture}
+	\node[field16](SP){};
+	\node[field16](DP)[right=0cm of SP]{};
+	\node[field32](SN)[below=0cm of SP.south east]{};
+	\node[field32](AN)[below=0cm of SN]{};
+	\node[field04](X1)[below=0cm of AN.south west,xshift=0.5cm ]{};
+	\node[field06](X2)[right=0cm of X1]{};
+	\node[field01](X3)[right=0cm of X2]{};
+	\node[field01,selected](X4)[right=0cm of X3]{};
+	\node[field01](X5)[right=0cm of X4]{};
+	\node[field01,selected](X6)[right=0cm of X5]{};
+	\node[field01,selected](X7)[right=0cm of X6]{};
+	\node[field01,selected](X8)[right=0cm of X7]{};
+	\node[field16](RW)[right=0cm of X8]{};
+	\node[field16](X9)[below=0cm of RW]{};
+	\node[field16](X10)[left=0cm of X9]{};
+\end{tikzpicture}
+}
+\end{cf}
+
+% 3-way handshake
+\input{lib/two-lines}
+
+% 4-way handshake
+\input{lib/two-lines}

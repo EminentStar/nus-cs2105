@@ -3,7 +3,7 @@ CS2105 Lecture 9\\
 \large
 \textbf{Link Layer\\[10pt]}
 \normalsize
-	25 March, 2013
+	24 March, 2014
 \note{
 \tiny
 	After this class, you are expected to be able to understand:
@@ -18,6 +18,11 @@ CS2105 Lecture 9\\
 }
 }
 \end{cf}
+
+\begin{frame}
+	``These Protocols Transmit At Random Interval.  It May Sound Ridiculous, But The Reason They Do It Is Simply Beautiful."
+\end{frame}
+
 
 \begin{frame}
 \begin{center}
@@ -196,16 +201,17 @@ CS2105 Lecture 9\\
 }
 \end{cf}
 
-\begin{cf}{
-	Midterm and Assignment 1 marks posted on IVLE Gradebook.
-	Please check for surprises.
-}
-\end{cf}
 
-\begin{cf}{
-	Assignment 2 due this coming Sunday 23:59.
-}
-\end{cf}
+%\begin{cf}{
+%	Midterm and Assignment 1 marks posted on IVLE Gradebook.
+%	Please check for surprises.
+%}
+%\end{cf}
+%
+%\begin{cf}{
+%	Assignment 2 due this coming Sunday 23:59.
+%}
+%\end{cf}
 
 \begin{cf}{
 	1. Partition the Channel \\
@@ -269,6 +275,23 @@ CS2105 Lecture 9\\
 }
 \end{cf}
 
+\begin{frame}
+	\small
+When there is a frame to send:
+	\begin{algorithmic}
+		\Repeat
+	 	\While{channel is busy}
+		\State wait
+		\EndWhile
+		\State start sending
+		\While{has more bits}
+		\State  continue sending
+		\EndWhile
+		\State stop sending
+		\Until frame is sent without collision
+	\end{algorithmic}
+\end{frame}
+
 \begin{cf}{
 	CSMA/CD (Carrier Sense Multiple Access/Collision Detection)\\
 	\vspace{1cm}
@@ -302,7 +325,7 @@ CS2105 Lecture 9\\
 
 \begin{cf}{\small
 	At $n$-th consecutive collision, let $m = \min(n, 10)$.
-	Pick $K$ randomly from $\{0, 1, .. 2^{m-1}\}$.  Wait for 512K bit time.\\
+	Pick $K$ randomly from $\{0, 1, .. 2^{m}-1\}$.  Wait for 512K bit time.\\
 	\vspace{1cm}
 	\begin{tikzpicture}[scale=2]
 		\draw[solid] (0,0) -- (0,2);
@@ -310,6 +333,28 @@ CS2105 Lecture 9\\
 	\end{tikzpicture}
 }
 \end{cf}
+
+\begin{frame}
+	\tiny
+When there is a frame to send, set $n$ = 1
+	\begin{algorithmic}
+		\Repeat
+		\While{channel is busy}
+		\State wait
+		\EndWhile
+		\State start sending
+		\While{no collision or has more bits}
+		\State  continue sending
+		\EndWhile
+		\State stop sending 
+		\If{there is a collision}
+		\State K = random(0,$2^n-1$)
+		\State Wait 512K bit time
+		\State n = min(n + 1, 10)
+		\EndIf
+		\Until{frame is sent completely}
+	\end{algorithmic}
+\end{frame}
 
 \begin{cf}{
 	Example: DOCSIS \\
@@ -327,6 +372,18 @@ CS2105 Lecture 9\\
 	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
 	\node[draw,rectangle,on chain,fill=yellow!30!white](){};
 	\end{tikzpicture}\\
+}
+\end{cf}
+
+\begin{cf}{
+	Example: DOCSIS \\
+	\small
+	\begin{itemize}
+		\item Use FDM to divide upstream and downstream into multiple channels
+		\item Use TDM for upstream (channels are shared)
+		\item CMTS assign slots to cable modems
+		\item Cable modems send slot requests in random access manner.
+	\end{itemize}
 }
 \end{cf}
 

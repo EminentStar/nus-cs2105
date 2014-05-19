@@ -3,11 +3,12 @@ CS2105 Lecture 7\\
 \large
 \textbf{Routing\\[10pt]}
 \normalsize
-	4 March, 2013
+	3 March, 2014
 \note{
 \tiny
 	After this class, you are expected to understand
 	\begin{itemize}
+	\item how longest prefix forwarding in a router works
 	\item the purpose of routing protocols on the Internet
 	\item the differences between inter-domain and intra-domain routing.
 	\item the workings of link-state and distance vector routing
@@ -17,6 +18,10 @@ CS2105 Lecture 7\\
 }
 }
 \end{cf}
+
+\begin{frame}
+	``Millions of Routers Work in Concert to Route Packets on the Internet, Based on This One Simple Equation. Amazing.''
+\end{frame}
 
 \begin{cf}{
 \tikzstyle{layer}=[draw,rectangle,minimum height=1.5 cm, minimum width=5 cm, text=white]
@@ -78,7 +83,7 @@ CS2105 Lecture 7\\
 \end{cf}
 
 
-\tikzstyle{router}=[draw,cylinder,aspect=1.5,rotate=90,minimum height=2.5 cm, minimum width=3.5cm, text=gray!80!black,fill=white!90!NetworkGreen,font=\small]
+\tikzstyle{router}=[draw,cylinder,aspect=1.5,rotate=90,minimum height=2.5 cm, minimum width=3.5cm, text=gray!80!black,fill=white!70!Yellow,font=\small]
 \begin{cf}{
 	\begin{tikzpicture}
 		\node[router](Router){};
@@ -93,15 +98,33 @@ CS2105 Lecture 7\\
 \end{cf}
 
 \begin{cf}[t]
-	forwarding table
+	Forwarding Table\\[1cm]
+	\small
+	\begin{tabular}{c|c}
+		destinations & outgoing interface\\
+		\hline
+		\; & \; \\
+		\; & \; \\
+		\; & \; \\
+		\; & \; \\
+	\end{tabular}
 \end{cf}
 
 \begin{cf}[t]
-	longest prefix matching
+	Longest Prefix Matching\\[1cm]
+	\small
+	\begin{tabular}{c|c}
+		address prefix & outgoing interface\\
+		\hline
+		\; & \; \\
+		\; & \; \\
+		\; & \; \\
+		\; & \; \\
+	\end{tabular}
 \end{cf}
 
 \begin{cf}
-The Internet is a ``network-of-networks'', organized into autonomous systems (AS), each own by an organization.
+The Internet is a ``network-of-networks'', organized into autonomous systems (AS), each is owned by an organization.
 \end{cf}
 
 \begin{cf}{
@@ -132,6 +155,25 @@ The Internet is a ``network-of-networks'', organized into autonomous systems (AS
 
 \begin{cf}{
 	\textbf{Abstract} view of intra-domain routing
+}
+\end{cf}
+
+\tikzstyle{smallrouter}=[draw,cylinder,aspect=1.5,rotate=90,minimum height=0.5 cm, minimum width=1cm, text=gray!80!black,fill=white!70!Yellow,font=\small]
+
+\begin{cf}{\normalsize
+	\begin{tikzpicture}
+			\node[smallrouter](A)[]{};
+			\node[smallrouter](B)[right=2cm of A.east]{};
+			\node[smallrouter](C)[right=2cm of B.east]{};
+			\node[smallrouter](D)[below=2cm of B.south]{};
+			\node[smallrouter](E)[right=2cm of C.south]{};
+			\draw[](A)--(B);
+			\draw[](B)--(C);
+			\draw[](C)--(D);
+			\draw[](C)--(E);
+			\draw[](A)--(D);
+			\draw[](E)--(D);
+	\end{tikzpicture}
 }
 \end{cf}
 
@@ -166,10 +208,18 @@ The Internet is a ``network-of-networks'', organized into autonomous systems (AS
 }
 \end{cf}
 
-\tikzstyle{rtr}=[draw,cylinder,aspect=1.5,rotate=90,minimum height=1 cm, minimum width=1.5cm, text=gray!80!black,fill=white!90!NetworkGreen,font=\small]
+\begin{cf}{
+	decentralized\\
+	self-terminating\\
+	iterative\\
+	asynchronous\\
+}
+\end{cf}
+
+\tikzstyle{rtr}=[draw,cylinder,aspect=1.2,rotate=90,minimum height=1 cm, minimum width=1.5cm, text=gray!80!black,fill=white!70!Yellow,font=\small]
 
 \begin{cf}{\normalsize
-	$d_x(y)$: the cost to reach $y$ from $x$'s view\\[1cm]
+	$d_x(y)$: the total cost to reach $y$ from $x$'s view\\[1cm]
 	\begin{tikzpicture}
 			\node[rtr](X)[label=left:x]{};
 			\node[rtr](Y)[label=left:y,right=3cm of X.south]{};
@@ -179,12 +229,108 @@ The Internet is a ``network-of-networks'', organized into autonomous systems (AS
 \end{cf}
 
 \begin{cf}{\normalsize
-	$c(x,y)$: the cost between $x$ and $y$.\\[1cm]
+	$c(x,y)$: the link cost between $x$ and $y$.\\[1cm]
 	\begin{tikzpicture}
 			\node[rtr](X)[label=left:x]{};
 			\node[rtr](Y)[label=left:y,right=2cm of X.south]{};
 			\draw[](X)--(Y);
 	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	$d_x(y) = \min_i \{c(x,i) + d_i(y) \}$\\[1cm]
+	\begin{tikzpicture}
+			\node[rtr](X)[label=left:x]{};
+			\node[rtr](V)[label=left:v,right=2cm of X.west,yshift=-1cm]{};
+			\node[rtr](U)[label=left:u,above=2cm of V.north,yshift=-1cm]{};
+			\node[rtr](W)[label=left:w,below=2cm of V.south,yshift=1cm]{};
+			\node[rtr](Y)[label=left:y,right=4cm of V.south]{};
+			\draw[](X)--(U);
+			\draw[](X)--(V);
+			\draw[](X)--(W);
+			\draw[->,decorate,decoration={snake}](U)--(Y);
+			\draw[->,decorate,decoration={snake}](V)--(Y);
+			\draw[->,decorate,decoration={snake}](W)--(Y);
+	\end{tikzpicture}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	$d_x(y) = \min_i \{c(x,i) + d_i(y) \}$\\[1cm]
+
+	\begin{tabular}{|c|c|c|}
+	\hline
+	dest & next & cost \\
+	\hline
+  v  & z & 10 \\
+  w  & z & 23 \\
+  x  & x & 11 \\
+  y  & x & 17 \\
+	\hline
+	\end{tabular}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	\textbf{distance vector} is the ``local view'' exchanged
+	between neighbors.\\[1cm]
+
+	\begin{tabular}{|c|c|c|}
+	\hline
+	dest & cost \\
+	\hline
+  v  & 10 \\
+  w  & 23 \\
+  x  & 11 \\
+  y  & 17 \\
+	\hline
+	\end{tabular}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	\begin{tikzpicture}
+			\node[rtr](Z)[label=above:z]{};
+			\node[rtr](X)[label=below:x,below=1.5cm of Z.south]{};
+			\node[rtr](Y)[label=below:y,right=3cm of Z.west]{};
+			\draw[](Z)--(X) node[draw=none,font=\scriptsize,near start,below]{7};
+			\draw[](X)--(Y) node[draw=none,font=\scriptsize,near end,below]{2};
+			\draw[](Z)--(Y) node[draw=none,font=\scriptsize,midway,above]{1};
+	\end{tikzpicture}
+
+	\vspace*{1cm}
+	\begin{tabular}{|c|c|c|c|}
+	\hline
+	 & to $x$ & to $y$ & to $z$ \\
+	\hline
+  @$x$ & & & \\
+  @$y$ & & & \\
+  @$z$ & & & \\
+	\hline
+	\end{tabular}
+}
+\end{cf}
+
+\begin{cf}{\normalsize
+	\begin{tikzpicture}
+			\node[rtr](Z)[label=above:z]{};
+			\node[rtr](X)[label=below:x,below=1.5cm of Z.south]{};
+			\node[rtr](Y)[label=below:y,right=3cm of Z.west]{};
+			\draw[](Z)--(X) node[draw=none,font=\scriptsize,near start,below]{7};
+			\draw[](X)--(Y) node[draw=none,font=\scriptsize,near end,below]{2};
+			\draw[](Z)--(Y) node[draw=none,font=\scriptsize,midway,above]{1};
+	\end{tikzpicture}
+
+	$d_x(y) = \min_i \{c(x,i) + d_i(y) \}$\\[1cm]
+
+	\begin{tabular}{|c|c|c|c|}
+	\hline
+	 & to $x$ & to $y$ & to $z$ \\
+	\hline
+  @$x$ & & & \\
+	\hline
+	\end{tabular}
 }
 \end{cf}
 
@@ -195,6 +341,46 @@ The Internet is a ``network-of-networks'', organized into autonomous systems (AS
 	asynchronous\\
 }
 \end{cf}
+
+\begin{cf}{\small
+	\begin{tikzpicture}
+			\node[rtr](Z)[label=above:z]{};
+			\node[rtr](X)[label=below:x,below=1.5cm of Z.south]{};
+			\node[rtr](Y)[label=below:y,right=3cm of Z.west]{};
+			\draw[](Z)--(X) node[draw=none,font=\scriptsize,near start,below]{50};
+			\draw[](X)--(Y) node[draw=none,font=\scriptsize,near end,below]{1};
+			\draw[](Z)--(Y) node[draw=none,font=\scriptsize,midway,above]{2};
+	\end{tikzpicture}
+
+	$d_x(y) = \min_i \{c(x,i) + d_i(y) \}$\\[1cm]
+
+	\begin{columns}
+		\begin{column}{.5\linewidth}
+		\begin{tabular}{|c|c|c|c|}
+		\hline
+		 & to $x$ & to $y$ & to $z$ \\
+		\hline
+	  @$x$ & & & \\
+	  @$y$ & & & \\
+	  @$z$ & & & \\
+		\hline
+		\end{tabular}
+		\end{column}
+		\begin{column}{.5\linewidth}
+		\begin{tabular}{|c|c|c|c|}
+		\hline
+		 & to $x$ & to $y$ & to $z$ \\
+		\hline
+	  @$x$ & & & \\
+	  @$y$ & & & \\
+	  @$z$ & & & \\
+		\hline
+		\end{tabular}
+		\end{column}
+	\end{columns}
+}
+\end{cf}
+
 \begin{cf}{
 	``count-to-infinity''
 }
@@ -203,9 +389,45 @@ The Internet is a ``network-of-networks'', organized into autonomous systems (AS
 	``poisoned reverse''
 }
 \end{cf}
+
+\begin{cf}{
+	Without poisoned reverse\\[1cm]
+
+	\small
+	\begin{algorithmic}
+		\ForAll{neighbor $n$}
+		\State distance vector $v_n \gets [\;]$
+		\ForAll{entry $e$ in local table}
+			  \State add ($e$.dest, $e$.cost) to $v_n$
+			\EndFor
+		\State send $v_n$ to $n$
+		\EndFor
+	\end{algorithmic}
+}
+\end{cf}
+
+\begin{cf}{
+	With poisoned reverse\\[1cm]
+	\scriptsize
+	\begin{algorithmic}
+		\ForAll{neighbor $n$}
+		\State distance vector $v_n \gets [\;]$
+		\ForAll{entry $e$ in local table}
+			\If {$e$.next is $n$}
+				  \State add ($e$.dest, $\infty$) to $v_n$
+			  \Else
+				  \State add ($e$.dest, $e$.cost)  to $v_n$
+			  \EndIf
+			\EndFor
+			\State send $v_n$ to $n$
+		\EndFor
+	\end{algorithmic}
+}
+\end{cf}
+
 \begin{cf}{
 	\textbf{link state vs. distance vector}\\
-	message complexity\\
+	message overhead\\
 	convergence speed\\
 	robustness (error)\\
 }
