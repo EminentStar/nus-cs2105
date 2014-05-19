@@ -11,15 +11,27 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Midterm Review}%
-    {\large\sf Semester 2 12/13}
+    {\large\sf Semester 2 13/14}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
+\newcommand{\answerbox}{\hfill\textbf{Answer:\ \ }\begin{picture}(0.9,0.9) \framebox(0.9,0.9)[r]{}              \end{picture}}
+
+\newcommand{\textfield}[1]{Answer:\\[4pt]\begin{picture}(15,#1)\framebox(15,#1)[r]{}\end{picture}\vspace{4pt}}
 
 \textsf{For MCQ, pick the most appropriate answer and write the corresponding choice (A, B, C, D, or E) in the answer box.  If multiple answers are equally appropriate, pick one and
 write the chosen answer in the answer box.  Do NOT write more than one 
 answers in the answer box.  \textbf{If none of the answers are appropriate, write \texttt{X} in the answer box.}}
 
+%\newpage
+%\textbf{\LARGE{Answer Sheet}}\\
+%\textbf{\Large{MCQs}}\\
+%\begin{tabular}
+%1. & \answerbox & 3. & \answerbox \\
+%2. & \answerbox & 4. & \answerbox \\
+%\end{tabular}
+%
+%5. (a) root DNS server 
 
 \begin{questions}
 \question
@@ -83,6 +95,7 @@ of the next packet transmitted by the sender?
 X 
 \end{solution}
 
+\newpage
 \question
 Consider the checksum algorithm used to compute the checksum field in UDP   header and TCP header.  Although UDP and TCP uses 16-bits words in computing the checksum, in this  question you are asked to consider 8-bits summands.
 
@@ -222,6 +235,7 @@ acknowledgement numbers.
 2nd packet from Y to X: S = 220, A = 1100\\
 \end{solution}
 
+\newpage
 \question
 Two hosts A and B are connected by a link with bandwidth-delay 
 product of $P$ bits and transmission rate of $R$ bps.  A sends 
