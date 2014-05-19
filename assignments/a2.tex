@@ -12,13 +12,13 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Assignment 2}%
-    {\large\sf Semester 2 12/13}
+    {\large\sf Semester 2 13/14}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
     \section*{Deadline}
 
-    31 March, 2013 (Sunday), 11:59pm.
+    30 March, 2014 (Sunday), 11:59pm.
 
     \section*{Objective}
 
@@ -28,7 +28,7 @@
 
 You are expected to be familiar with the alternating bit protocol (rdt 3.0).
 
-The assignment will be done under a controlled, UNIX environment. Familiarity with UNIX environment (how to copy/move/delete/edit files, how to compile and run programs, etc.) is assumed.
+The assignment will be done under a controlled UNIX environment. Familiarity with UNIX environment (how to copy/move/delete/edit files, how to compile and run programs, etc.) is assumed.
 
 \section*{Administrative Matters}
 
@@ -87,7 +87,8 @@ Figure 1 shows the overall relationship between the classes in this assignment.
 
 \subsection*{Timer}
 
-You will need two java.util.* classes to implement timeout.  The \texttt{Timer} class schedules a task to be executed periodically after a certain delay, while the \texttt{TimerTask} class implements the code that you want to execute periodically.  For example, to print a given number after 5 seconds, and subsequently every 5 seconds, you create the following task, 
+You will need two java.util.* classes to implement timeout.  
+The \texttt{Timer} class schedules a task to be executed periodically after a certain delay, while the \texttt{TimerTask} class implements the code that you want to execute periodically.  For example, to print a given number after 5 seconds, and subsequently every 5 seconds, you create the following task, 
 \newpage
 
 \begin{verbatim}
@@ -112,11 +113,10 @@ When you want to stop printing,
 \end{verbatim}
 
 You can read the Java document on these two classes for more details.
-You should write your own private class that implements the timer.
 
-\subsection*{Timeout Value}
+\subsection*{Timers and Timeout Value}
 
-Your implementation should work for any retransmission timeout values.  Note, however, that if you set your timeout value to be too small (in order of milliseconds), you will have many unnecessary retransmissions due to premature timeout.  On the other hand, if your timeout value is too large (in order of seconds), then the file transfer will take a long time to complete.  A timeout value of a few hundred milliseconds work well for me.
+Your implementation should work for any retransmission timeout values.  You should at least test your code with a timeout value of less than or equal to 5ms (to test the case with premature timeout) and 100ms.
 
 \subsection*{Sending and Receiving Packets}
 
@@ -133,7 +133,7 @@ The UDT layer randomly corrupts or drops packets according to the probability \t
 \subsection*{Detecting Closed Connection}
 One practical issue that needs to be dealt with for rdt 3.0 is the closing of the connection.  In this assignment, the sender sends a packet with no data (0 byte) to signal that there is no more packet.  The receiver closes the connection when it receives all the data correctly.  This action may lead to an \texttt{EOFException} being thrown at the sender.
 
-You may handle this exception at the sender side by gracefully closing the connection.  You need not implement a TCP-like four-way handshake (FIN/ACK) to close the connection.
+You may handle this exception at the sender side by gracefully closing the connection (inside the \texttt{catch} block). You need not implement a TCP-like four-way handshake (FIN/ACK) to close the connection.
 
 \section*{Verifying The Received File}
 One way to check if the file received is the same as the file sent is to use cryptographic hash functions (Lecture 8).

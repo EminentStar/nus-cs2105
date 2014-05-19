@@ -1,0 +1,116 @@
+\documentclass[a4paper,11pt]{exam}
+    \usepackage{hyperref}
+    \ifx\pdftexversion\undefined
+       \usepackage{epsfig}
+    \else
+       \usepackage[pdftex]{graphics}
+    \fi
+    \usepackage{epsfig}
+    \usepackage{verbatim}
+\begin{document}
+    \extraheadheight{.5in}
+    \firstpageheader{\large\sf CS2105}%
+    {\large\sf National University of Singapore\\ School of Computing \\
+    \LARGE\sf Assignment 0}%
+    {\large\sf Semester 2 13/14}
+    \firstpageheadrule
+    \pagestyle{headandfoot}
+
+    \section*{Deadline}
+
+    There is no deadline.  This is a warm up exercise to familiarize you with some Java classes that would be useful for your Assignments 1 and 2.
+
+    \section*{Objectives}
+
+    In this assignment, you will learn how to (i) read from, and write to, a file, (ii) call an external program, and (iii) schedule a task to be executed later in Java. 
+
+    \section*{Pre-requisites}
+
+    You are expected to know (i) how to write simple Java programs with branches, loops, classes (including inheritence), methods, and arguments and (ii) how to compile and run a Java program in a UNIX environment.  You should also be comfortable referring to  Java API documents for information.
+
+
+\section*{File I/O in Java}
+
+In this section, you will learn about how to read and write a file in Java.  
+
+Let's consider reading first.  There are several important Java classes for this purpose.  The first, is the \texttt{InputStream} class.  \texttt{InputStream} is an abstract class that represents a sequence of bytes that can be read.  The \texttt{FileInputStream} is a special type of \texttt{InputStream} class that represents a sequence of bytes from a file.  
+
+An \texttt{InputStreamReader} is a class that provides methods to read from an \texttt{InputStream}.  When reading, the \texttt{InputStreamReader} also converts the input streams from bytes to characters.  Note that this conversion is necessary since, unlike in C, each character in Java is represented by two bytes (due to Unicode encoding). 
+
+The \texttt{InputStreamReader} class performs raw input from files, and is less efficient that a \textit{buffered} reader.  A buffered reader would read a bunch of data from the disk at one time and keep them in memory.  When \texttt{read} is called, a buffered reader returns the data from memory if available, or read another batch if the amount of data in memory is low.  The class that corresponds to a buffered reader is \texttt{BufferedReader}.
+
+With these three classes, you can now read from a file.  The following is a typical code snippet for this purpose:
+\begin{verbatim}
+  FileInputStream in = new FileInputStream("input.txt");
+  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+  String line;
+  while((line = br.readLine())!= null) {
+     // process line
+  }
+\end{verbatim}
+
+For writing, there is an output-counterpart for \texttt{InputStream}, called, well, \texttt{OutputStream}.  You can guess that there are classes called \texttt{FileOutputStream}, \texttt{OutputStreamWriter}, and \texttt{BufferedWriter}, and you are right!  The typical code to write something to a file is:
+\begin{verbatim}
+FileOutputStream out = new FileOutputStream("output.txt");
+BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+bw.write("Hello World!");
+\end{verbatim}
+
+If you write the three lines of code above in a program, however, you will find that output.txt will be created, but is empty!  To understand why this happens, you need to understand how \texttt{BufferedWriter} works.  Just like buffered reader, a buffered writer does not write immediately to disk, but store the content to write in memory.  Thus, the string ``Hello World!'' would have been stored only in memory, not to the file on disk.  There are two things we can do to make sure that the content in the buffer is written properly: (i) we can call the \texttt{flush()} of \texttt{BufferedWriter}.  This would cause whatever content buffered to be written out to disk, (ii) if we have no use for the \texttt{BufferedWriter} object anymore, we can call the \texttt{close()} method of \texttt{BufferedWriter}.  This call would clean up the internals of \texttt{BufferedWriter}, including flushing the content to disk.  Try adding either one of the following two lines into your code, and you should see that output.txt will contain ``Hello World!'' correctly after this.
+
+\begin{verbatim}
+bw.close();
+\end{verbatim}
+
+\begin{verbatim}
+bw.flush();
+\end{verbatim}
+
+So, remember to flush.  Past experience indicates that students in CS2105 have spent countless sleepless hours debugging their programs, because they forgot to flush after they are done writing.
+
+As an exercise, try to write a program called Copier that copies one file to another.  Your program should take in two arguments: \texttt{Copier.java src deist}, and it should copy the content from \texttt{src} and write it to a new file \texttt{dest}.  Your program should work for both text and binary files, and for both small files and large files (hundreds of MBs).
+
+\section*{Calling an External Program}
+
+If you do not like to do the hard work of copying data from one file to another, you can make use of existing system command \texttt{cp} in UNIX-based OS to do it for you.  Java provides an easy way to invoke an external command/program, using the \texttt{Runtime} class.  The \texttt{Runtime} class provides an interface with the environment in which the Java application is running, and it allows us to do many cool things, such as finding out the amount of free memory and the number of processors.  We are interested in the \texttt{exec()} method of \texttt{Runtime}, which allows us to execute an external program.  For example, if I wish to invoke the \texttt{cp} command, I can use the following:
+
+\begin{verbatim}
+Runtime.getRuntime().exec("cp output.txt backup.txt");
+\end{verbatim}
+
+There are variations of the \texttt{exec()} commands.  Read the \texttt{Runtime} API and play with different variations to see their differences.
+
+As an exercise, rewrite the Copier program to use the system command \texttt{cp} to make copies of your files.
+
+\section*{Timer}
+
+Now, let's see how we can write a method that can be scheduled to be invoked ``in the future'', perhaps periodically.  This effect can be achieved using the classes \texttt{Timer} and \texttt{TimerTask}.
+
+The \texttt{Timer} class schedules a task to be executed periodically after a certain delay, while the \texttt{TimerTask} class implements the code that you want to execute periodically.  For example, to print a given number after 5 seconds, and subsequently every 5 seconds, you create the following task, 
+
+\begin{verbatim}
+class NumberPrinter extends TimerTask {
+  int x;
+  NumberPrinter(int toPrint) {
+    x = toPrint;
+  } 
+  public void run() {
+    System.out.println(x);
+  }
+}
+\end{verbatim}
+and schedule the timer elsewhere, like this.
+\begin{verbatim}
+  Timer timer = new Timer();
+  timer.schedule(new NumberPrinter(10), 5000, 5000);
+\end{verbatim}
+When you want to stop printing,
+\begin{verbatim}
+  timer.cancel();
+\end{verbatim}
+
+As an exercise, extend the Copier.java program you wrote earlier to be a crude backup program that takes in the file $f$ to back up and the location $L$ to be back up to, and periodically (say every 10 minutes) make a copy of $f$ into $L$.
+
+\vfill
+\center\Huge{THE END}
+\end{document}

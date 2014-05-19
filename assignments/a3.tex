@@ -6,150 +6,187 @@
 \usepackage[pdftex]{graphics}
 \fi
 \usepackage{epsfig}
-
+ 
 \usepackage{fancyvrb}
-
-\rhead{\textsf{CS2105 Assignment 3}}
-\lhead{\textsf{Matriculation Number:
-}}
-\headrule
-
+ 
 \begin{document}
 \extraheadheight{.5in}
 \firstpageheader{\large\sf CS2105}%
 {\large\sf National University of Singapore\\ School of Computing \\
 \LARGE\sf Assignment 3}%
-{\large\sf Semester 2 12/13}
+{\large\sf Semester 2 13/14}
 \firstpageheadrule
-\pagestyle{headandfoot}
+\pagestyle{headandfoot} 
 
-\begin{center}
-{\Large{\sf MATRICULATION NUMBER:}}
-\begin{tabular}{| c | c | c | c | c | c | c | c | c |}
-\hline
-\hspace{.3cm} &
-\hspace{.3cm} &
-\hspace{.3cm} &
-\hspace{.3cm} &
-\hspace{.3cm} &
-\hspace{.3cm} &
-\hspace{.3cm} &
-\hspace{.3cm} &
-\hspace{.3cm} \\[11pt]
-\hline
-\end{tabular}
-\end{center}
 
-\textbf{Deadline: 15 April, 6:00pm}
+\textbf{Deadline: 18 April, 6:00pm}
 
-This assignment can be done on your local computer.  We assume that you are familiar with basic user interfaces of Wireshark and have installed it on your computer.  Otherwise, please take a look at past DIY exercises for guidance.
+This assignment can be done on your local computer. We assume that you are
+familiar with basic user interfaces of Wireshark and have installed it on your
+computer. Otherwise, please take a look at past DIY exercises for guidance.
 
-The goal of this assignment, like the DIY exercises, is to relate what you have learnt from CS2105 to networking practice in the real world.  This exercise also introduces a few new concepts that are not in the book/lecture.  You will need to be resourceful (e.g., using Google, Wikipedia) to answer these questions.
+The goal of this assignment, like the DIY exercises, is to relate what you have
+learnt from CS2105 to networking practice in the real world. This exercise also
+introduces a few new concepts that are not in the book/lecture. You will need to
+be resourceful (e.g., using Google, Wikipedia) to answer these questions.
 
-Answer all questions in the space provided.  Write your matriculation number on top of this page, and hand in a hardcopy of this assignment to Wei Tsang's office (AS6 05-14) before 6pm, 15 April 2013.
+Answer all questions in the answer sheet provided, and hand in a hardcopy of the
+answer sheet to Wei Tsang's office (AS6 05-14) before 6pm, 18 April 2014 (Friday).
+
+Submission of answers in any other form (softcopy, foolscap paper etc.) will result 
+in an automatic deduction of 1 point.  
+
+WRITE YOUR MATRICULATION NUMBER OF THE TOP LEFT HAND CORNER OF EVERY PAGE IN THE ANSWER SHEET.  Failure to do so could result in 0 marks for the assignment (since we do not know who you are).
 
 \section*{Your Task}
 
-In this assignment, you are given a file, named a3.packets, that contains a set of packets captured using Wireshark on a host with IP address 172.26.187.16.  The host was originally not connected to the Internet and has its Ethernet cable unplugged.  Trace collection starts (at Time 0) as soon as the Ethernet cable is plugged into the host.  
+In this assignment, you are given a file, named a3.packets, that contains a set
+of packets captured using Wireshark on a host with IP address 172.26.191.153.
+We call this computer the capturing host in the questions. The host was
+originally not connected to the Internet and has its Ethernet cable unplugged.
+Trace collection starts (at Time 0) as soon as the Ethernet cable is plugged into the host.
 
-You can download this file from \url{http://www.comp.nus.edu.sg/~ooiwt/cs2105/1011s2/a3.packets}.  Open this file using Wireshark.  Examined the packets carefully, and try to reconstruct the sequence of events when a host is plugged into the network.
+You can download this file from
+\url{http://www.comp.nus.edu.sg/~ooiwt/cs2105/1314s2/a3.packets}. Open this file
+using Wireshark. Examined the packets carefully, and try to reconstruct the
+sequence of events when a host is plugged into the network.
 
 \begin{questions}
-
-\question \textbf{ARP and DHCP}
-\begin{parts}
-\uplevel{We start by looking at Packet 1.}
-	\part[1] What is the MAC address of 172.26.187.16?  How did you find this out?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		64:b9:e8:c9:07:b4.  Source of Packet 1.
-	\end{solution}
-	\part[2] What is the destination MAC address of Packet 1?  Why isn't the destination MAC address FF:FF:FF:FF:FF:FF as expected?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-The host looks up the ARP table and found that, previously, the MAC address of 172.26.186.1 is 00:00:0c:07:ac:02.  So it sends it directly to that MAC address instead of broadcasting to everyone.
-	\end{solution}
-	\part[1] What is the purpose of Packet 1?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		To reconfirm the MAC address of 172.26.186.1.
-	\end{solution}
-	\part[1] Is Packet 1 sent using UDP, TCP, or neither?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		Neither.  ARP is a protocol between link and network layer.
-	\end{solution}
-	\part[1] Which packet is the response to Packet 1? (indicate the packet number).
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		Packet 11.
-	\end{solution}
-\uplevel{Now, let's look at Packet 2.  Note that Packet 2 is a DHCP Request packet, instead of a DHCP Discover packet as explained in the book/lecture.}
-	\part[1] Why is the source IP address 0.0.0.0?  
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		Because the host does not have an IP address yet.
-	\end{solution}
-	\part[1] Which packet is the response to this DHCP request?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		Packet 16 (or 17).
-	\end{solution}
-\uplevel{Now, take a look at Packets 5 - 8.}
-	\part[1] These packets does not concern 172.26.187.16.  Why do these packets still get delivered to 172.26.187.16?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		They are broadcast packets.	
-	\end{solution}
-	\part[3] Now, right click on ``Source'' column of Packet 5, and choose ``Apply as Filter'', ``Selected''.  Take note of the ARP packets sent from the same Ethernet address, and the timing interval between the packets.  What do you think the purpose of these packets is?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		They are likely used to probe if the IP addresses are in used.  (To find out more, google for periodic ARP probes).
-	\end{solution}
-	\part[1] The same MAC address is also the link-layer source for two other IP addresses.  What are they?  What is the associated role played by the host with each of these IP addresses?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		137.132.82.7 is the DHCP Server; 137.132.87.2 is the DNS server.
-	\end{solution}
-	\uplevel{Now, click ``Clear'' to remove the filter.  Click on Packet 20, and filter packets based on its source MAC address.  Suppose the MAC address is X, filter the packets using the expression "eth.addr == X" by entering and applying it in the display filter field.}
-	\part[1] The same MAC address is also the link-layer source for two IP addresses under 137.132.80/20.  What are they?  What is the associated role played by the host with each of these IP addresses?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		137.132.82.6 is the DHCP Server; 137.132.85.2 is the DNS server.
-	\end{solution}
-	\part[2] Does 137.132.82.6 belong to the same LAN (not separated by a router) as 172.26.187.16?  How can you tell?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		Yes, because 172.26.186.16 can hear broadcast packet from 137.132.82.6; and no, because they have different subnet mask.
-	\end{solution}
-
-\uplevel{Click ``Clear'' to remove the filter, and let's move on to Packet 12}
-	\part[1] Packet 12 is labelled as a Gratuitous ARP packet.  What is the source and destination IP address of this packet?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		They are both 172.26.187.16
-	\end{solution}
-	\part[3] What is the purpose of sending a Gratuitous ARP request packet?
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		To check if anyone else have the same IP address. 
-	\end{solution}
+\question[10] \textbf{ARP}
+\begin{parts} 
+\part[1] What is the purpose of Packet 9?
+%\fillwithdottedlines{.25in}
+% \begin{solution} 
+% A. To obtain the mac address of 172.26.190.1.
+% \end{solution}
+\part[1] Who sends Packet 9?
+%\fillwithdottedlines{.25in}
+% \begin{solution}
+% A. 172.26.191.183
+%\end{solution}
+\part[2] Does the response to Packet 9 exist in the trace? Why?
+%\fillwithdottedlines{.5in}
+% \begin{solution}
+% A. No. Because 172.26.190.1 responds within a standard frame to the
+%  172.26.191.183 not in the broadcast manner.
+% \end{solution}
+%\uplevel{Consider Packet 126:}
+\part[1] What is the purpose of Packet 126?
+%\fillwithdottedlines{.25in}
+% \begin{solution}
+% A. To query for the mac address of the IP 172.26.190.1.
+% \end{solution}
+\part[1] Which packet is the response to Packet 126?  Write down the most important
+information brought to the capturing host by the response of Packet 126.
+%\fillwithdottedlines{.25in}
+% \begin{solution}
+% A. 127. The Mac address of IP 172.26.190.1 which is 00:00:0c:07:ac:02.
+% \end{solution}
+\part[3] What is the purpose of Packet 18?
+%\fillwithdottedlines{.75in}
+% \begin{solution}
+% A. Gratuitous ARP message is useful for updating other hosts' mapping of a
+% hardware address when the sender's IP address or MAC address has changed.
+% \end{solution}
+\part[1] What is the MAC address of capturing host?
+%\fillwithdottedlines{.25in}
 \end{parts}
 
-\question \textbf{SSL}.  We now turn our focus to Packet 36, which starts a TCP connection to a remote server.  Right click on Packet 36 and choose ``Conversation Filter'', ``TCP''.
-You can observe the establishment of a TCP connection, followed by a SSL connection.  Click on Packet 42, where the certificate of the server is handed over to 172.26.187.16.  
-Look into the content of the packet, paying attention of the certificates.  
+\question[8] \textbf{DHCP}
+\begin{parts} 
+\part[1] Find the IP addresses of two DHCP servers that are accessible from
+the subnet of capturing host.
+%\fillwithdottedlines{.25in}
+% \begin{solution}
+% A.137.132.83.7 and 137.132.83.6
+% \end{solution}
+\part[3] Are the DHCP servers in the same subnet as the capturing host?  Justify your answer.
+%\fillwithdottedlines{.75in}
+% \begin{solution}
+% a. By finding the DHCP ack packets, we can find 137.132.83.7 and
+% 137.132.83.6 as the source IP address. By finding the subnet mask for
+% 172.26.191.153 which is 255.255.254.0, you can find that they are not in the same subnet.
+% \end{solution}
+\part[2] How many distinct clients (including the capturing host) request for
+the DHCP IP address in the subnet of capturing host during the trace time?
+%\fillwithdottedlines{.25in}
+% \begin{solution}
+% Two. Answer Description: We can obtain this by list all the DHCP Discover
+% messages and then count the number of different mac address.
+% \end{solution}
+\part[2] Why is the first DHCP packet a DHCP Request packet, rather than a DHCP Discover packet?
+%\fillwithdottedlines{.5in}
+% \begin{solution}
+% A. Because the capturing host wants to keep its previous IP address if it is possible.
+% \end{solution}
+\end{parts}
+
+%\question \textbf{General}
+%\begin{parts}
+% \begin{solution}
+% d4:be:d9:9d:b4:ba.
+% \end{solution}
+%\end{parts}
+
+\question[5] \textbf{DNS}
 \begin{parts}
-	\part[2] Why are there two certificates?  What is their relation?
-%	\fillwithdottedlines{1in}
-	\begin{solution}
-		The first certificate certifies the public key of Google, signed by Google Internet Authority.  The other certificate certifies the public key of Google Internet Authority, signed by Equifax Secure Certificate Authority.
-	\end{solution}
-	\part[2] What is the purpose of Packet 44?  What is it encrypting, and what is the message encrypted with?  (Note: the answer comes from the textbook/lecture, not from the payload of the packet).
-	%\fillwithdottedlines{.5in}
-	\begin{solution}
-		Packet 44 contains the master key encrypted with the public key of google.com.
-	\end{solution}
+\part[2] What are the IP addresses of the three DNS servers which are contacted
+by capturing host?
+%\fillwithdottedlines{.25in}
+% \begin{solution}
+% 137.132.87.2, 137.132.85.2 and 137.132.94.2
+% \end{solution}
+
+\part[2] What could be the reason for contacting three DNS servers instead of one?
+%\fillwithdottedlines{.75in}
+% \begin{solution}
+% The client may contacts several DNS server in parallel to save the time in
+% the case of failure of one or when an address may not be cached in one DNS
+% server but may be cached in another.
+% \end{solution}
+
+\part[1] What is the longest TTL among the DNS records corresponding to the IP
+address of daisy.ubuntu.com (starts from packet 128)? Which DNS server does it
+come from? (You can use ctrl+F to look for daisy.ubuntu.com)
+%\fillwithdottedlines{.25in}
+% \begin{solution}
+% 9 min and 31 second comes form 137.132.85.2.
+% \end{solution}
+\end{parts}
+
+\question[7] \textbf{SSL}
+\begin{parts}
+\uplevel{We now turn our focus to Packet 145, which starts a TCP connection to a
+remote server. Right click on Packet 145 and choose ``Conversation Filter'',
+``TCP''. You can observe the establishment of a TCP connection, followed by a SSL
+connection. Click on Packet 211, where the certificate of the server is handed
+over to 172.26.191.153. Look into the content of the packet, paying attention of
+the certificates.} 
+\part[3] Why are there four certificates? What is their relation?
+%\fillwithdottedlines{.75in}
+% \begin{solution}
+% The first certificate certifies the public key of diasy.ubuntu.com, signed by
+% "Go Daddy Secure Certificate Authority". The second certificate certifies the
+% public key of "Go Daddy Secure Certificate Authority", signed by "Go Daddy
+% Root Certificate Authority". The third certificate certifies the public key
+% of "Go Daddy Root Certificate Authority", signed by "Go Daddy Class 2
+% Certification Aut".
+% \end{solution}
+
+\part[2] Is it trustable that the forth certificate is self-signed? Explain your answer.
+%\fillwithdottedlines{.75in}
+% \begin{solution}
+% \end{solution}
+
+\part[2] What is the purpose of Packet 211? What is it encrypting, and what is
+the message encrypted with? (Note: the answer comes from the textbook/lecture, not
+from the payload of the packet).
+%\fillwithdottedlines{.75in}
+% \begin{solution}
+%Packet 211 contains the master key encrypted with the public key of
+% diasy.ubuntu.com
+% \end{solution}
+
 \end{parts}
 \end{questions}
 \vfill

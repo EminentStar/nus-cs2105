@@ -12,13 +12,13 @@
     \firstpageheader{\large\sf CS2105}%
     {\large\sf National University of Singapore\\ School of Computing \\
     \LARGE\sf Assignment 1}%
-    {\large\sf Semester 2 12/13}
+    {\large\sf Semester 2 13/14}
     \firstpageheadrule
     \pagestyle{headandfoot}
 
     \section*{Deadline}
 
-    10 March, 2013 (Sunday), 11:59pm.
+    21 February, 2014 (Friday), 11:59pm.
 
     \section*{Objective}
 
@@ -30,7 +30,7 @@ You are expected to know the format of HTTP request and response messages, socke
 
     The assignment will be done under a controlled UNIX environment. Familiarity with UNIX environment (how to copy/move/delete/edit files, how to compile and run programs, etc.) is assumed.
 
-    You should use Chrome version 24 or above as your Web client for this assignment.  You may additionally choose to support other browsers.  The ``Developer Tools'' for Chrome might be useful for debugging.
+    You should use Chrome version 32 or above as your Web client for this assignment.  You may additionally choose to support other browsers.  The ``Developer Tools'' for Chrome might be useful for debugging.
 
     \section*{Administrative Matters}
 
@@ -145,8 +145,8 @@ Figure 2 shows a screen shot of the to-do list application. The important elemen
 	\item B: Edit button. Click to edit the current to-do item, including description and notes. (it will bring the user to the next screen).
 	\item C: Description. A short string describing the to-do item. Cannot be empty.
 	\item D: Notes. Optional note pertaining to the corresponding to-do item.
-	\item E: Input textbox . Enter the description of a new to-do item.
-	\item F: Add button. Add a new to-do item with the current description entered in the textbox.
+	\item F: Input textbox . Enter the description of a new to-do item.
+	\item G: Add button. Add a new to-do item with the current description entered in the textbox.
 \end{itemize}
 
 \begin{figure}
@@ -177,7 +177,7 @@ The todo application is implemented in the script todo.pl. Calling todo.pl direc
 
 \subsection*{Calling an external program}
 
-You can use the exec() method of the Runtime class in Java to execute an external program. To execute a CGI script written in Perl, e.g. /home/o/ooiwt/a1/todo.pl, you can use the following code:
+You can use the exec() method of the Runtime class in Java to execute an external program. To execute a CGI script written in Perl, e.g. /home/o/ooiwt/a1/todo.pl, you can use the following code\footnote{Of course, you should not hardcode the paths in your code, as in this example.}:
 
 \begin{verbatim}
 Runtime.getRuntime().exec("/usr/bin/perl /home/o/ooiwt/a1/todo.pl");
@@ -227,13 +227,15 @@ You will see the following files:
 	\item edit.gif, del.gif, style.css -- images and style file used by the to-do list application.
 \end{itemize}
 
-Note that you must put your files inside the directory \texttt{a1} directly under your home directory. This is the root of your Web directory.
+Note that you must put your files inside the directory \texttt{a1} directly under your home directory (i.e., \texttt{\$HOME/a1}). This is the root of your Web directory.  
 
 \textit{You should ensure that the files in the directory of both team members are updated to the latest version before the deadline.  We will randomly pick the files from one of the team member to grade.}
 
 \subsection*{File Permission}
 
 You will be responsible for the security of your own source code. Please be careful and set the correct permission for your files. They should not be readable by anyone else except the owner (chmod 600 *.java will ensure that).
+
+If you use an online source code repository for revision control, please use a private one.  
 
 \section*{Port Numbers}
 
@@ -245,7 +247,7 @@ To make it easy to use a different port number, your Web server must take in the
 java WebServer 9090
 \end{verbatim}
 
-Note that all of you will be running your Web server on the same host, and therefore must use a different port number. To prevent collision, you should avoid "nice" port numbers such as 8000 or 8080.
+Note that all of you will be running your Web server on the same host, and therefore must use a different port number. To prevent collision, you should avoid ``nice'' port numbers such as 8000 or 8080.
 
 If you do not know how to parse command line arguments in Java, take a look at \url{http://docs.oracle.com/javase/tutorial/essential/environment/cmdLineArgs.html}.
 
@@ -253,13 +255,27 @@ If you do not know how to parse command line arguments in Java, take a look at \
 
 There is no need to submit the program by email or IVLE workbin. We will collect your assignment from your home directory on cs2105-z.comp.nus.edu.sg when the deadline is over.
 
-We will test your assignment automatically using a grading program. For this to work, you must not modify todo.pl in any way. If you suspect that there is a bug in todo.pl, please contact us by posting on the IVLE forum.  In addition, there will be a short demo slot for both team members to explain their program to the teaching staff. 
+We will test your assignment automatically using a grading program. For this to work, you must not modify todo.pl in any way. If you suspect that there is a bug in todo.pl, please contact us by commenting on the blog.  In addition, there will be a short demo slot for both team members to explain their program to the teaching staff. 
 
 You MUST name your java program WebServer.java. We will only compile this file when we grade. You MUST not implement additional classes in other *.java files.
 
 \section*{Using Another Platform}
 
 If you like to work on your assignment on other platforms (Windows, Mac) that you are more familiar with, you are free to do so. But when you submit your assignment, you should ensure that your program runs properly under cs2105-z.comp.nus.edu.sg and your WebServer.java is located under \$HOME/a1 on cs2105-z.comp.nus.edu.sg.
+
+\section*{Clean Code}
+
+In the example WebServer.java given, the whole server is (intentionally) written in one main method, to highlight the simplicity of writing a minimal working Web server.
+
+As you will augment this code with much additional functionalities, writing everything in one main function will lead to long, unreadable, unmaintainable code.  You should organize reusable parts of your code into smaller methods.
+
+Other good clean coding practice we will look at:
+\begin{itemize}
+	\item comments/documentation
+	\item consistent naming convention
+	\item consistent indentation
+	\item avoid hardcoding of paths/port numbers
+\end{itemize}
 
 \section*{Common Bugs}
 
@@ -271,22 +287,30 @@ Here are some tips on how to avoid common bugs made by students from previous ye
 		\item Make sure you return the correct content type in your HTTP response header (including CSS files).
 		\item Beware of duplicate ``Content-Type:'' -- Both todo.pl and debug.pl returns the content type as the first line of the output, so you need not insert another content type.
 		\item If you move your code to your teammate's account, make sure that your program is running the perl script from the teammate's directory.
+		\item Make sure you handle errors properly, especially failure in reading or running the Perl script.
 \end{itemize}
 
 \section*{Plagiarism Warning}
 
 You are free to discuss the assignment with your peers. But, ultimately, you should write your own code. We employ zero-tolerance policy against plagiarism. If you are caught copying from another team, or let another team copies your code, you will receive zero for this assignment. Further disciplinary action may be taken by the school.
 
+Note that copying from students from previous semesters of CS2105 is considered plagiarism as well.
+
 \section*{Grading}
 
 \begin{itemize}
+\item 1 mark: Cleanliness of code. 
 \item 2 marks: Able to invoke CGI script and return output (when calling todo.pl without query string).
-\item 3 marks: Able to handle GET request correctly.
+\item 2 marks: Able to handle GET request correctly.
 \item 3 marks: Able to handle POST request correctly.
 \item 2 marks: Answering questions during demo (individual marks).
 \end{itemize}
 
 We \textit{will deduct one mark} for every failure to following instructions (wrong directory name, wrong filename for WebServer.java, not taking in port number as a command line argument, inconsistent copies in the directory of team members, etc.)
+
+\section*{Late Submission}
+
+We deduct one mark for every hour after the submission deadline.  We will use the last modified timestamp on the server as submission time.
 
 \vfill
 \center\Huge{THE END}
